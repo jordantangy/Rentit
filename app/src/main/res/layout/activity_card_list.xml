@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+
+    tools:context=".CardList">
+
+
+        <ImageView
+            android:id="@+id/imageViewListCard"
+            android:layout_width="130dp"
+            android:layout_height="95dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_car" />
+
+        <TextView
+            android:id="@+id/priceDayListCard"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:text="מחיר ליום: 9999"
+            android:textColor="#100F0F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/typeCarListCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="טויוטה קורולה"
+            android:textColor="#100F0F"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewListCard"
+            app:layout_constraintStart_toStartOf="@+id/imageViewListCard"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewListCard"
+            app:layout_constraintVertical_bias="0.642" />
+
+        <TextView
+            android:id="@+id/insuranceListCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:text="צד ג עד גיל  25 "
+            android:textColor="#100F0F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateListCard" />
+
+        <TextView
+            android:id="@+id/phoneListCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="4dp"
+            android:text="0544540185"
+            android:textColor="#100F0F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/insuranceListCard" />
+
+        <TextView
+            android:id="@+id/dateListCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:text="מ-25.02.21 עד 31.08.21 "
+            android:textColor="#100F0F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/priceDayListCard" />
+
+        <TextView
+            android:id="@+id/remarksListCard"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="לא משכיר פחות משלושה ימים"
+            android:textColor="#100F0F"
+            app:layout_constraintEnd_toStartOf="@+id/insuranceListCard"
+            app:layout_constraintTop_toBottomOf="@+id/dateListCard" />
+
+        <TextView
+            android:id="@+id/areaListCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:text="איזור חיפה"
+            android:textColor="#100F0F"
+            app:layout_constraintEnd_toStartOf="@+id/priceDayListCard"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewPermission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ממתין לאישור"
+            android:textColor="#D82323"
+            android:textSize="40dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewListCard"
+            app:layout_constraintTop_toTopOf="@+id/areaListCard" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

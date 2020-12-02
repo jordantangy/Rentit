@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "816843148971",
+    "firebase_url": "https://rentit-c8af7.firebaseio.com",
+    "project_id": "rentit-c8af7",
+    "storage_bucket": "rentit-c8af7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816843148971:android:264a78328f68e9395831ee",
+        "android_client_info": {
+          "package_name": "com.example.rentit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816843148971-11teg8lv2dqlibd5bjvkmr3qfbnul32f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOewjxYnFcR9rvHJ19EH5I0xoK0ShhsXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816843148971-11teg8lv2dqlibd5bjvkmr3qfbnul32f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
