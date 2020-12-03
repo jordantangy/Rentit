@@ -78,7 +78,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     ArrayList<ImageView> arrayListImageView = new ArrayList<>();
     private ImageView imageViewTemp = null;
     private ImageView imageView1;
-    int x=2;
+    int x;
     private ImageView imageView2;
     private ImageView imageView3;
     private ImageView imageView4;
@@ -326,7 +326,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private void cardsRejection() {
         cardCarEdit.setPermissionToPublish(2);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("CardsRejection").push();
-         final String keyRejection = ref.getKey();
+        final String keyRejection = ref.getKey();
         ref.setValue(cardCarEdit);
         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
         ref2.child(cardCarEdit.getKey()).removeValue();
@@ -527,7 +527,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         if (!flag && flag2) flag = true;
         cardCar.setYearCar(edit);
 
-        if(flag){
+        if (flag) {
             textViewWarnAll.setText("אחד הנתונים לא תקין");
             textViewWarnAll.setVisibility(View.VISIBLE);
         }
@@ -696,7 +696,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                                         Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
 
                                         if (flagEdit) deleteCard();
-                                        else if(flagI==length) {
+                                        else if (flagI == length) {
                                             Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                                             startActivity(intent);
                                         }
