@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="450dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtWarnEmail"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#EF2B2B"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/loginEmail"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_marginTop="20dp"
+        android:hint="אימייל"
+        android:inputType="textEmailAddress"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/txtWarnPssword"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#EF2B2B"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/loginPassword"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:hint="סיסמא"
+        android:inputType="textPassword"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/txtWarnAll"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#EF2B2B"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/loginButton2"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="#c1112e"
+        android:gravity="center"
+        android:text="כניסה"
+        android:textSize="30sp" />
+
+</LinearLayout>
