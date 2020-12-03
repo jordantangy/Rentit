@@ -78,7 +78,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     ArrayList<ImageView> arrayListImageView = new ArrayList<>();
     private ImageView imageViewTemp = null;
     private ImageView imageView1;
-    int k;
+    int x;
     private ImageView imageView2;
     private ImageView imageView3;
     private ImageView imageView4;
