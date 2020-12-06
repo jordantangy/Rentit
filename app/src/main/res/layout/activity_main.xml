@@ -6,130 +6,144 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".MainActivity">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp"
-        android:text="Rentit!- השכרת רכבים"
-        android:textSize="30dp"
-
-        />
-
-    <Button
-        android:id="@+id/login"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-
-        android:text="כניסה" />
-
-    <Button
-        android:id="@+id/register"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/login"
-
-        android:text="הרשמה" />
-
-    <Button
-        android:id="@+id/feedback"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="משוב" />
-
-    <Spinner
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-       android:layout_toLeftOf="@id/area"
-        android:layout_marginEnd="35dp"
-        android:layout_marginTop="15dp" />
-
-    <Spinner
-        android:id="@+id/area"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="7dp"
-
-
-
-        android:visibility="visible" />
-
-    <EditText
-        android:id="@+id/endData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/price"
-      android:layout_toLeftOf="@id/startData"
-        android:layout_marginEnd="40dp"
-        android:ems="6"
-        android:layout_marginTop="10dp"
-        android:hint="עד תאריך"
-        android:inputType="date" />
-
-    <EditText
-        android:id="@+id/startData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/area"
-        android:layout_alignParentEnd="true"
-
-        android:layout_marginEnd="22dp"
-        android:layout_marginTop="10dp"
-        android:ems="6"
-        android:hint="מתאריך"
-        android:inputType="date" />
-
-    <Button
-        android:id="@+id/search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="חיפוש"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/endData"
-        android:layout_marginTop="20dp"/>
-
-    <ListView
-        android:id="@+id/lvMange"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/search"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/buttonSeeAll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/endData"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_toRightOf="@+id/search"
-        android:text="כל הכרטיסים"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <TextView
-        android:id="@+id/textViewWarnSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/search"
-        android:layout_centerHorizontal="true"
-        android:text="לא נמצאו כרטיסים תואמים"
-        android:textColor="#EF2B2B"
-        android:visibility="gone" />
-</RelativeLayout>
+            android:layout_marginTop="17dp"
+            android:text="Rentit!- השכרת רכבים"
+
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/register" />
+
+        <Button
+            android:id="@+id/login"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="5dp"
+            android:text="כניסה"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/register"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="10dp"
+            android:text="הרשמה"
+            app:layout_constraintEnd_toStartOf="@+id/login"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/feedback"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="משוב"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="71dp"
+            app:layout_constraintEnd_toStartOf="@+id/area"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <Spinner
+            android:id="@+id/area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_marginTop="14dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <EditText
+            android:id="@+id/endData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="10dp"
+            android:ems="6"
+            android:hint="עד תאריך"
+            android:inputType="date"
+            app:layout_constraintEnd_toStartOf="@+id/startData"
+            app:layout_constraintTop_toBottomOf="@+id/price" />
+
+        <EditText
+            android:id="@+id/startData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:ems="6"
+            android:hint="מתאריך"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="@+id/area"
+            app:layout_constraintTop_toBottomOf="@+id/area" />
+
+        <Button
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="10dp"
+            android:text="חיפוש"
+            app:layout_constraintEnd_toStartOf="@+id/buttonSeeAll"
+            app:layout_constraintTop_toBottomOf="@+id/endData" />
+
+        <ListView
+            android:id="@+id/lvMange"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="340dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="16dp" />
+
+
+        <Button
+            android:id="@+id/buttonSeeAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="13dp"
+            android:text="כל הכרטיסים"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/startData"
+            app:layout_constraintTop_toBottomOf="@+id/startData" />
+
+        <TextView
+            android:id="@+id/textViewWarnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="3dp"
+            android:text="לא נמצאו כרטיסים תואמים"
+            android:textColor="#EF2B2B"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/search"
+            app:layout_constraintStart_toStartOf="@+id/search"
+            app:layout_constraintTop_toBottomOf="@+id/search" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </ScrollView>
