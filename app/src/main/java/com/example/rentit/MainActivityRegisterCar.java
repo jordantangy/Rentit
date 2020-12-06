@@ -285,8 +285,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         ref2.child(cardCarEdit.getKey()).removeValue();
 
         DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-        ref3.child("cardsUser").orderByChild("email").equalTo(cardCarEdit.getEmail());
-        ref3.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref3.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
@@ -309,8 +308,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 DatabaseReference cardR = FirebaseDatabase.getInstance().getReference();
                 cardR.child("RegisterInformation").child(key2).setValue(registerInformation);
 
-                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+//                startActivity(intent);
 
 
             }
@@ -332,9 +331,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         ref2.child(cardCarEdit.getKey()).removeValue();
 
 
-        DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-        ref3.child("cardsUser").orderByChild("email").equalTo(cardCarEdit.getEmail());
-        ref3.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+
+        cardRef2.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
@@ -344,9 +343,14 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     key2 = child.getKey();
                 }
                 editTextRemarks.setText("lll" + registerInformation.getEmail());
+                editTextCity.setText("lll" + cardCarEdit.getEmail());
+                editTextInsurance.setText("lll" + cardCarEdit.getId());
+
 
                 List<CardCar> cardCarList = registerInformation.getCardsUser();
                 for (int j = 0; j < cardCarList.size(); j++) {
+                    editTextTypeCar.setText("lll" + "xxxxx");
+
                     if (cardCarList.get(j).getId() == cardCarEdit.getId()) {
                         registerInformation.getCardsUser().get(j).setPermissionToPublish(2);
                         registerInformation.getCardsUser().get(j).setKey(keyRejection);
@@ -357,8 +361,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 DatabaseReference cardR = FirebaseDatabase.getInstance().getReference();
                 cardR.child("RegisterInformation").child(key2).setValue(registerInformation);
 
-                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+//                startActivity(intent);
 
 
             }
@@ -782,8 +786,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsRejection");
                     ref2.child(cardCarEdit.getKey()).removeValue();
                 }
-                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+//                startActivity(intent);
 
             }
 

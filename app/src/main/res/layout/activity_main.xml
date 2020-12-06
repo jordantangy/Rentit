@@ -82,34 +82,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="13dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="14dp"
             android:ems="6"
             android:hint="עד תאריך"
             android:inputType="date"
-            app:layout_constraintEnd_toStartOf="@+id/startData"
-            app:layout_constraintTop_toBottomOf="@+id/price" />
+            app:layout_constraintEnd_toEndOf="@+id/area"
+            app:layout_constraintTop_toBottomOf="@+id/area" />
 
         <EditText
             android:id="@+id/startData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="5dp"
             android:ems="6"
             android:hint="מתאריך"
             android:inputType="date"
-            app:layout_constraintEnd_toEndOf="@+id/area"
-            app:layout_constraintTop_toBottomOf="@+id/area" />
+            app:layout_constraintEnd_toStartOf="@+id/endData"
+            app:layout_constraintTop_toBottomOf="@+id/price" />
 
         <Button
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="16dp"
             android:text="חיפוש"
-            app:layout_constraintEnd_toStartOf="@+id/buttonSeeAll"
-            app:layout_constraintTop_toBottomOf="@+id/endData" />
+            app:layout_constraintEnd_toEndOf="@+id/endData"
+            app:layout_constraintStart_toStartOf="@+id/startData"
+            app:layout_constraintTop_toBottomOf="@+id/startData" />
 
         <ListView
             android:id="@+id/lvMange"
@@ -122,14 +122,16 @@
 
         <Button
             android:id="@+id/buttonSeeAll"
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
 
-            android:layout_marginTop="13dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
             android:text="כל הכרטיסים"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@+id/startData"
-            app:layout_constraintTop_toBottomOf="@+id/startData" />
+            app:layout_constraintStart_toEndOf="@+id/search"
+            app:layout_constraintTop_toBottomOf="@+id/endData" />
 
         <TextView
             android:id="@+id/textViewWarnSearch"

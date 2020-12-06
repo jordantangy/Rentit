@@ -18,7 +18,7 @@
             android:layout_marginTop="20dp"
             android:ems="8"
             android:hint="שנת יצור רכב"
-            android:inputType="textPersonName"
+            android:inputType="number"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/typeCar3" />
 
@@ -82,7 +82,7 @@
             android:layout_marginStart="8dp"
             android:ems="8"
             android:hint="פלאפון"
-            android:inputType="textPersonName"
+            android:inputType="number"
             app:layout_constraintBottom_toBottomOf="@+id/yearCar3"
             app:layout_constraintStart_toEndOf="@+id/yearCar3"
             app:layout_constraintTop_toTopOf="@+id/yearCar3"
@@ -95,7 +95,7 @@
             android:layout_marginStart="10dp"
             android:ems="8"
             android:hint="מחיר ליום"
-            android:inputType="textPersonName"
+            android:inputType="number"
             app:layout_constraintBottom_toBottomOf="@+id/insurance3"
             app:layout_constraintStart_toEndOf="@+id/insurance3"
             app:layout_constraintTop_toTopOf="@+id/insurance3" />
@@ -137,23 +137,24 @@
 
 
         <EditText
-            android:id="@+id/startDate23"
+            android:id="@+id/endDate23"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="8"
-            android:hint="מתאריך"
+            android:hint="עד תאריך"
             android:inputType="date"
-            app:layout_constraintBottom_toBottomOf="@+id/endDate23"
-            app:layout_constraintStart_toEndOf="@+id/endDate23"
-            app:layout_constraintTop_toTopOf="@+id/endDate23" />
+            app:layout_constraintBottom_toBottomOf="@+id/startDate23"
+            app:layout_constraintStart_toEndOf="@+id/startDate23"
+            app:layout_constraintTop_toTopOf="@+id/startDate23" />
 
         <EditText
-            android:id="@+id/endDate23"
+            android:id="@+id/startDate23"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="8"
-            android:hint="עד תאריך"
+            android:hint="מתאריך"
             android:inputType="date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/city3" />
@@ -375,6 +376,8 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/buttonMyPage"
             app:layout_constraintEnd_toEndOf="@+id/buttonMyPage" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
