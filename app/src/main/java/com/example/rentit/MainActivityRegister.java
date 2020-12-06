@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivityRegister extends AppCompatActivity {
     private FirebaseDatabase database;
-
+int a;
     private DatabaseReference cardRef;
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
 
