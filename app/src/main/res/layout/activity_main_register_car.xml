@@ -376,6 +376,17 @@
             app:layout_constraintBottom_toTopOf="@+id/buttonMyPage"
             app:layout_constraintEnd_toEndOf="@+id/buttonMyPage" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:text="תמונה ראשית"
+            android:textColor="#131313"
+            app:layout_constraintBottom_toTopOf="@+id/image43"
+            app:layout_constraintEnd_toEndOf="@+id/image43"
+            app:layout_constraintStart_toStartOf="@+id/image43" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
