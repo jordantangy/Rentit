@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivityRegister extends AppCompatActivity {
     private FirebaseDatabase database;
-
+int a;
     private DatabaseReference cardRef;
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
 
@@ -124,23 +124,25 @@ public class MainActivityRegister extends AppCompatActivity {
             textViewWarnEmail.setText("אימייל לא קיים");
             textViewWarnEmail.setVisibility(View.VISIBLE);
         }else {
-            String pass1 = editTextPass1.getText().toString();
+            String pass1 =""+ editTextPass1.getText().toString();
             if (pass1.length() < 6) {
                 textViewWarnPassword1.setText("סיסמא קצרה מדי, לפחות 6 תווים");
                 textViewWarnPassword1.setVisibility(View.VISIBLE);
             }
-            String pass2 = editTextPass2.getText().toString();
-            if (pass1.equals(pass2)) {
+            else {
+                String pass2 = editTextPass2.getText().toString();
+                if (pass1.equals(pass2)) {
 
-                registerInformation = new RegisterInformation();
-                registerInformation.setEmail(email);
-                registerInformation.setPassword(pass1);
-                registerFirebase(email, pass1);
+                    registerInformation = new RegisterInformation();
+                    registerInformation.setEmail(email);
+                    registerInformation.setPassword(pass1);
+                    registerFirebase(email, pass1);
 
 
-            } else {
-                textViewWarnPassword2.setText("סיסמא לא תואמת");
-                textViewWarnPassword2.setVisibility(View.VISIBLE);
+                } else {
+                    textViewWarnPassword2.setText("סיסמא לא תואמת");
+                    textViewWarnPassword2.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
