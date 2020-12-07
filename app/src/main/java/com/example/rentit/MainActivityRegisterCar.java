@@ -170,10 +170,17 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
         if (flagManagementCardsApprov) {
             editTextRejection = findViewById(R.id.editTextRejection);
-            buttonDelete.setText("סירוב");
-            buttonDelete.setVisibility(View.VISIBLE);
-            buttonRegister.setText("אישור");
-            buttonMyPage.setText("לעמוד הראשי");
+            if (cardCarEdit.getPermissionToPublish() == 0) {
+                buttonRegister.setText("אישור");
+                buttonDelete.setText("סירוב");
+                buttonDelete.setVisibility(View.VISIBLE);
+            } else {
+                email=cardCarEdit.getEmail();
+                buttonDelete.setText("מחיקת כרטיס");
+                buttonDelete.setVisibility(View.VISIBLE);
+                buttonRegister.setVisibility(View.GONE);
+            }
+                buttonMyPage.setText("לעמוד שלי");
 
         }
         if (flagEdit) {
@@ -185,7 +192,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (flagManagementCardsApprov) {
+                    if (!buttonDelete.getText().equals("מחיקת כרטיס")) {
                         cardsRejection();
 
 
@@ -270,13 +277,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         buttonMyPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (flagMain) {
-                    Intent intent = new Intent(MainActivityRegisterCar.this, MainActivity.class);
-                    startActivity(intent);
-                } else {
+              //  if (flagMain) {
+                //    Intent intent = new Intent(MainActivityRegisterCar.this, MainActivity.class);
+               //     startActivity(intent);
+             //   } else {
                     Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                     startActivity(intent);
-                }
+               // }
             }
         });
     }
@@ -285,15 +292,16 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCarEdit.setPermissionToPublish(1);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("CardsApprov").push();
         final String keyApprov = ref.getKey();
-        ref.setValue(cardCarEdit);
         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
         ref2.child(cardCarEdit.getKey()).removeValue();
+        cardCarEdit.setKey(keyApprov);
+        ref.setValue(cardCarEdit);
 
         DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
         ref3.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
+               // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
                 editTextRemarks.setText(snapshot.toString());
                 for (DataSnapshot child : snapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
@@ -312,7 +320,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 }
                 DatabaseReference cardR = FirebaseDatabase.getInstance().getReference();
                 cardR.child("RegisterInformation").child(key2).setValue(registerInformation);
-                 progressDialog.dismiss();
+                progressDialog.dismiss();
                 Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                 startActivity(intent);
 
@@ -331,9 +339,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCarEdit.setPermissionToPublish(2);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("CardsRejection").push();
         final String keyRejection = ref.getKey();
-        ref.setValue(cardCarEdit);
         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
         ref2.child(cardCarEdit.getKey()).removeValue();
+        cardCarEdit.setKey(keyRejection);
+        ref.setValue(cardCarEdit);
 
 
         DatabaseReference cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
@@ -341,7 +350,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardRef2.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
+               // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
                 editTextRemarks.setText(snapshot.toString());
                 for (DataSnapshot child : snapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
@@ -624,7 +633,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         //  progressDialog = new ProgressDialog(this);
 
 
-
         cardRef = FirebaseDatabase.getInstance().getReference();
         cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
 
@@ -709,7 +717,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
                                         if (flagEdit) deleteCard();
                                         else if (flagI == length) {
-                                               progressDialog.dismiss();
+                                            progressDialog.dismiss();
                                             Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                                             startActivity(intent);
 
@@ -763,6 +771,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
     public void deleteCard() {
+        Toast.makeText(MainActivityRegisterCar.this,email+"lklk", Toast.LENGTH_SHORT).show();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("RegisterInformation");
 
@@ -780,7 +789,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 for (int i = 0; i < registerInformation.getCardsUser().size(); i++) {
                     if (cardCarEdit.getId() == registerInformation.getCardsUser().get(i).getId()) {
                         registerInformation.removeCardCar(i);
-                        Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
