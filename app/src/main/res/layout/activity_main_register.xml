@@ -115,7 +115,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="65dp"
-        android:layout_marginBottom="270dp"
         android:text="חזרה לדף הראשי"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -174,6 +173,54 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/register"
         app:layout_constraintEnd_toEndOf="@+id/register" />
+
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:ems="10"
+        android:hint="פלאפון"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/email"
+        app:layout_constraintEnd_toEndOf="@+id/email"
+        app:layout_constraintStart_toStartOf="@+id/email" />
+
+    <Button
+        android:id="@+id/buttonRegisterPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="הרשמה באמצעות פון"
+        app:layout_constraintEnd_toEndOf="@+id/mainPage"
+        app:layout_constraintStart_toStartOf="@+id/mainPage"
+        app:layout_constraintTop_toBottomOf="@+id/mainPage" />
+
+    <EditText
+        android:id="@+id/editTextSmsCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ems="10"
+        android:hint="הכנס קוד סמס"
+        android:inputType="number"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/buttonRegisterPhone"
+        app:layout_constraintStart_toStartOf="@+id/buttonRegisterPhone"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRegisterPhone" />
+
+    <Button
+        android:id="@+id/buttonCodeGo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="66dp"
+        android:text="אשר קוד"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/editTextSmsCode"
+        app:layout_constraintStart_toStartOf="@+id/editTextSmsCode"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSmsCode" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
