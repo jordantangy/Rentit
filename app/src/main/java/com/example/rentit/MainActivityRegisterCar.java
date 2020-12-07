@@ -308,8 +308,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 DatabaseReference cardR = FirebaseDatabase.getInstance().getReference();
                 cardR.child("RegisterInformation").child(key2).setValue(registerInformation);
 
-//                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+                startActivity(intent);
 
 
             }
@@ -361,8 +361,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 DatabaseReference cardR = FirebaseDatabase.getInstance().getReference();
                 cardR.child("RegisterInformation").child(key2).setValue(registerInformation);
 
-//                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+                startActivity(intent);
 
 
             }
@@ -786,8 +786,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsRejection");
                     ref2.child(cardCarEdit.getKey()).removeValue();
                 }
-//                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+                startActivity(intent);
 
             }
 
