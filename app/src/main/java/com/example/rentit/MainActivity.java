@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextEmail, editTextPassword, editTextStartdate, editTextEndData;
     private Button loginButtonMain, loginButtonIn, searchButton, buttonSeeAll;
     private Dialog d;
-    //  private ProgressDialog progressDialog;TODO :  ProgressDialog
+    private ProgressDialog progressDialog;
     private Button registerButton;
     private Button feedbekButton;
     private Spinner areaSpinner;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressDialog = new ProgressDialog(this);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -109,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.setMessage("טוען כרטיסים...");
+                progressDialog.show();
                 search();
 
 
@@ -208,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        progressDialog.dismiss();
     }
 
     private void searchMatch(String area, String price, String startDate, String endDate, CardCar card) {
@@ -245,6 +250,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void viewCards() {
+        progressDialog.setMessage("טוען כרטיסים...");
+        progressDialog.show();
         textViewWarnSearch.setVisibility(View.GONE);
 
         cardRef2 = FirebaseDatabase.getInstance().getReference("CardsApprov");
@@ -282,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
+                progressDialog.dismiss();
 
 
             }

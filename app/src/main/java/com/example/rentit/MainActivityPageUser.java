@@ -37,7 +37,7 @@ public class MainActivityPageUser extends AppCompatActivity {
     private ListView lv;
     private DatabaseReference cardRef2;
 
-    //private ProgressDialog progressDialog;
+   private ProgressDialog progressDialog;
 
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
@@ -50,7 +50,9 @@ public class MainActivityPageUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page_user);
 
-        //  progressDialog = new ProgressDialog(this);
+         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("טוען כרטיסים...");
+        progressDialog.show();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
@@ -72,6 +74,7 @@ public class MainActivityPageUser extends AppCompatActivity {
                     }
 
                     if (registerInformation.getCardsUser().size() > 0) {
+
                         // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
 
                         toyAdapter = new ToyAdapter(MainActivityPageUser.this, 0, 0, registerInformation.getCardsUser());
@@ -90,7 +93,7 @@ public class MainActivityPageUser extends AppCompatActivity {
                         });
                     }
 
-                    //   progressDialog.dismiss();
+                    progressDialog.dismiss();
                 }
 
                 @Override

@@ -61,7 +61,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
     private DatabaseReference cardRef;
 
-    // private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
@@ -124,6 +124,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_register_car);
+
+        progressDialog = new ProgressDialog(this);
         flagManagementCardsApprov = false;
         flagEdit = false;
         flagMain = false;
@@ -206,6 +208,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.setMessage("Registering Please Wait...");
+                progressDialog.show();
+
                 if (flagManagementCardsApprov) {
                     cardsApprov();
 
@@ -307,7 +312,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 }
                 DatabaseReference cardR = FirebaseDatabase.getInstance().getReference();
                 cardR.child("RegisterInformation").child(key2).setValue(registerInformation);
-
+                 progressDialog.dismiss();
                 Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                 startActivity(intent);
 
@@ -616,6 +621,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
 
     public void retrieveData() {
+        //  progressDialog = new ProgressDialog(this);
+
 
 
         cardRef = FirebaseDatabase.getInstance().getReference();
@@ -624,6 +631,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
                     key2 = child.getKey();
@@ -701,8 +709,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
                                         if (flagEdit) deleteCard();
                                         else if (flagI == length) {
+                                               progressDialog.dismiss();
                                             Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                                             startActivity(intent);
+
                                         }
 
 
