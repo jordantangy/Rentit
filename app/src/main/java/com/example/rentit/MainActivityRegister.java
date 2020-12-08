@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivityRegister extends AppCompatActivity {
@@ -38,7 +40,7 @@ public class MainActivityRegister extends AppCompatActivity {
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
 
     private FirebaseAuth mAuth;
-    private RegisterInformation registerInformation;
+    private RegisterInformation registerInformation=null;
 
     private Button registerButton,buttonPhone,buttonSmsCode;
     private Button returnButton;
@@ -46,6 +48,9 @@ public class MainActivityRegister extends AppCompatActivity {
     private EditText editTextPass1;
     private EditText editTextPass2;
     private  String mVerificationId;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBacks;
+    private String mobile;
+
 
 
     @Override
@@ -54,6 +59,7 @@ public class MainActivityRegister extends AppCompatActivity {
         setContentView(R.layout.activity_main_register);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        setmCallBacks();
 
 
         textViewWarnEmail = findViewById(R.id.textWarnEmail);
@@ -74,7 +80,7 @@ public class MainActivityRegister extends AppCompatActivity {
         buttonPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String mobile = editTextPhone.getText().toString().trim();
+                 mobile = editTextPhone.getText().toString().trim();
 
                 if(mobile.isEmpty() || mobile.length() < 10){
                     editTextPhone.setError("Enter a valid mobile");
@@ -82,10 +88,14 @@ public class MainActivityRegister extends AppCompatActivity {
                    return;
                 }
                 else{
-                    mobile="+972"+mobile;
-                  sendVerificationCode(mobile);
-//                    editTextSmsCode.setVisibility(View.VISIBLE);
-//                    buttonSmsCode.setVisibility(View.VISIBLE);
+                    mobile=mobile;
+//                    Intent intent = new Intent(MainActivityRegister.this, MainActivityPhone.class);
+//                    intent.putExtra("num", mobile);
+//                    startActivityForResult(intent, 0);
+                 sendVerificationCode(mobile);
+                    editTextSmsCode.setVisibility(View.VISIBLE);
+                    buttonSmsCode.setVisibility(View.VISIBLE);
+
 
                 }
             }
@@ -122,6 +132,39 @@ public class MainActivityRegister extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setmCallBacks() {
+        mCallBacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                //Getting the code sent by SMS
+                String code = phoneAuthCredential.getSmsCode();
+
+                //sometime the code is not detected automatically
+                //in this case the code will be null
+                //so user has to manually enter the code
+                if (code != null) {
+                    editTextSmsCode.setText(code);
+                    //verifying the code
+                    verifyVerificationCode(code);
+                }
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                Toast.makeText(MainActivityRegister.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                mVerificationId = s;
+
+
+                //  mResendToken = forceResendingToken;
+            }
+        };
     }
 
     private void saveRegisterDataFireBase() {
@@ -194,43 +237,17 @@ public class MainActivityRegister extends AppCompatActivity {
     }
 
     private void sendVerificationCode(String mobile) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+91" + mobile,
-                60,
-                TimeUnit.SECONDS,
-                (Activity) TaskExecutors.MAIN_THREAD,
-                mCallbacks);
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
+                .setPhoneNumber("+972"+mobile)
+                .setTimeout(60L , TimeUnit.SECONDS)
+                .setActivity(MainActivityRegister.this)
+                .setCallbacks(mCallBacks)
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
 
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new  PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            //Getting the code sent by SMS
-            String code = phoneAuthCredential.getSmsCode();
 
-            //sometime the code is not detected automatically
-            //in this case the code will be null
-            //so user has to manually enter the code
-            if (code != null) {
-                editTextSmsCode.setText(code);
-                //verifying the code
-                verifyVerificationCode(code);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(MainActivityRegister.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            mVerificationId = s;
-          //  mResendToken = forceResendingToken;
-        }
-    };
     private void verifyVerificationCode(String code) {
         //creating the credential
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
@@ -240,15 +257,45 @@ public class MainActivityRegister extends AppCompatActivity {
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(MainActivityRegister.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            mobile=mobile.substring(1);
+                            DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+                            ref3.orderByChild("email").equalTo("+972"+mobile).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
+                                    for (DataSnapshot child : snapshot.getChildren()) {
+                                        registerInformation = child.getValue(RegisterInformation.class);
+                                    }
+                                    if(registerInformation==null){
+                                        registerInformation=new RegisterInformation();
+                                        registerInformation.setEmail("+972"+mobile);
+                                        saveRegisterDataFireBase();
+                                    }
+                                    else{
+                                        Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
+                                        startActivity(intent);
+
+
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+
                             //verification successful we will start the profile activity
-                            Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);// TODO: all like this
-                            startActivity(intent);
+
 
                         } else {
 
@@ -260,14 +307,14 @@ public class MainActivityRegister extends AppCompatActivity {
                                 message = "Invalid code entered...";
                             }
 
-                            Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_LONG);
-                            snackbar.setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            });
-                            snackbar.show();
+//                            Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_LONG);
+//                            snackbar.setAction("Dismiss", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//
+//                                }
+//                            });
+//                            snackbar.show();
                         }
                     }
                 });

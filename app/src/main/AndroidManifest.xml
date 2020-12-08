@@ -9,16 +9,15 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        >
-        <activity android:name=".MainActivityManagementCardsApprov"></activity>
+        android:usesCleartextTraffic="true">
+        <activity android:name=".MainActivityPhone"></activity>
+        <activity android:name=".MainActivityManagementCardsApprov" />
         <activity android:name=".MainActivityFeedback" />
         <activity android:name=".MainActivityPageUser" />
         <activity android:name=".MainActivityRegisterCar" />

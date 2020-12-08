@@ -41,8 +41,8 @@ public class MainActivityPageUser extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
-    private String email;
-    private RegisterInformation registerInformation;
+    private String email="";
+    private RegisterInformation registerInformation=null;
 
 
     @Override
@@ -55,8 +55,12 @@ public class MainActivityPageUser extends AppCompatActivity {
         progressDialog.show();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            email = firebaseUser.getEmail().toString();
+
+            if(!firebaseUser.getEmail().toString().isEmpty())
+                email = firebaseUser.getEmail().toString();
+            else   email = firebaseUser.getPhoneNumber().toString();
+        Toast.makeText(MainActivityPageUser.this, ""+email, Toast.LENGTH_LONG).show();
+
             if (email.equals("arielrentit@gmail.com")) {
                 Intent intent = new Intent(MainActivityPageUser.this, MainActivityManagementCardsApprov.class);
                 startActivityForResult(intent, 0);
@@ -73,7 +77,7 @@ public class MainActivityPageUser extends AppCompatActivity {
                         registerInformation = child.getValue(RegisterInformation.class);
                     }
 
-                    if (registerInformation.getCardsUser().size() > 0) {
+                    if (registerInformation!=null&&registerInformation.getCardsUser().size() > 0) {
 
                         // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
 
@@ -102,7 +106,7 @@ public class MainActivityPageUser extends AppCompatActivity {
                 }
             });
             //     progressDialog.dismiss();
-        }
+
 
 
         cardButton = findViewById(R.id.publish);

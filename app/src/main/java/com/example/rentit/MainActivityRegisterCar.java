@@ -156,8 +156,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null)
-            email = firebaseUser.getEmail().toString();
+            if(!firebaseUser.getEmail().toString().isEmpty())
+                email = firebaseUser.getEmail().toString();
+            else   email = firebaseUser.getPhoneNumber().toString();
+        editTextPhone.setText(email);
+
         // progressDialog = new ProgressDialog(this);
 
 
@@ -222,9 +225,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     cardsApprov();
 
                 } else {
+
                     setWarnGone();
                     setCardDetails();
-                    if (!flag) retrieveData();
+                   if (!flag) retrieveData();
                 }
 
             }
@@ -635,6 +639,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
         cardRef = FirebaseDatabase.getInstance().getReference();
         cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+        Toast.makeText(MainActivityRegisterCar.this, "לפני", Toast.LENGTH_SHORT).show();
 
         cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -645,8 +650,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     key2 = child.getKey();
 
                 }
-                cardCar.setId(registerInformation.getId());
-                upladUriFirebase();
+              cardCar.setId(registerInformation.getId());
+              upladUriFirebase();
+               // Toast.makeText(MainActivityRegisterCar.this, dataSnapshot.toString(), Toast.LENGTH_LONG).show();
+
             }
 
             @Override
@@ -739,7 +746,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 //   Toast.makeText(MainActivityRegisterCar.this, "צלחה"+riversRef.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
 
             }
-        }
+     }
 
 
         // finish();
