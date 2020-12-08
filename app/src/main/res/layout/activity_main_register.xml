@@ -186,6 +186,7 @@
             android:ems="10"
             android:hint="פלאפון"
             android:inputType="number"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/email"
             app:layout_constraintEnd_toEndOf="@+id/email"
             app:layout_constraintStart_toStartOf="@+id/email" />

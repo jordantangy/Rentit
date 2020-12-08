@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +43,7 @@ public class MainActivityRegister extends AppCompatActivity {
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
     private FirebaseAuth mAuth;
     private RegisterInformation registerInformation = null;
-
+    private Button  loginButtonIn;
     private Button registerButton, buttonPhone, buttonSmsCode;
     private Button returnButton;
     private EditText editTextEmail, editTextPhone, editTextSmsCode;
@@ -51,6 +53,12 @@ public class MainActivityRegister extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBacks;
     private String mobile;
 
+    private CheckBox checkBox;
+
+    private Boolean flagCode = false;
+
+    private Dialog d;
+    private EditText  editTextPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,23 +86,24 @@ public class MainActivityRegister extends AppCompatActivity {
         buttonPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mobile = editTextPhone.getText().toString().trim();
+                dialod();
+//                mobile = editTextPhone.getText().toString().trim();
+//
+//                if (mobile.isEmpty() || mobile.length() < 10) {
+//                    editTextPhone.setError("Enter a valid mobile");
+//                    editTextPhone.requestFocus();
+//                    return;
+//                } else {
+//                    mobile = mobile;
+////                    Intent intent = new Intent(MainActivityRegister.this, MainActivityPhone.class);
+////                    intent.putExtra("num", mobile);
+////                    startActivityForResult(intent, 0);
+//                    sendVerificationCode(mobile);
+//                    editTextSmsCode.setVisibility(View.VISIBLE);
+//                    buttonSmsCode.setVisibility(View.VISIBLE);
 
-                if (mobile.isEmpty() || mobile.length() < 10) {
-                    editTextPhone.setError("Enter a valid mobile");
-                    editTextPhone.requestFocus();
-                    return;
-                } else {
-                    mobile = mobile;
-//                    Intent intent = new Intent(MainActivityRegister.this, MainActivityPhone.class);
-//                    intent.putExtra("num", mobile);
-//                    startActivityForResult(intent, 0);
-                    sendVerificationCode(mobile);
-                    editTextSmsCode.setVisibility(View.VISIBLE);
-                    buttonSmsCode.setVisibility(View.VISIBLE);
 
-
-                }
+              //  }
             }
         });
 
@@ -131,7 +140,7 @@ public class MainActivityRegister extends AppCompatActivity {
 
     }
 
-    private void setmCallBacks() {
+    private void setmCallBacks1() {
         mCallBacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
@@ -164,7 +173,7 @@ public class MainActivityRegister extends AppCompatActivity {
         };
     }
 
-    private void saveRegisterDataFireBase() {
+    private void saveRegisterDataFireBaseEmail() {
 
 
         cardRef = database.getReference("RegisterInformation").push();
@@ -189,7 +198,7 @@ public class MainActivityRegister extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            saveRegisterDataFireBase();
+                            saveRegisterDataFireBaseEmail();
                         } else {
                             textViewWarnAll.setText("אימייל או סיסמא לא תקינים");
                             textViewWarnAll.setVisibility(View.VISIBLE);
@@ -231,7 +240,7 @@ public class MainActivityRegister extends AppCompatActivity {
         }
     }
 
-    private void sendVerificationCode(String mobile) {
+    private void sendVerificationCode1(String mobile) {
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
                 .setPhoneNumber("+972" + mobile)
                 .setTimeout(60L, TimeUnit.SECONDS)
@@ -242,15 +251,15 @@ public class MainActivityRegister extends AppCompatActivity {
     }
 
 
-    private void verifyVerificationCode(String code) {
+    private void verifyVerificationCode1(String code) {
         //creating the credential
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
 
         //signing the user
-        signInWithPhoneAuthCredential(credential);
+        signInWithPhoneAuthCredential1(credential);
     }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+    private void signInWithPhoneAuthCredential1(PhoneAuthCredential credential) {
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(MainActivityRegister.this, new OnCompleteListener<AuthResult>() {
@@ -312,6 +321,206 @@ public class MainActivityRegister extends AppCompatActivity {
                     }
                 });
     }
+    private void dialod() {
 
+        d = new Dialog(this);
+        d.setContentView(R.layout.login);
+        d.setTitle("Login");
+
+        d.setCancelable(true);
+        checkBox = (CheckBox) d.findViewById(R.id.checkBoxPhone);
+
+             checkBox.setChecked(true);
+
+
+        editTextEmail = (EditText) d.findViewById(R.id.loginEmail);
+        editTextPassword = (EditText) d.findViewById(R.id.loginPassword);
+        loginButtonIn = (Button) d.findViewById(R.id.loginButton2);
+        editTextEmail.setText("");
+        editTextEmail.setInputType(3);
+        editTextEmail.setHint("פלאפון");
+        editTextPassword.setVisibility(View.GONE);
+        editTextPassword.setText("");
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+            }
+        });
+        loginButtonIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+                    if (flagCode) {
+                        String code = editTextPassword.getText().toString().trim();
+                        if (code.isEmpty() || code.length() < 6) {
+                            editTextPassword.setError("Enter valid code");
+                            editTextPassword.requestFocus();
+                            return;
+                        } else
+                            verifyVerificationCode(code);
+                    } else {
+
+                        mobile = editTextEmail.getText().toString().trim();
+                        if (mobile.isEmpty() || mobile.length() < 10) {
+                            editTextEmail.setError("Enter a valid mobile");
+                            editTextEmail.requestFocus();
+                            return;
+                        } else {
+                            mobile = mobile;
+
+                            sendVerificationCode(mobile);
+                            editTextPassword.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+        });
+        d.show();
+
+    }
+
+
+
+
+
+
+
+    private void setmCallBacks() {
+        mCallBacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                //Getting the code sent by SMS
+                String code = phoneAuthCredential.getSmsCode();
+
+                //sometime the code is not detected automatically
+                //in this case the code will be null
+                //so user has to manually enter the code
+                if (code != null) {
+                    editTextPassword.setText(code);
+                    //verifying the code
+                    verifyVerificationCode(code);
+                }
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                Toast.makeText(MainActivityRegister.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                flagCode = true;
+                mVerificationId = s;
+
+
+                //  mResendToken = forceResendingToken;
+            }
+        };
+    }
+
+    private void verifyVerificationCode(String code) {
+
+        //creating the credential
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+
+        //signing the user
+        signInWithPhoneAuthCredential(credential);
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(MainActivityRegister.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            registerInformation = null;
+                            mobile = mobile.substring(1);
+                            DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+                            ref3.orderByChild("email").equalTo("+972" + mobile).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot child : snapshot.getChildren()) {
+
+                                        registerInformation = child.getValue(RegisterInformation.class);
+                                    }
+                                    if (!snapshot.exists()) {
+
+                                        registerInformation = new RegisterInformation();
+                                        registerInformation.setEmail("+972" + mobile);
+                                        saveRegisterDataFireBase();
+                                    }
+                                    else {
+                                        d.dismiss();
+                                        Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
+
+                                        startActivity(intent);
+
+
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+
+                            //verification successful we will start the profile activity
+
+
+                        } else {
+
+                            //verification unsuccessful.. display an error message
+
+                            editTextPassword.setError("Enter valid code");
+                            editTextPassword.requestFocus();
+
+                            return;
+
+
+//                            Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_LONG);
+//                            snackbar.setAction("Dismiss", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//
+//                                }
+//                            });
+//                            snackbar.show();
+                        }
+                    }
+                });
+    }
+
+    private void saveRegisterDataFireBase() {
+
+
+        DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("RegisterInformation").push();
+
+
+        cardRef4.setValue(registerInformation);
+        d.dismiss();
+        Toast.makeText(MainActivityRegister.this, "הייתי פה", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
+
+        startActivity(intent);
+    }
+
+    private void sendVerificationCode(String mobile) {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
+                .setPhoneNumber("+972" + mobile)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(MainActivityRegister.this)
+                .setCallbacks(mCallBacks)
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
 
 }

@@ -156,10 +156,15 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
+        try {
             if(!firebaseUser.getEmail().toString().isEmpty())
                 email = firebaseUser.getEmail().toString();
             else   email = firebaseUser.getPhoneNumber().toString();
-        editTextPhone.setText(email);
+        }
+        catch (RuntimeException e){
+            email = firebaseUser.getPhoneNumber().toString();
+            editTextPhone.setText(email);
+        }
 
         // progressDialog = new ProgressDialog(this);
 

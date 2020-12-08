@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private String mVerificationId;
     private Boolean flagCode = false;
 
-
-    private EditText editTextEmail, editTextPassword, editTextStartdate, editTextEndData;
-    private Button loginButtonMain, loginButtonIn, searchButton, buttonSeeAll;
     private Dialog d;
+    private EditText editTextEmail, editTextPassword;
+    private EditText editTextStartdate, editTextEndData;
+    private Button loginButtonMain, loginButtonIn, searchButton, buttonSeeAll;
     private ProgressDialog progressDialog;
     private Button registerButton;
     private Button feedbekButton;
@@ -87,8 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        progressDialog = new ProgressDialog(this);
 
+        progressDialog = new ProgressDialog(this);
+        flagCode = false;
         setmCallBacks();
         mAuth = FirebaseAuth.getInstance();
         textVieeTittel = findViewById(R.id.title);
@@ -141,8 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 if (firebaseUser != null) {
                     Toast.makeText(MainActivity.this, "!!!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
                     mAuth.signOut();
-                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                    startActivity(intent);
+                  finish();
+                  startActivity(getIntent());
+                  overridePendingTransition(0,0);
 //                    loginButtonMain.setText("כניסה");
 //                    registerButton.setText("הרשמה");
 
@@ -320,6 +322,71 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    private void setLists() {
+        areaList.add("בחר אזור");
+        areaList.add("צפון");
+        areaList.add("מרכז");
+        areaList.add("דרום");
+
+        priceList.add("טווח מחיר");
+        priceList.add("50-150");
+        priceList.add("150-250");
+        priceList.add("250-350");
+        priceList.add("350-450");
+        priceList.add("450-550");
+        priceList.add("550+");
+    }
+
+
+    public void setSpinerArea() {
+        priceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                price = priceList.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                area = areaList.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    private void pass(Intent intent, CardCar cardCar) {
+        intent.putExtra("flag", true);
+        intent.putExtra("name", cardCar.getName());
+        intent.putExtra("typeCar", cardCar.getTypeCar());
+        intent.putExtra("area", cardCar.getArea());
+        intent.putExtra("city", cardCar.getCity());
+        intent.putExtra("dateEnd", cardCar.getDateEnd());
+        intent.putExtra("dateStart", cardCar.getDateStart());
+        intent.putExtra("id", cardCar.getId());
+        intent.putExtra("insurance", cardCar.getInsurance());
+        intent.putExtra("numImage", cardCar.getImageViewArrayListName().size());
+        intent.putExtra("permissionToPublish", cardCar.getPermissionToPublish());
+        intent.putExtra("phone", cardCar.getPhone());
+        intent.putExtra("priceDay", cardCar.getPriceDay());
+        intent.putExtra("remarks", cardCar.getRemarks());
+        intent.putExtra("yearCar", cardCar.getYearCar());
+        for (int i = 1; i <= cardCar.getImageViewArrayListName().size(); i++) {
+            intent.putExtra("image" + i, cardCar.getImageViewArrayListName().get(i - 1));
+        }
+
+
+    }
     private void dialod() {
         d = new Dialog(this);
         d.setContentView(R.layout.login);
@@ -328,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
         d.setCancelable(true);
         checkBox = (CheckBox) d.findViewById(R.id.checkBoxPhone);
         if (checkBox.isChecked()) {
-            checkBox.setChecked(false);
+           // checkBox.setChecked(false);
         }
 
         editTextEmail = (EditText) d.findViewById(R.id.loginEmail);
@@ -429,70 +496,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setLists() {
-        areaList.add("בחר אזור");
-        areaList.add("צפון");
-        areaList.add("מרכז");
-        areaList.add("דרום");
-
-        priceList.add("טווח מחיר");
-        priceList.add("50-150");
-        priceList.add("150-250");
-        priceList.add("250-350");
-        priceList.add("350-450");
-        priceList.add("450-550");
-        priceList.add("550+");
-    }
 
 
-    public void setSpinerArea() {
-        priceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                price = priceList.get(i);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                area = areaList.get(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-    }
-
-    private void pass(Intent intent, CardCar cardCar) {
-        intent.putExtra("flag", true);
-        intent.putExtra("name", cardCar.getName());
-        intent.putExtra("typeCar", cardCar.getTypeCar());
-        intent.putExtra("area", cardCar.getArea());
-        intent.putExtra("city", cardCar.getCity());
-        intent.putExtra("dateEnd", cardCar.getDateEnd());
-        intent.putExtra("dateStart", cardCar.getDateStart());
-        intent.putExtra("id", cardCar.getId());
-        intent.putExtra("insurance", cardCar.getInsurance());
-        intent.putExtra("numImage", cardCar.getImageViewArrayListName().size());
-        intent.putExtra("permissionToPublish", cardCar.getPermissionToPublish());
-        intent.putExtra("phone", cardCar.getPhone());
-        intent.putExtra("priceDay", cardCar.getPriceDay());
-        intent.putExtra("remarks", cardCar.getRemarks());
-        intent.putExtra("yearCar", cardCar.getYearCar());
-        for (int i = 1; i <= cardCar.getImageViewArrayListName().size(); i++) {
-            intent.putExtra("image" + i, cardCar.getImageViewArrayListName().get(i - 1));
-        }
-
-
-    }
 
     private void setmCallBacks() {
         mCallBacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
