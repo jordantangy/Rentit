@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,19 +39,17 @@ public class MainActivityRegister extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference cardRef;
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
-
     private FirebaseAuth mAuth;
-    private RegisterInformation registerInformation=null;
+    private RegisterInformation registerInformation = null;
 
-    private Button registerButton,buttonPhone,buttonSmsCode;
+    private Button registerButton, buttonPhone, buttonSmsCode;
     private Button returnButton;
-    private EditText editTextEmail,editTextPhone,editTextSmsCode;
+    private EditText editTextEmail, editTextPhone, editTextSmsCode;
     private EditText editTextPass1;
     private EditText editTextPass2;
-    private  String mVerificationId;
+    private String mVerificationId;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBacks;
     private String mobile;
-
 
 
     @Override
@@ -67,32 +66,30 @@ public class MainActivityRegister extends AppCompatActivity {
         textViewWarnPassword2 = findViewById(R.id.textWarnPassword2);
         textViewWarnAll = findViewById(R.id.textWarnAll);
 
-
         registerButton = findViewById(R.id.register);
-        buttonSmsCode=findViewById(R.id.buttonCodeGo);
-        buttonPhone=findViewById(R.id.buttonRegisterPhone);
+        buttonSmsCode = findViewById(R.id.buttonCodeGo);
+        buttonPhone = findViewById(R.id.buttonRegisterPhone);
         returnButton = findViewById(R.id.mainPage);
-        editTextSmsCode=findViewById(R.id.editTextSmsCode);
-        editTextPhone=findViewById(R.id.editTextPhone);
+        editTextSmsCode = findViewById(R.id.editTextSmsCode);
+        editTextPhone = findViewById(R.id.editTextPhone);
         editTextEmail = findViewById(R.id.email);
         editTextPass1 = findViewById(R.id.editTextTextPassword);
         editTextPass2 = findViewById(R.id.password2);
         buttonPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 mobile = editTextPhone.getText().toString().trim();
+                mobile = editTextPhone.getText().toString().trim();
 
-                if(mobile.isEmpty() || mobile.length() < 10){
+                if (mobile.isEmpty() || mobile.length() < 10) {
                     editTextPhone.setError("Enter a valid mobile");
-                   editTextPhone.requestFocus();
-                   return;
-                }
-                else{
-                    mobile=mobile;
+                    editTextPhone.requestFocus();
+                    return;
+                } else {
+                    mobile = mobile;
 //                    Intent intent = new Intent(MainActivityRegister.this, MainActivityPhone.class);
 //                    intent.putExtra("num", mobile);
 //                    startActivityForResult(intent, 0);
-                 sendVerificationCode(mobile);
+                    sendVerificationCode(mobile);
                     editTextSmsCode.setVisibility(View.VISIBLE);
                     buttonSmsCode.setVisibility(View.VISIBLE);
 
@@ -181,7 +178,6 @@ public class MainActivityRegister extends AppCompatActivity {
     }
 
 
-
     private void registerFirebase(String email, String password) {
         final String TAG = "tag";
         Toast.makeText(MainActivityRegister.this, email, Toast.LENGTH_SHORT).show();
@@ -212,13 +208,12 @@ public class MainActivityRegister extends AppCompatActivity {
         if (ErrWarn.errEmail(email)) {
             textViewWarnEmail.setText("אימייל לא קיים");
             textViewWarnEmail.setVisibility(View.VISIBLE);
-        }else {
-            String pass1 =""+ editTextPass1.getText().toString();
+        } else {
+            String pass1 = "" + editTextPass1.getText().toString();
             if (pass1.length() < 6) {
                 textViewWarnPassword1.setText("סיסמא קצרה מדי, לפחות 6 תווים");
                 textViewWarnPassword1.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 String pass2 = editTextPass2.getText().toString();
                 if (pass1.equals(pass2)) {
 
@@ -238,14 +233,13 @@ public class MainActivityRegister extends AppCompatActivity {
 
     private void sendVerificationCode(String mobile) {
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
-                .setPhoneNumber("+972"+mobile)
-                .setTimeout(60L , TimeUnit.SECONDS)
+                .setPhoneNumber("+972" + mobile)
+                .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(MainActivityRegister.this)
                 .setCallbacks(mCallBacks)
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
-
 
 
     private void verifyVerificationCode(String code) {
@@ -263,21 +257,20 @@ public class MainActivityRegister extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            mobile=mobile.substring(1);
+                            mobile = mobile.substring(1);
                             DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-                            ref3.orderByChild("email").equalTo("+972"+mobile).addListenerForSingleValueEvent(new ValueEventListener() {
+                            ref3.orderByChild("email").equalTo("+972" + mobile).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
                                     for (DataSnapshot child : snapshot.getChildren()) {
                                         registerInformation = child.getValue(RegisterInformation.class);
                                     }
-                                    if(registerInformation==null){
-                                        registerInformation=new RegisterInformation();
-                                        registerInformation.setEmail("+972"+mobile);
+                                    if (registerInformation == null) {
+                                        registerInformation = new RegisterInformation();
+                                        registerInformation.setEmail("+972" + mobile);
                                         saveRegisterDataFireBase();
-                                    }
-                                    else{
+                                    } else {
                                         Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
                                         startActivity(intent);
 

@@ -55,10 +55,15 @@ public class MainActivityPageUser extends AppCompatActivity {
         progressDialog.show();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
+try {
+    if(!firebaseUser.getEmail().toString().isEmpty())
+        email = firebaseUser.getEmail().toString();
+    else   email = firebaseUser.getPhoneNumber().toString();
+}
+catch (RuntimeException e){
+    email = firebaseUser.getPhoneNumber().toString();
+}
 
-            if(!firebaseUser.getEmail().toString().isEmpty())
-                email = firebaseUser.getEmail().toString();
-            else   email = firebaseUser.getPhoneNumber().toString();
         Toast.makeText(MainActivityPageUser.this, ""+email, Toast.LENGTH_LONG).show();
 
             if (email.equals("arielrentit@gmail.com")) {

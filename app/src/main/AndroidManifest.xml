@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MainActivityPhone"></activity>
         <activity android:name=".MainActivityManagementCardsApprov" />
         <activity android:name=".MainActivityFeedback" />
         <activity android:name=".MainActivityPageUser" />

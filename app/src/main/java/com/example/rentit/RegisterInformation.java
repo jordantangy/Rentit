@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 @IgnoreExtraProperties
 public class RegisterInformation {
-    private String email;
+    private String email="";
     private String password;
     private int id=1;
     protected List<CardCar> cardsUser = new ArrayList<>();
