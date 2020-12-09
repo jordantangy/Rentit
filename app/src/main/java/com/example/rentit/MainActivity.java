@@ -137,11 +137,12 @@ public class MainActivity extends AppCompatActivity {
         loginButtonMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mAuth = FirebaseAuth.getInstance();
                 firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     Toast.makeText(MainActivity.this, "!!!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
                     mAuth.signOut();
+
                   finish();
                   startActivity(getIntent());
                   overridePendingTransition(0,0);
@@ -534,15 +535,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void verifyVerificationCode(String code) {
-
+        PhoneAuthCredential credential;
         //creating the credential
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+        Toast.makeText(MainActivity.this, mVerificationId, Toast.LENGTH_LONG).show();
+      // editTextEmail.setText(mVerificationId);
+      try{
+           credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+      }
+      catch (RuntimeException e){
+          editTextPassword.setError("משו השתבש לחץ כניסה שוב");
+          editTextPassword.requestFocus();
+       return;
+
+      }
 
         //signing the user
-        signInWithPhoneAuthCredential(credential);
+      signInWithPhoneAuthCredential(credential);
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        mAuth = FirebaseAuth.getInstance();
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
@@ -566,7 +578,7 @@ public class MainActivity extends AppCompatActivity {
                                         saveRegisterDataFireBase();
                                     }
                                     else {
-                                        d.dismiss();
+                                       d.dismiss();
                                         Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
 
                                         startActivity(intent);
@@ -619,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
         cardRef4.setValue(registerInformation);
         d.dismiss();
         Toast.makeText(MainActivity.this, "הייתי פה", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
 
         startActivity(intent);
     }
