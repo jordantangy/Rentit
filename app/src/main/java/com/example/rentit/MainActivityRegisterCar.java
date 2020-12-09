@@ -224,7 +224,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressDialog.setMessage("Registering Please Wait...");
-                progressDialog.show();
 
                 if (flagManagementCardsApprov) {
                     cardsApprov();
@@ -641,6 +640,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     public void retrieveData() {
         //  progressDialog = new ProgressDialog(this);
 
+        progressDialog.show();
 
         cardRef = FirebaseDatabase.getInstance().getReference();
         cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");

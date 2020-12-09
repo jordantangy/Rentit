@@ -38,6 +38,16 @@
             android:layout_marginTop="128dp"
             app:layout_constraintEnd_toEndOf="@+id/publish" />
 
+        <TextView
+            android:id="@+id/textViewExplanationPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="לחץ על ברטיס בשביל הצגה ועריכה"
+            app:layout_constraintEnd_toEndOf="@+id/publish"
+            app:layout_constraintStart_toStartOf="@+id/pageMain2"
+            app:layout_constraintTop_toBottomOf="@+id/pageMain2" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

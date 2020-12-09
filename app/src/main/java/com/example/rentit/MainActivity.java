@@ -142,10 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 if (firebaseUser != null) {
                     Toast.makeText(MainActivity.this, "!!!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
                     mAuth.signOut();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
 
-                  finish();
-                  startActivity(getIntent());
-                  overridePendingTransition(0,0);
 //                    loginButtonMain.setText("כניסה");
 //                    registerButton.setText("הרשמה");
 
