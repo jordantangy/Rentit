@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private String mobile;
     private String mVerificationId;
     private Boolean flagCode = false;
-
+int x;
     private Dialog d;
     private EditText editTextEmail, editTextPassword;
     private EditText editTextStartdate, editTextEndData;
