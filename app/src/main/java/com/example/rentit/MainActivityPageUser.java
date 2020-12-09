@@ -3,9 +3,9 @@ package com.example.rentit;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,8 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,21 +21,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 public class MainActivityPageUser extends AppCompatActivity {
     private Button cardButton;
     private Button pageMainButton;
-    private ToyAdapter toyAdapter;
+    private CardCarAdapter cardCarAdapter;
     private ListView lv;
     private DatabaseReference cardRef2;
-    private TextView textView;
+    private TextView textViewExplanation;
    private ProgressDialog progressDialog;
 
     private FirebaseAuth mAuth;
@@ -56,7 +47,8 @@ public class MainActivityPageUser extends AppCompatActivity {
         progressDialog.show();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
-try {
+
+        try {
     if(!firebaseUser.getEmail().toString().isEmpty())
         email = firebaseUser.getEmail().toString();
     else   email = firebaseUser.getPhoneNumber().toString();
@@ -77,6 +69,7 @@ catch (RuntimeException e){
 
             // progressDialog.show();
             cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+                @SuppressLint("ResourceAsColor")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -87,10 +80,10 @@ catch (RuntimeException e){
 
                         // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
 
-                        toyAdapter = new ToyAdapter(MainActivityPageUser.this, 0, 0, registerInformation.getCardsUser());
+                        cardCarAdapter = new CardCarAdapter(MainActivityPageUser.this, 0, 0, registerInformation.getCardsUser());
                         //phase 4 reference to listview
                         lv = (ListView) findViewById(R.id.lv);
-                        lv.setAdapter(toyAdapter);
+                        lv.setAdapter(cardCarAdapter);
 
                         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
@@ -103,6 +96,9 @@ catch (RuntimeException e){
                         });
                     }
                     else{
+                   textViewExplanation=     findViewById(R.id.textViewExplanationPage);
+                        textViewExplanation.setText("אין כרטיסים להצגה");
+                        textViewExplanation.setTextColor( -65536);
 
                     }
 

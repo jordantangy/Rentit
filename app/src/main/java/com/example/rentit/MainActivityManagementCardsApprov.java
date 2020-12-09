@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,37 +24,41 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
     private DatabaseReference cardRef2;
     private List<CardCar> arrayListCards;
     private RegisterInformation registerInformation;
-    private ToyAdapter toyAdapter = null;
+    private CardCarAdapter cardCarAdapter = null;
     private ListView lv1;
-    private Button buttonMainReturn,buttonRejection,buttonApprov,buttonWitheApprov;
+    private Button buttonMainReturn, buttonRejection, buttonApprov, buttonWitheApprov;
+    private TextView textViewRejection, textViewApprov, textViewWitheApprov;
+    private boolean flagNum=true;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_management_cards_approv);
-
-        buttonApprov=findViewById(R.id.buttonApprov);
-        buttonWitheApprov=findViewById(R.id.buttonWhite);
-        buttonRejection=findViewById(R.id.buttonRejection);
-        buttonMainReturn=findViewById(R.id.buttonMainReturn);
-
+        textViewWitheApprov = findViewById(R.id.textViewNumWaitAprove);
+        textViewApprov = findViewById(R.id.textViewNumAprove);
+        textViewRejection= findViewById(R.id.textViewNumReject);
+        buttonApprov = findViewById(R.id.buttonApprov);
+        buttonWitheApprov = findViewById(R.id.buttonWhite);
+        buttonRejection = findViewById(R.id.buttonRejection);
+        buttonMainReturn = findViewById(R.id.buttonMainReturn);
+        numCards();
         buttonApprov.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playCards("CardsApprov");
+                playCards2("CardsApprov");
             }
         });
         buttonWitheApprov.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playCards("CardsWaitApprov");
+                playCards2("CardsWaitApprov");
             }
         });
         buttonRejection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playCards("CardsRejection");
+                playCards2("CardsRejection");
 
             }
         });
@@ -66,14 +71,20 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         });
 
 
-
-        playCards("CardsWaitApprov");
-
+        playCards2("CardsWaitApprov");
 
 
     }
 
-    private void playCards(String type) {
+    private void numCards() {
+        playCards("CardsApprov");
+
+        playCards("CardsWaitApprov");
+
+        playCards("CardsRejection");
+    }
+
+    private void playCards(final String type) {
         cardRef2 = FirebaseDatabase.getInstance().getReference(type);
         cardRef2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -85,13 +96,48 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
                     cardCar = child.getValue(CardCar.class);
                     arrayListCards.add(cardCar);
                 }
+
+                   int numCards = arrayListCards.size();
+                    if (type.equals("CardsWaitApprov"))
+                        textViewWitheApprov.setText(""+numCards);
+                    if (type.equals("CardsRejection"))
+                        textViewRejection.setText(""+numCards);
+                    if (type.equals("CardsApprov"))
+                        textViewApprov.setText(""+numCards);
+
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void playCards2(final String type) {
+        cardRef2 = FirebaseDatabase.getInstance().getReference(type);
+        cardRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                arrayListCards = new ArrayList();
+                CardCar cardCar;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                    cardCar = child.getValue(CardCar.class);
+                    arrayListCards.add(cardCar);
+                }
+
                 if (arrayListCards.size() > 0) {
                     // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
 
-                    toyAdapter = new ToyAdapter(MainActivityManagementCardsApprov.this, 0, 0, arrayListCards);
+                    cardCarAdapter = new CardCarAdapter(MainActivityManagementCardsApprov.this, 0, 0, arrayListCards);
                     //phase 4 reference to listview
                     lv1 = (ListView) findViewById(R.id.lvMange);
-                    lv1.setAdapter(toyAdapter);
+                    lv1.setAdapter(cardCarAdapter);
 
                     lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override

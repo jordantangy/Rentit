@@ -6,64 +6,98 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".MainActivityManagementCardsApprov">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-
-    <ListView
-        android:id="@+id/lvMange"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
-
-    <Button
-        android:id="@+id/buttonApprov"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:text="אושרו"
-        app:layout_constraintEnd_toStartOf="@+id/buttonWhite"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonRejection"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:text="סורבו"
-        app:layout_constraintEnd_toStartOf="@+id/buttonApprov"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonWhite"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:text="מחכים לאישור"
-        app:layout_constraintEnd_toStartOf="@+id/buttonMainReturn"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonMainReturn"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:text="לעמוד הראשי"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ListView
+            android:id="@+id/lvMange"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="80dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
+
+        <Button
+            android:id="@+id/buttonApprov"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:text="אושרו"
+            app:layout_constraintEnd_toStartOf="@+id/buttonWhite"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonRejection"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:text="סורבו"
+            app:layout_constraintEnd_toStartOf="@+id/buttonApprov"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonWhite"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:text="מחכים לאישור"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMainReturn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonMainReturn"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="לעמוד הראשי"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewNumWaitAprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="20"
+            android:textColor="#FF9800"
+            app:layout_constraintEnd_toEndOf="@+id/buttonWhite"
+            app:layout_constraintStart_toStartOf="@+id/buttonWhite"
+            app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
+
+        <TextView
+            android:id="@+id/textViewNumAprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="700 "
+            android:textColor="#53CA53"
+            app:layout_constraintEnd_toEndOf="@+id/buttonApprov"
+            app:layout_constraintStart_toStartOf="@+id/buttonApprov"
+            app:layout_constraintTop_toBottomOf="@+id/buttonApprov" />
+
+        <TextView
+            android:id="@+id/textViewNumReject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="50"
+            android:textColor="#EA2C2C"
+            app:layout_constraintEnd_toEndOf="@+id/buttonRejection"
+            app:layout_constraintStart_toStartOf="@+id/buttonRejection"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRejection" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

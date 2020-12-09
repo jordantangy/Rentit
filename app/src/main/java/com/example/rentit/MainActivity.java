@@ -28,7 +28,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -64,14 +63,14 @@ int x;
     private DatabaseReference cardRef;
 
     private TextView textViewWarnEmail, textViewWarnPassword, textViewWarnAll, textVieeTittel;
-
+int y;
 
     private RegisterInformation registerInformation;
     private RegisterInformation registerInformation1;
 
-    private ToyAdapter toyAdapter = null;
+    private CardCarAdapter cardCarAdapter = null;
     private ListView lv1;
-    private ToyAdapter toyAdapter1;
+    private CardCarAdapter toyAdapter1;
     private ListView lv11;
     private String area = "";
     private String price = "";
@@ -201,11 +200,11 @@ int x;
                             "" + editTextEndData.getText().toString(), cardCar);
                 }
                 if (arrayListCards2.size() > 0) {
-                    if (toyAdapter != null) toyAdapter.clear();
+                    if (cardCarAdapter != null) cardCarAdapter.clear();
 
                     // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
                     buttonSeeAll.setVisibility(View.VISIBLE);
-                    toyAdapter1 = new ToyAdapter(MainActivity.this, 0, 0, arrayListCards2);
+                    toyAdapter1 = new CardCarAdapter(MainActivity.this, 0, 0, arrayListCards2);
                     //phase 4 reference to listview
                     lv11 = (ListView) findViewById(R.id.lvMange);
                     lv11.setAdapter(toyAdapter1);
@@ -293,10 +292,10 @@ int x;
                     // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
                     buttonSeeAll.setVisibility(View.GONE);
 
-                    toyAdapter = new ToyAdapter(MainActivity.this, 0, 0, arrayListCards);
+                    cardCarAdapter = new CardCarAdapter(MainActivity.this, 0, 0, arrayListCards);
                     //phase 4 reference to listview
                     lv1 = (ListView) findViewById(R.id.lvMange);
-                    lv1.setAdapter(toyAdapter);
+                    lv1.setAdapter(cardCarAdapter);
 
                     lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override

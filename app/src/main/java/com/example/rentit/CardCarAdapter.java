@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 
-public class ToyAdapter extends ArrayAdapter<CardCar> {
+public class CardCarAdapter extends ArrayAdapter<CardCar> {
 
     private ImageView ivProduct;
     private Context context;
@@ -37,7 +37,7 @@ public class ToyAdapter extends ArrayAdapter<CardCar> {
     private View view;
 
 
-    public ToyAdapter(Context context, int resource, int textViewResourceId, List<CardCar> objects) {
+    public CardCarAdapter(Context context, int resource, int textViewResourceId, List<CardCar> objects) {
         super(context, resource, textViewResourceId, objects);
 
         this.context = context;
