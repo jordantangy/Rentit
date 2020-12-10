@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 public class MainActivityRegister extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference cardRef;
-    int x;
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
     private FirebaseAuth mAuth;
     private RegisterInformation registerInformation = null;
