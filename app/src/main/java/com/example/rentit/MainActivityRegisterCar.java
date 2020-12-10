@@ -10,8 +10,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -25,10 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,14 +37,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 
 public class MainActivityRegisterCar extends AppCompatActivity {
@@ -57,12 +49,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
 
     private DatabaseReference cardRef2;
-
-
     private DatabaseReference cardRef;
 
     private ProgressDialog progressDialog;
-
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
@@ -73,12 +62,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
 
     private CardCar cardCar = new CardCar();
-    ArrayList<Uri> arrayListImageViewUri = new ArrayList<>();
-    ArrayList<String> areaList = new ArrayList<>();
-    ArrayList<ImageView> arrayListImageView = new ArrayList<>();
+    private ArrayList<Uri> arrayListImageViewUri = new ArrayList<>();
+    private ArrayList<String> areaList = new ArrayList<>();
+    private ArrayList<ImageView> arrayListImageView = new ArrayList<>();
     private ImageView imageViewTemp = null;
     private ImageView imageView1;
-    int k;
     private ImageView imageView2;
     private ImageView imageView3;
     private ImageView imageView4;
@@ -157,11 +145,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         try {
-            if(!firebaseUser.getEmail().toString().isEmpty())
+            if (!firebaseUser.getEmail().toString().isEmpty())
                 email = firebaseUser.getEmail().toString();
-            else   email = firebaseUser.getPhoneNumber().toString();
-        }
-        catch (RuntimeException e){
+            else {
+                email = firebaseUser.getPhoneNumber().toString();
+                editTextPhone.setText(email);
+            }
+        } catch (RuntimeException e) {
             email = firebaseUser.getPhoneNumber().toString();
             editTextPhone.setText(email);
         }
@@ -177,18 +167,19 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         buttonRegister = findViewById(R.id.buttonReturnMainPage);
 
         if (flagManagementCardsApprov) {
+            editTextRemarks.setHint("הסבר סירוב");
             editTextRejection = findViewById(R.id.editTextRejection);
             if (cardCarEdit.getPermissionToPublish() == 0) {
                 buttonRegister.setText("אישור");
                 buttonDelete.setText("סירוב");
                 buttonDelete.setVisibility(View.VISIBLE);
             } else {
-                email=cardCarEdit.getEmail();
+                email = cardCarEdit.getEmail();
                 buttonDelete.setText("מחיקת כרטיס");
                 buttonDelete.setVisibility(View.VISIBLE);
                 buttonRegister.setVisibility(View.GONE);
             }
-                buttonMyPage.setText("לעמוד שלי");
+            buttonMyPage.setText("לעמוד שלי");
 
         }
         if (flagEdit) {
@@ -232,7 +223,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
                     setWarnGone();
                     setCardDetails();
-                   if (!flag) retrieveData();
+                    if (!flag) retrieveData();
                 }
 
             }
@@ -285,15 +276,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         buttonMyPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  if (flagMain) {
-                //    Intent intent = new Intent(MainActivityRegisterCar.this, MainActivity.class);
-               //     startActivity(intent);
-             //   } else {
-                    Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                    startActivity(intent);
-               // }
+
+                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+                startActivity(intent);
+
             }
         });
+
     }
 
     private void cardsApprov() {
@@ -309,20 +298,19 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         ref3.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
-                editTextRemarks.setText(snapshot.toString());
+                // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
                     key2 = child.getKey();
                 }
-                editTextRemarks.setText("lll" + registerInformation.getEmail());
+                //  editTextRemarks.setText("lll" + registerInformation.getEmail());
 
                 List<CardCar> cardCarList = registerInformation.getCardsUser();
                 for (int j = 0; j < cardCarList.size(); j++) {
                     if (cardCarList.get(j).getId() == cardCarEdit.getId()) {
                         registerInformation.getCardsUser().get(j).setPermissionToPublish(1);
                         registerInformation.getCardsUser().get(j).setKey(keyApprov);
-                        editTextRemarks.setText("lll" + registerInformation.getCardsUser().get(j).getPermissionToPublish());
+                        // editTextRemarks.setText("lll" + registerInformation.getCardsUser().get(j).getPermissionToPublish());
                         break;
                     }
                 }
@@ -344,6 +332,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
     private void cardsRejection() {
+        cardCarEdit.setRejection(editTextRemarks.getText().toString());
         cardCarEdit.setPermissionToPublish(2);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("CardsRejection").push();
         final String keyRejection = ref.getKey();
@@ -358,25 +347,23 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardRef2.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
-                editTextRemarks.setText(snapshot.toString());
+                // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
+                //   editTextRemarks.setText(snapshot.toString());
                 for (DataSnapshot child : snapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
                     key2 = child.getKey();
                 }
-                editTextRemarks.setText("lll" + registerInformation.getEmail());
-                editTextCity.setText("lll" + cardCarEdit.getEmail());
-                editTextInsurance.setText("lll" + cardCarEdit.getId());
+
 
 
                 List<CardCar> cardCarList = registerInformation.getCardsUser();
                 for (int j = 0; j < cardCarList.size(); j++) {
-                    editTextTypeCar.setText("lll" + "xxxxx");
-
                     if (cardCarList.get(j).getId() == cardCarEdit.getId()) {
                         registerInformation.getCardsUser().get(j).setPermissionToPublish(2);
+                        registerInformation.getCardsUser().get(j).setRejection(
+                                editTextRemarks.getText().toString());
+
                         registerInformation.getCardsUser().get(j).setKey(keyRejection);
-                        editTextRemarks.setText("lll" + registerInformation.getCardsUser().get(j).getPermissionToPublish());
                         break;
                     }
                 }
@@ -423,6 +410,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         editTextDateStart.setText(cardCarEdit.getDateStart());
         editTextDateEnd.setText(cardCarEdit.getDateEnd());
         editTextRemarks.setText(cardCarEdit.getRemarks());
+        if (cardCarEdit.getPermissionToPublish() == 2 && cardCarEdit.getRejection().length() > 0) {
+            editTextRemarks.setText("סורב מפני: " + cardCarEdit.getRejection());
+            editTextRemarks.setTextColor(-65536);
+        }
     }
 
     private void setEditTxtId() {
@@ -473,8 +464,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         textViewWarnRemarker = findViewById(R.id.warnRemarker);
         textViewWarnTypeCar = findViewById(R.id.warnTypeCar);
         textViewWarnYearCar = findViewById(R.id.warnYearCar);
-
-
     }
 
     public void downloadFile(Context context, String fileName, String fileExtension, String destinationDirectory, String url) {
@@ -655,9 +644,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     key2 = child.getKey();
 
                 }
-              cardCar.setId(registerInformation.getId());
-              upladUriFirebase();
-               // Toast.makeText(MainActivityRegisterCar.this, dataSnapshot.toString(), Toast.LENGTH_LONG).show();
+                cardCar.setId(registerInformation.getId());
+                upladUriFirebase();
+                // Toast.makeText(MainActivityRegisterCar.this, dataSnapshot.toString(), Toast.LENGTH_LONG).show();
 
             }
 
@@ -751,7 +740,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 //   Toast.makeText(MainActivityRegisterCar.this, "צלחה"+riversRef.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
 
             }
-     }
+        }
 
 
         // finish();
@@ -776,6 +765,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCarEdit.setInsurance(bundle.getString("insurance"));
         cardCarEdit.setId(bundle.getInt("id"));
         cardCarEdit.setPermissionToPublish(bundle.getInt("permissionToPublish"));
+        cardCarEdit.setRejection(bundle.getString("rejection"));
 
         for (int i = 1; i <= cardCarEdit.getNumImage(); i++)
             cardCarEdit.addImageViewArrayListName(bundle.getString("image" + i));
@@ -783,7 +773,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
     public void deleteCard() {
-        Toast.makeText(MainActivityRegisterCar.this,email+"lklk", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivityRegisterCar.this, email + "lklk", Toast.LENGTH_SHORT).show();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("RegisterInformation");
 
@@ -801,7 +791,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 for (int i = 0; i < registerInformation.getCardsUser().size(); i++) {
                     if (cardCarEdit.getId() == registerInformation.getCardsUser().get(i).getId()) {
                         registerInformation.removeCardCar(i);
-                       // Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }

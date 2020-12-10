@@ -199,12 +199,13 @@
             android:id="@+id/remarksRegisterCar3"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="21dp"
             android:ems="8"
             android:hint="הוסף הערות כגון: לפחות להשכרה של שלושה ימים"
             android:inputType="textPersonName"
             android:textSize="12dp"
-            app:layout_constraintEnd_toEndOf="@+id/startDate23"
+            app:layout_constraintEnd_toEndOf="@+id/endDate23"
+            app:layout_constraintStart_toStartOf="@+id/startDate23"
             app:layout_constraintTop_toBottomOf="@+id/startDate23" />
 
         <Button
@@ -376,7 +377,6 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/buttonMyPage"
             app:layout_constraintEnd_toEndOf="@+id/buttonMyPage" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

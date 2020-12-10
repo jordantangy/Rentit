@@ -3,7 +3,6 @@ package com.example.rentit;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,13 +17,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -34,7 +30,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivityRegister extends AppCompatActivity {
@@ -43,7 +38,7 @@ public class MainActivityRegister extends AppCompatActivity {
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
     private FirebaseAuth mAuth;
     private RegisterInformation registerInformation = null;
-    private Button  loginButtonIn;
+    private Button loginButtonIn;
     private Button registerButton, buttonPhone, buttonSmsCode;
     private Button returnButton;
     private EditText editTextEmail, editTextPhone, editTextSmsCode;
@@ -58,7 +53,7 @@ public class MainActivityRegister extends AppCompatActivity {
     private Boolean flagCode = false;
 
     private Dialog d;
-    private EditText  editTextPassword;
+    private EditText editTextPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,23 +82,6 @@ public class MainActivityRegister extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialod();
-//                mobile = editTextPhone.getText().toString().trim();
-//
-//                if (mobile.isEmpty() || mobile.length() < 10) {
-//                    editTextPhone.setError("Enter a valid mobile");
-//                    editTextPhone.requestFocus();
-//                    return;
-//                } else {
-//                    mobile = mobile;
-////                    Intent intent = new Intent(MainActivityRegister.this, MainActivityPhone.class);
-////                    intent.putExtra("num", mobile);
-////                    startActivityForResult(intent, 0);
-//                    sendVerificationCode(mobile);
-//                    editTextSmsCode.setVisibility(View.VISIBLE);
-//                    buttonSmsCode.setVisibility(View.VISIBLE);
-
-
-              //  }
             }
         });
 
@@ -125,8 +103,6 @@ public class MainActivityRegister extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 register();
-
-                //   saveRegisterDataFireBase();
             }
         });
         returnButton.setOnClickListener(new View.OnClickListener() {
@@ -140,48 +116,10 @@ public class MainActivityRegister extends AppCompatActivity {
 
     }
 
-    private void setmCallBacks1() {
-        mCallBacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-                //Getting the code sent by SMS
-                String code = phoneAuthCredential.getSmsCode();
-
-                //sometime the code is not detected automatically
-                //in this case the code will be null
-                //so user has to manually enter the code
-                if (code != null) {
-                    editTextSmsCode.setText(code);
-                    //verifying the code
-                    verifyVerificationCode(code);
-                }
-            }
-
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
-                Toast.makeText(MainActivityRegister.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                super.onCodeSent(s, forceResendingToken);
-                mVerificationId = s;
-
-
-                //  mResendToken = forceResendingToken;
-            }
-        };
-    }
 
     private void saveRegisterDataFireBaseEmail() {
-
-
         cardRef = database.getReference("RegisterInformation").push();
-
-
         cardRef.setValue(registerInformation);
-
-        Toast.makeText(MainActivityRegister.this, "הייתי פה", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
         startActivity(intent);
     }
@@ -240,87 +178,8 @@ public class MainActivityRegister extends AppCompatActivity {
         }
     }
 
-    private void sendVerificationCode1(String mobile) {
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
-                .setPhoneNumber("+972" + mobile)
-                .setTimeout(60L, TimeUnit.SECONDS)
-                .setActivity(MainActivityRegister.this)
-                .setCallbacks(mCallBacks)
-                .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
 
 
-    private void verifyVerificationCode1(String code) {
-        //creating the credential
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-
-        //signing the user
-        signInWithPhoneAuthCredential1(credential);
-    }
-
-    private void signInWithPhoneAuthCredential1(PhoneAuthCredential credential) {
-
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(MainActivityRegister.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            mobile = mobile.substring(1);
-                            DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-                            ref3.orderByChild("email").equalTo("+972" + mobile).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
-                                    for (DataSnapshot child : snapshot.getChildren()) {
-                                        registerInformation = child.getValue(RegisterInformation.class);
-                                    }
-                                    if (registerInformation == null) {
-                                        registerInformation = new RegisterInformation();
-                                        registerInformation.setEmail("+972" + mobile);
-                                        saveRegisterDataFireBase();
-                                    } else {
-                                        Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
-                                        startActivity(intent);
-
-
-                                    }
-
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
-
-                            //verification successful we will start the profile activity
-
-
-                        } else {
-
-                            //verification unsuccessful.. display an error message
-
-                            String message = "Somthing is wrong, we will fix it soon...";
-
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                message = "Invalid code entered...";
-                            }
-
-//                            Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_LONG);
-//                            snackbar.setAction("Dismiss", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//
-//                                }
-//                            });
-//                            snackbar.show();
-                        }
-                    }
-                });
-    }
     private void dialod() {
 
         d = new Dialog(this);
@@ -330,7 +189,7 @@ public class MainActivityRegister extends AppCompatActivity {
         d.setCancelable(true);
         checkBox = (CheckBox) d.findViewById(R.id.checkBoxPhone);
 
-             checkBox.setChecked(true);
+        checkBox.setChecked(true);
 
 
         editTextEmail = (EditText) d.findViewById(R.id.loginEmail);
@@ -352,40 +211,34 @@ public class MainActivityRegister extends AppCompatActivity {
             public void onClick(View view) {
 
 
+                if (flagCode) {
+                    String code = editTextPassword.getText().toString().trim();
+                    if (code.isEmpty() || code.length() < 6) {
+                        editTextPassword.setError("Enter valid code");
+                        editTextPassword.requestFocus();
+                        return;
+                    } else
+                        verifyVerificationCode(code);
+                } else {
 
-                    if (flagCode) {
-                        String code = editTextPassword.getText().toString().trim();
-                        if (code.isEmpty() || code.length() < 6) {
-                            editTextPassword.setError("Enter valid code");
-                            editTextPassword.requestFocus();
-                            return;
-                        } else
-                            verifyVerificationCode(code);
+                    mobile = editTextEmail.getText().toString().trim();
+                    if (mobile.isEmpty() || mobile.length() < 10) {
+                        editTextEmail.setError("Enter a valid mobile");
+                        editTextEmail.requestFocus();
+                        return;
                     } else {
+                        mobile = mobile;
 
-                        mobile = editTextEmail.getText().toString().trim();
-                        if (mobile.isEmpty() || mobile.length() < 10) {
-                            editTextEmail.setError("Enter a valid mobile");
-                            editTextEmail.requestFocus();
-                            return;
-                        } else {
-                            mobile = mobile;
-
-                            sendVerificationCode(mobile);
-                            editTextPassword.setVisibility(View.VISIBLE);
-                        }
+                        sendVerificationCode(mobile);
+                        editTextPassword.setVisibility(View.VISIBLE);
                     }
                 }
+            }
 
         });
         d.show();
 
     }
-
-
-
-
-
 
 
     private void setmCallBacks() {
@@ -424,8 +277,18 @@ public class MainActivityRegister extends AppCompatActivity {
 
     private void verifyVerificationCode(String code) {
 
+        PhoneAuthCredential credential;
         //creating the credential
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+        Toast.makeText(MainActivityRegister.this, mVerificationId, Toast.LENGTH_LONG).show();
+        // editTextEmail.setText(mVerificationId);
+        try {
+            credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+        } catch (RuntimeException e) {
+            editTextPassword.setError("משו השתבש לחץ כניסה שוב");
+            editTextPassword.requestFocus();
+            return;
+
+        }
 
         //signing the user
         signInWithPhoneAuthCredential(credential);
@@ -453,8 +316,7 @@ public class MainActivityRegister extends AppCompatActivity {
                                         registerInformation = new RegisterInformation();
                                         registerInformation.setEmail("+972" + mobile);
                                         saveRegisterDataFireBase();
-                                    }
-                                    else {
+                                    } else {
                                         d.dismiss();
                                         Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
 
@@ -472,9 +334,7 @@ public class MainActivityRegister extends AppCompatActivity {
                                 }
                             });
 
-
                             //verification successful we will start the profile activity
-
 
                         } else {
 
@@ -484,32 +344,16 @@ public class MainActivityRegister extends AppCompatActivity {
                             editTextPassword.requestFocus();
 
                             return;
-
-
-//                            Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_LONG);
-//                            snackbar.setAction("Dismiss", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//
-//                                }
-//                            });
-//                            snackbar.show();
                         }
                     }
                 });
     }
 
     private void saveRegisterDataFireBase() {
-
-
         DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("RegisterInformation").push();
-
-
         cardRef4.setValue(registerInformation);
         d.dismiss();
-        Toast.makeText(MainActivityRegister.this, "הייתי פה", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivityRegister.this, MainActivityPageUser.class);
-
         startActivity(intent);
     }
 

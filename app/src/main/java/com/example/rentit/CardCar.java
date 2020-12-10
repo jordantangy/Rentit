@@ -24,6 +24,7 @@ public class CardCar {
     private String dateStart="";
     private String dateEnd="";
     private String remarks="";
+    private String rejection="";
     private List<String> imageViewArrayListName=new ArrayList<>();
 
 
@@ -47,25 +48,10 @@ public class CardCar {
         this.dateStart = c.dateStart;
         this.dateEnd = c.dateEnd;
         this.remarks = c.remarks;
+        this.rejection=c.rejection;
         this.imageViewArrayListName = c.imageViewArrayListName;
     }
 
-    public CardCar(int id, int permissionToPublish, String name, String typeCar, String yearCar, String phone, String priceDay, String insurance, String area, String city, String dateStart, String dateEnd, String remarks, List<String> imageViewArrayListName) {
-        this.id = id;
-        this.permissionToPublish = permissionToPublish;
-        this.name = name;
-        this.typeCar = typeCar;
-        this.yearCar = yearCar;
-        this.phone = phone;
-        this.priceDay = priceDay;
-        this.insurance = insurance;
-        this.area = area;
-        this.city = city;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
-        this.remarks = remarks;
-        this.imageViewArrayListName = imageViewArrayListName;
-    }
 
     public String getEmail() {
         return email;
@@ -212,5 +198,13 @@ public class CardCar {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getRejection() {
+        return rejection;
+    }
+
+    public void setRejection(String rejection) {
+        this.rejection = rejection;
     }
 }

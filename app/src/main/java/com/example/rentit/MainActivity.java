@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private String mobile;
     private String mVerificationId;
     private Boolean flagCode = false;
-int x;
     private Dialog d;
     private EditText editTextEmail, editTextPassword;
     private EditText editTextStartdate, editTextEndData;
@@ -63,10 +62,8 @@ int x;
     private DatabaseReference cardRef;
 
     private TextView textViewWarnEmail, textViewWarnPassword, textViewWarnAll, textVieeTittel;
-int y;
 
     private RegisterInformation registerInformation;
-    private RegisterInformation registerInformation1;
 
     private CardCarAdapter cardCarAdapter = null;
     private ListView lv1;
@@ -144,8 +141,6 @@ int y;
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
 
-//                    loginButtonMain.setText("כניסה");
-//                    registerButton.setText("הרשמה");
 
                 } else
                     dialod();
@@ -201,11 +196,10 @@ int y;
                 }
                 if (arrayListCards2.size() > 0) {
                     if (cardCarAdapter != null) cardCarAdapter.clear();
+                    //phase 4 reference to listview
 
-                    // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
                     buttonSeeAll.setVisibility(View.VISIBLE);
                     toyAdapter1 = new CardCarAdapter(MainActivity.this, 0, 0, arrayListCards2);
-                    //phase 4 reference to listview
                     lv11 = (ListView) findViewById(R.id.lvMange);
                     lv11.setAdapter(toyAdapter1);
 
@@ -221,6 +215,7 @@ int y;
                         }
                     });
                 } else textViewWarnSearch.setVisibility(View.VISIBLE);
+                progressDialog.dismiss();
 
 
             }
@@ -230,7 +225,6 @@ int y;
 
             }
         });
-        progressDialog.dismiss();
     }
 
     private void searchMatch(String area, String price, String startDate, String endDate, CardCar card) {
@@ -273,8 +267,6 @@ int y;
         textViewWarnSearch.setVisibility(View.GONE);
 
         cardRef2 = FirebaseDatabase.getInstance().getReference("CardsApprov");
-        //   Toast.makeText(MainActivityPageUser.this, email, Toast.LENGTH_LONG).show();
-        // textViewTitle.setText("jjjjj");
 
         cardRef2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -365,7 +357,7 @@ int y;
     }
 
     private void pass(Intent intent, CardCar cardCar) {
-        intent.putExtra("flag", true);
+        intent.putExtra("flagEdit", true);
         intent.putExtra("name", cardCar.getName());
         intent.putExtra("typeCar", cardCar.getTypeCar());
         intent.putExtra("area", cardCar.getArea());
@@ -374,12 +366,16 @@ int y;
         intent.putExtra("dateStart", cardCar.getDateStart());
         intent.putExtra("id", cardCar.getId());
         intent.putExtra("insurance", cardCar.getInsurance());
-        intent.putExtra("numImage", cardCar.getImageViewArrayListName().size());
+        intent.putExtra("numImage", cardCar.getNumImage());
         intent.putExtra("permissionToPublish", cardCar.getPermissionToPublish());
         intent.putExtra("phone", cardCar.getPhone());
         intent.putExtra("priceDay", cardCar.getPriceDay());
         intent.putExtra("remarks", cardCar.getRemarks());
         intent.putExtra("yearCar", cardCar.getYearCar());
+        intent.putExtra("email", cardCar.getEmail());
+        intent.putExtra("key", cardCar.getKey());
+        intent.putExtra("rejection", cardCar.getRejection());
+
         for (int i = 1; i <= cardCar.getImageViewArrayListName().size(); i++) {
             intent.putExtra("image" + i, cardCar.getImageViewArrayListName().get(i - 1));
         }
@@ -393,9 +389,9 @@ int y;
 
         d.setCancelable(true);
         checkBox = (CheckBox) d.findViewById(R.id.checkBoxPhone);
-        if (checkBox.isChecked()) {
-           // checkBox.setChecked(false);
-        }
+//        if (checkBox.isChecked()) {
+//           // checkBox.setChecked(false);
+//        }
 
         editTextEmail = (EditText) d.findViewById(R.id.loginEmail);
         editTextPassword = (EditText) d.findViewById(R.id.loginPassword);
@@ -443,7 +439,7 @@ int y;
                             return;
                         } else {
                             flagCode = true;
-                            mobile = mobile;
+
 
                             sendVerificationCode(mobile);
                             editTextPassword.setVisibility(View.VISIBLE);
@@ -505,7 +501,6 @@ int y;
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 //Getting the code sent by SMS
                 String code = phoneAuthCredential.getSmsCode();
-
                 //sometime the code is not detected automatically
                 //in this case the code will be null
                 //so user has to manually enter the code
@@ -525,9 +520,6 @@ int y;
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 mVerificationId = s;
-
-
-                //  mResendToken = forceResendingToken;
             }
         };
     }
@@ -578,13 +570,8 @@ int y;
                                     else {
                                        d.dismiss();
                                         Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
-
                                         startActivity(intent);
-
-
                                     }
-
-
                                 }
 
                                 @Override
@@ -592,10 +579,6 @@ int y;
 
                                 }
                             });
-
-
-                            //verification successful we will start the profile activity
-
 
                         } else {
 
@@ -606,15 +589,6 @@ int y;
 
                             return;
 
-
-//                            Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_LONG);
-//                            snackbar.setAction("Dismiss", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//
-//                                }
-//                            });
-//                            snackbar.show();
                         }
                     }
                 });
@@ -622,15 +596,11 @@ int y;
 
     private void saveRegisterDataFireBase() {
 
-
         DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("RegisterInformation").push();
-
-
         cardRef4.setValue(registerInformation);
         d.dismiss();
         Toast.makeText(MainActivity.this, "הייתי פה", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
-
         startActivity(intent);
     }
 

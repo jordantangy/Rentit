@@ -29,12 +29,12 @@ public class MainActivityPageUser extends AppCompatActivity {
     private ListView lv;
     private DatabaseReference cardRef2;
     private TextView textViewExplanation;
-   private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
-    private String email="";
-    private RegisterInformation registerInformation=null;
+    private String email = "";
+    private RegisterInformation registerInformation = null;
 
 
     @Override
@@ -42,77 +42,67 @@ public class MainActivityPageUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page_user);
 
-         progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("טוען כרטיסים...");
         progressDialog.show();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
 
         try {
-    if(!firebaseUser.getEmail().toString().isEmpty())
-        email = firebaseUser.getEmail().toString();
-    else   email = firebaseUser.getPhoneNumber().toString();
-}
-catch (RuntimeException e){
-    email = firebaseUser.getPhoneNumber().toString();
-}
+            if (!firebaseUser.getEmail().toString().isEmpty())
+                email = firebaseUser.getEmail().toString();
+            else email = firebaseUser.getPhoneNumber().toString();
+        } catch (RuntimeException e) {
+            email = firebaseUser.getPhoneNumber().toString();
+        }
 
-        Toast.makeText(MainActivityPageUser.this, ""+email, Toast.LENGTH_LONG).show();
+        //Toast.makeText(MainActivityPageUser.this, "" + email, Toast.LENGTH_LONG).show();
 
-            if (email.equals("arielrentit@gmail.com")) {
-                Intent intent = new Intent(MainActivityPageUser.this, MainActivityManagementCardsApprov.class);
-                startActivityForResult(intent, 0);
+        if (email.equals("arielrentit@gmail.com")) {
+            Intent intent = new Intent(MainActivityPageUser.this, MainActivityManagementCardsApprov.class);
+            startActivityForResult(intent, 0);
+        }
+        cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+        // progressDialog.setMessage("Registering Please Wait...");
+        //   Toast.makeText(MainActivityPageUser.this, email, Toast.LENGTH_LONG).show();
+
+        // progressDialog.show();
+        cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    registerInformation = child.getValue(RegisterInformation.class);
+                }
+                if (registerInformation != null && registerInformation.getCardsUser().size() > 0) {
+                    cardCarAdapter = new CardCarAdapter(MainActivityPageUser.this, 0, 0, registerInformation.getCardsUser());
+                    //phase 4 reference to listview
+                    lv = (ListView) findViewById(R.id.lv);
+                    lv.setAdapter(cardCarAdapter);
+
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Intent intent = new Intent(MainActivityPageUser.this, MainActivityRegisterCar.class);
+                            intent.putExtra("position", i);
+                            pass(intent, registerInformation.getCardsUser().get(i));
+                            startActivityForResult(intent, 0);
+                        }
+                    });
+                } else {
+                    textViewExplanation = findViewById(R.id.textViewExplanationPage);
+                    textViewExplanation.setText("אין כרטיסים להצגה");
+                    textViewExplanation.setTextColor(-65536);
+                }
+
+                progressDialog.dismiss();
             }
-            cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-            // progressDialog.setMessage("Registering Please Wait...");
-            //   Toast.makeText(MainActivityPageUser.this, email, Toast.LENGTH_LONG).show();
 
-            // progressDialog.show();
-            cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        registerInformation = child.getValue(RegisterInformation.class);
-                    }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    if (registerInformation!=null&&registerInformation.getCardsUser().size() > 0) {
-
-                        // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
-
-                        cardCarAdapter = new CardCarAdapter(MainActivityPageUser.this, 0, 0, registerInformation.getCardsUser());
-                        //phase 4 reference to listview
-                        lv = (ListView) findViewById(R.id.lv);
-                        lv.setAdapter(cardCarAdapter);
-
-                        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                Intent intent = new Intent(MainActivityPageUser.this, MainActivityRegisterCar.class);
-                                intent.putExtra("position", i);
-                                pass(intent, registerInformation.getCardsUser().get(i));
-                                startActivityForResult(intent, 0);
-                            }
-                        });
-                    }
-                    else{
-                   textViewExplanation=     findViewById(R.id.textViewExplanationPage);
-                        textViewExplanation.setText("אין כרטיסים להצגה");
-                        textViewExplanation.setTextColor( -65536);
-
-                    }
-
-                    progressDialog.dismiss();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-            //     progressDialog.dismiss();
-
-
+            }
+        });
 
         cardButton = findViewById(R.id.publish);
         pageMainButton = findViewById(R.id.pageMain2);
@@ -154,6 +144,8 @@ catch (RuntimeException e){
         intent.putExtra("yearCar", cardCar.getYearCar());
         intent.putExtra("email", cardCar.getEmail());
         intent.putExtra("key", cardCar.getKey());
+        intent.putExtra("rejection", cardCar.getRejection());
+
         for (int i = 1; i <= cardCar.getImageViewArrayListName().size(); i++) {
             intent.putExtra("image" + i, cardCar.getImageViewArrayListName().get(i - 1));
         }

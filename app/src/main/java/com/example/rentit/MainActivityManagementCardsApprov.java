@@ -23,12 +23,13 @@ import java.util.List;
 public class MainActivityManagementCardsApprov extends AppCompatActivity {
     private DatabaseReference cardRef2;
     private List<CardCar> arrayListCards;
-    private RegisterInformation registerInformation;
     private CardCarAdapter cardCarAdapter = null;
     private ListView lv1;
     private Button buttonMainReturn, buttonRejection, buttonApprov, buttonWitheApprov;
     private TextView textViewRejection, textViewApprov, textViewWitheApprov;
-    private boolean flagNum=true;
+    private boolean flagNum = true;
+    private int numCards = -1;
+    CardCar cardCar;
 
 
     @Override
@@ -37,7 +38,7 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         setContentView(R.layout.activity_main_management_cards_approv);
         textViewWitheApprov = findViewById(R.id.textViewNumWaitAprove);
         textViewApprov = findViewById(R.id.textViewNumAprove);
-        textViewRejection= findViewById(R.id.textViewNumReject);
+        textViewRejection = findViewById(R.id.textViewNumReject);
         buttonApprov = findViewById(R.id.buttonApprov);
         buttonWitheApprov = findViewById(R.id.buttonWhite);
         buttonRejection = findViewById(R.id.buttonRejection);
@@ -71,17 +72,15 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         });
 
 
-        playCards2("CardsWaitApprov");
+         playCards2("CardsWaitApprov");
 
 
     }
 
     private void numCards() {
         playCards("CardsApprov");
-
-        playCards("CardsWaitApprov");
-
         playCards("CardsRejection");
+        playCards("CardsWaitApprov");
     }
 
     private void playCards(final String type) {
@@ -90,23 +89,24 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 arrayListCards = new ArrayList();
-                CardCar cardCar;
+                cardCar = new CardCar();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    try {
+                        cardCar = child.getValue(CardCar.class);
+                        arrayListCards.add(cardCar);
 
-                    cardCar = child.getValue(CardCar.class);
-                    arrayListCards.add(cardCar);
+                    } catch (RuntimeException e) {
+
+                    }
                 }
 
-                   int numCards = arrayListCards.size();
-                    if (type.equals("CardsWaitApprov"))
-                        textViewWitheApprov.setText(""+numCards);
-                    if (type.equals("CardsRejection"))
-                        textViewRejection.setText(""+numCards);
-                    if (type.equals("CardsApprov"))
-                        textViewApprov.setText(""+numCards);
-
-
-
+                numCards = arrayListCards.size();
+                if (type.equals("CardsWaitApprov"))
+                    textViewWitheApprov.setText("" + numCards);
+                if (type.equals("CardsRejection"))
+                    textViewRejection.setText("" + numCards);
+                if (type.equals("CardsApprov"))
+                    textViewApprov.setText("" + numCards);
 
 
             }
@@ -127,8 +127,13 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
                 CardCar cardCar;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
 
-                    cardCar = child.getValue(CardCar.class);
-                    arrayListCards.add(cardCar);
+                    try {
+                        cardCar = child.getValue(CardCar.class);
+                        arrayListCards.add(cardCar);
+
+                    } catch (RuntimeException e) {
+
+                    }
                 }
 
                 if (arrayListCards.size() > 0) {
@@ -179,6 +184,7 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         intent.putExtra("yearCar", cardCar.getYearCar());
         intent.putExtra("email", cardCar.getEmail());
         intent.putExtra("key", cardCar.getKey());
+        intent.putExtra("rejection", cardCar.getRejection());
 
         for (int i = 1; i <= cardCar.getImageViewArrayListName().size(); i++) {
             intent.putExtra("image" + i, cardCar.getImageViewArrayListName().get(i - 1));
