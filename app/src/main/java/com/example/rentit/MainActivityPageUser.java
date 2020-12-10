@@ -100,10 +100,10 @@ public class MainActivityPageUser extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressDialog.dismiss();
             }
-        });
 
+        });
         cardButton = findViewById(R.id.publish);
         pageMainButton = findViewById(R.id.pageMain2);
 

@@ -40,7 +40,6 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
-    int x;
     private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
     private CheckBox checkBox;
@@ -119,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        viewCards();
+        viewCards();//make cards list view
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean dateMatch(CardCar card, String startDate, String endDate) {
         return true;
-    }
+    }//TODO:this
 
     private void viewCards() {
         progressDialog.setMessage("טוען כרטיסים...");
@@ -307,9 +306,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressDialog.dismiss();
             }
         });
+
 
 
     }
@@ -420,10 +420,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                if (!checkBox.isChecked())
+                if (!checkBox.isChecked()) {//login email
+
+                    if (editTextEmail.getText().toString().isEmpty()||
+                            ErrWarn.errEmail(editTextEmail.getText().toString())) {
+                        editTextEmail.setError("Enter valid code");
+                        editTextEmail.requestFocus();
+                        return;
+                    }
+                    if (editTextPassword.getText().toString().isEmpty()) {
+                        editTextPassword.setError("Enter valid code");
+                        editTextPassword.requestFocus();
+                        return;
+                    }
                     loginIn();
-                else {
-                    if (flagCode) {
+                }
+                else {        //login phome
+                    if (flagCode) {//VerificationCode
                         String code = editTextPassword.getText().toString().trim();
                         if (code.isEmpty() || code.length() < 6) {
                             editTextPassword.setError("Enter valid code");
@@ -431,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         } else
                             verifyVerificationCode(code);
-                    } else {
+                    } else {//send code
 
                         mobile = editTextEmail.getText().toString().trim();
                         if (mobile.isEmpty() || mobile.length() < 10) {
@@ -486,6 +499,7 @@ public class MainActivity extends AppCompatActivity {
                             // progressDialog.dismiss();
                         }
                     });
+
         }
 
 

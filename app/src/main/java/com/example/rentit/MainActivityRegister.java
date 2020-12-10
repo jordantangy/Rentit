@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivityRegister extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference cardRef;
-    int gg;
+
     private TextView textViewWarnEmail, textViewWarnPassword1, textViewWarnPassword2, textViewWarnAll;
     private FirebaseAuth mAuth;
     private RegisterInformation registerInformation = null;
@@ -62,7 +62,7 @@ public class MainActivityRegister extends AppCompatActivity {
         setContentView(R.layout.activity_main_register);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        setmCallBacks();
+        setmCallBacks();//register phone
 
 
         textViewWarnEmail = findViewById(R.id.textWarnEmail);
@@ -86,21 +86,9 @@ public class MainActivityRegister extends AppCompatActivity {
             }
         });
 
-        buttonSmsCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String code = editTextSmsCode.getText().toString().trim();
-                if (code.isEmpty() || code.length() < 6) {
-                    editTextSmsCode.setError("Enter valid code");
-                    editTextSmsCode.requestFocus();
-                    return;
-                }
-                verifyVerificationCode(code);
 
-            }
-        });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {//email
             @Override
             public void onClick(View view) {
                 register();
@@ -146,7 +134,7 @@ public class MainActivityRegister extends AppCompatActivity {
                 });
     }
 
-    public void register() {
+    public void register() {//warng err
         textViewWarnPassword2.setVisibility(View.GONE);
         textViewWarnPassword1.setVisibility(View.GONE);
         textViewWarnAll.setVisibility(View.GONE);
@@ -168,7 +156,7 @@ public class MainActivityRegister extends AppCompatActivity {
                     registerInformation = new RegisterInformation();
                     registerInformation.setEmail(email);
                     registerInformation.setPassword(pass1);
-                    registerFirebase(email, pass1);
+                    registerFirebase(email, pass1);            //register
 
 
                 } else {
