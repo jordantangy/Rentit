@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
+    int x;
     private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
     private CheckBox checkBox;
