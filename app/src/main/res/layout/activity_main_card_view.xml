@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWarng"
+    tools:context=".MainActivityCardView">
+
+
+    <ImageView
+        android:id="@+id/imageMainM"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/ic_car"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="#BCB2B2"
+        android:text="לתמונה הבאה"
+        android:visibility="visible"
+        app:backgroundTint="#8BC34A"
+        app:layout_constraintEnd_toEndOf="@+id/imageMainM"
+        app:layout_constraintStart_toStartOf="@+id/imageMainM"
+        app:layout_constraintTop_toBottomOf="@+id/imageMainM"
+        app:strokeColor="#8BC34A" />
+
+    <TextView
+        android:id="@+id/textViewPriceAndAreaM"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+
+        android:layoutDirection="ltr"
+        android:text="מחיר ליום:200        אזור צפון: חיפה"
+        android:textColor="#FFEB3B"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonImage" />
+
+    <TextView
+        android:id="@+id/textViewSrartDateM"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="15dp"
+
+        android:layout_marginRight="10dp"
+        android:text=" מ: 11/12/2020    עד: 03/02/2021"
+        android:textColor="#FFEB3B"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPriceAndAreaM" />
+
+    <TextView
+        android:id="@+id/textViewInsuranceAndPhoneM"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:text="מגיל 25 ומעלה צד ג    יואב: 0544540189"
+        android:layout_marginRight="10dp"
+
+        android:textColor="#FFEB3B"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTypeCarAndYearM" />
+
+    <TextView
+        android:id="@+id/textViewTypeCarAndYearM"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginRight="10dp"
+
+        android:layout_marginTop="15dp"
+        android:text=" הונדה סיווק שנת 2000"
+        android:textColor="#FFEB3B"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSrartDateM" />
+
+    <TextView
+        android:id="@+id/textViewRemarksM"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginRight="10dp"
+
+        android:layout_marginTop="15dp"
+        android:text="רק לשלושה ימים ורק אנשים אחראים"
+        android:textColor="#FFEB3B"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewInsuranceAndPhoneM" />
+
+    <Button
+        android:id="@+id/buttonMainM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:text="לעמוד הראשי"
+        app:backgroundTint="#8BC34A"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

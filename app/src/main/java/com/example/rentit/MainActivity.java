@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                     lv11.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Intent intent = new Intent(MainActivity.this, MainActivityRegisterCar.class);
+                            Intent intent = new Intent(MainActivity.this, MainActivityCardView.class);
                             intent.putExtra("flagMain", true);
                             pass(intent, arrayListCards2.get(i));
 
@@ -273,10 +273,10 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 arrayListCards = new ArrayList();
                 CardCar card;
-                int i = 0;
+               // int i = 0;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    i++;
-                    if (i > 30) break;
+                   // i++;
+                  //  if (i > 30) break;
                     card = child.getValue(CardCar.class);
                     arrayListCards.add(card);
                 }
@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
                     lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Intent intent = new Intent(MainActivity.this, MainActivityRegisterCar.class);
+                            Intent intent = new Intent(MainActivity.this, MainActivityCardView.class);
                             intent.putExtra("flagMain", true);
                             pass(intent, arrayListCards.get(i));
                             startActivityForResult(intent, 0);
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("dateStart", cardCar.getDateStart());
         intent.putExtra("id", cardCar.getId());
         intent.putExtra("insurance", cardCar.getInsurance());
-        intent.putExtra("numImage", cardCar.getNumImage());
+        intent.putExtra("numImage", cardCar.getImageViewArrayListName().size());
         intent.putExtra("permissionToPublish", cardCar.getPermissionToPublish());
         intent.putExtra("phone", cardCar.getPhone());
         intent.putExtra("priceDay", cardCar.getPriceDay());
