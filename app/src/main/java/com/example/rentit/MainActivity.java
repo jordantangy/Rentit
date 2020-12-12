@@ -492,8 +492,8 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 d.dismiss();
                             } else {
-                                textViewWarnAll.setText("אימייל או סיסמא שגויים");
-                                textViewWarnAll.setVisibility(View.VISIBLE);
+                                editTextPassword.setError("משתמש לא קיים");
+                                editTextPassword.requestFocus();
                                 Toast.makeText(MainActivity.this, "הכניסה נכשלה", Toast.LENGTH_SHORT).show();
                             }
                             // progressDialog.dismiss();

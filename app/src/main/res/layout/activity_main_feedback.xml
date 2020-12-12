@@ -2,176 +2,24 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".MainActivityFeedback">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/yearCar3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="7"
-        android:hint="שנת יצור רכב"
-        android:inputType="textPersonName"
-        android:layout_toRightOf="@id/insurance3"
-        android:layout_below="@id/typeCar3"/>
-
-
-    <ImageView
-        android:id="@+id/image13"
-        android:layout_width="150dp"
-        android:layout_height="130dp"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/ic_car"
-
-
-        />
-
-    <ImageView
-        android:id="@+id/image23"
-        android:layout_width="150dp"
-        android:layout_height="130dp"
-        android:layout_below="@id/image13"
-
-        android:src="@drawable/ic_car" />
-
-
-    <ImageView
-        android:id="@+id/image33"
-        android:layout_width="150dp"
-        android:layout_height="130dp"
-        android:layout_toRightOf="@id/image13"
-        android:src="@drawable/ic_car"
-
-        />
-
-
-    <ImageView
-        android:id="@+id/image43"
-        android:layout_width="150dp"
-        android:layout_height="130dp"
-
-        android:layout_below="@id/image33"
-        android:layout_toRightOf="@id/image23"
-        android:src="@drawable/ic_car" />
-
-    <EditText
-        android:id="@+id/nameMen3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="7"
-        android:hint="שם"
-        android:inputType="textPersonName"
-       android:layout_toRightOf="@id/phone3"
-        android:layout_below="@id/image43"/>
-
-    <EditText
-        android:id="@+id/phone3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="7"
-        android:hint="פלאפון"
-        android:inputType="textPersonName"
-        android:layout_below="@id/image23"
-        />
-
-    <EditText
-        android:id="@+id/manyDay3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:ems="7"
-        android:hint="מחיר ליום"
-        android:inputType="textPersonName"
-       android:layout_below="@id/phone3"
-        />
-
-    <EditText
-        android:id="@+id/typeCar3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:ems="7"
-        android:hint="סוג רכב"
-        android:inputType="textPersonName"
-        android:layout_below="@id/nameMen3"
-        android:layout_toRightOf="@+id/manyDay3"/>
-
-    <EditText
-        android:id="@+id/insurance3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="7"
-        android:hint="סוג ביטוח"
-        android:inputType="textPersonName"
-        android:layout_below="@id/manyDay3" />
-
-
-    <EditText
-        android:id="@+id/city3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/insurance3"
-        android:ems="7"
-        android:hint="עיר/ישוב"
-        android:inputType="textPersonName" />
-
-
-    <EditText
-        android:id="@+id/startDate23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="7"
-        android:hint="מתאריך"
-        android:inputType="date"
-        android:layout_toRightOf="@id/endDate23"
-        android:layout_below="@id/spinnerArea3"/>
-
-    <EditText
-        android:id="@+id/endDate23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="7"
-        android:hint="עד תאריך"
-        android:inputType="date"
-        android:layout_below="@id/city3"
-        android:layout_toRightOf="@id/endDate23"/>
-
-
-    <Button
-        android:id="@+id/upgrade3"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@id/image33"
-        android:layout_toRightOf="@id/image43"
-        android:text="העלאת תמונות"
-        android:textSize="11dp" />
-
-    <Spinner
-        android:id="@+id/spinnerArea3"
-        android:layout_width="150dp"
-        android:layout_height="45dp"
-        android:layout_below="@id/yearCar3"
-        android:layout_toRightOf="@id/city3" />
-
-    <Button
-        android:id="@+id/buttonReturnMainPage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/endDate23"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="19dp"
-        android:text="לפרסום"
-
-        />
-
-</RelativeLayout>
-
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="דף בבניה"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
