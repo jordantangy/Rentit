@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
 
                     cardCarAdapter = new CardCarAdapter(MainActivity.this, 0, 0, arrayListCards);
                     //phase 4 reference to listview
-                    lv1 = (ListView) findViewById(R.id.lvMange);
+                    lv1 = (ListView) findViewById(R.id.lvMange2);
                     lv1.setAdapter(cardCarAdapter);
 
                     lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {

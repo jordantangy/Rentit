@@ -11,6 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ListView
+            android:id="@+id/lvMange2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="320dp"
+
+             />
+
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -111,15 +119,6 @@
             app:layout_constraintStart_toStartOf="@+id/startData"
             app:layout_constraintTop_toBottomOf="@+id/startData" />
 
-        <ListView
-            android:id="@+id/lvMange"
-            android:layout_width="404dp"
-            android:layout_height="659dp"
-            android:layout_marginTop="22dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search" />
-
 
         <Button
             android:id="@+id/buttonSeeAll"
@@ -146,6 +145,8 @@
             app:layout_constraintEnd_toEndOf="@+id/search"
             app:layout_constraintStart_toStartOf="@+id/search"
             app:layout_constraintTop_toBottomOf="@+id/search" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

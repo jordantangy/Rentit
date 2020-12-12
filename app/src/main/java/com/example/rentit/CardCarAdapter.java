@@ -84,9 +84,11 @@ public class CardCarAdapter extends ArrayAdapter<CardCar> {
         phone.setText("פלאפון: " + temp.getPhone());
         price.setText("מחיר ליום: " + temp.getPriceDay());
         area.setText("אזור " + temp.getArea() + ": " + temp.getCity());
-        date.setText("תאריכים: מה-" + temp.getDateStart() + " עד ה-" + temp.getDateEnd());
+        date.setText("מה-" + temp.getDateStart() + " עד ה-" + temp.getDateEnd());
         insurance.setText("ביטוח: " + temp.getInsurance());
-        remark.setText("הערות: " + temp.getRemarks());
+        if(!temp.getRemarks().equals(""))
+            remark.setText("הערות: " + temp.getRemarks());
+        else remark.setText("");
         typeCar.setText("סוג רכב: " + temp.getTypeCar());
 
         return view;
