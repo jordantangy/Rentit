@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
                     buttonSeeAll.setVisibility(View.VISIBLE);
                     toyAdapter1 = new CardCarAdapter(MainActivity.this, 0, 0, arrayListCards2);
-                    lv11 = (ListView) findViewById(R.id.lvMange);
+                    lv11 = (ListView) findViewById(R.id.lvMange2);
                     lv11.setAdapter(toyAdapter1);
 
                     lv11.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -397,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
         editTextEmail = (EditText) d.findViewById(R.id.loginEmail);
         editTextPassword = (EditText) d.findViewById(R.id.loginPassword);
         loginButtonIn = (Button) d.findViewById(R.id.loginButton2);
+        textViewWarnAll=(TextView) d.findViewById(R.id.textWarnAll);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -419,17 +420,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 if (!checkBox.isChecked()) {//login email
 
                     if (editTextEmail.getText().toString().isEmpty()||
                             ErrWarn.errEmail(editTextEmail.getText().toString())) {
-                        editTextEmail.setError("Enter valid code");
+                        editTextEmail.setError("אימייל לא תקין");
                         editTextEmail.requestFocus();
                         return;
                     }
                     if (editTextPassword.getText().toString().isEmpty()) {
-                        editTextPassword.setError("Enter valid code");
+                        editTextPassword.setError("סיסמא לא תקינה");
                         editTextPassword.requestFocus();
                         return;
                     }
@@ -467,20 +467,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginIn() {
-//        progressDialog.setMessage("Registering Please Wait...");
-//        progressDialog.show();
-        String emailLogin = editTextEmail.getText().toString();
-        if (ErrWarn.errEmail(emailLogin)) {
-            textViewWarnEmail.setText("אימייל לא תקין");
-            textViewWarnEmail.setVisibility(View.VISIBLE);
-        }
-        String passwordLogin = "";
-        passwordLogin = editTextPassword.getText().toString();
-        if (passwordLogin.length() == 0) {
-            textViewWarnPassword.setText("סיסמא לא תקינה");
-            textViewWarnPassword.setVisibility(View.VISIBLE);
-        } else {
 
+        String emailLogin = editTextEmail.getText().toString();
+       String passwordLogin = editTextPassword.getText().toString();
             mAuth.signInWithEmailAndPassword(emailLogin, passwordLogin)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -492,8 +481,11 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 d.dismiss();
                             } else {
-                                editTextPassword.setError("משתמש לא קיים");
+//                                textViewWarnAll.setText("אימייל או סיסמא לא נכונים");
+//                                textViewWarnAll.setVisibility(View.VISIBLE);
+                                editTextPassword.setError("אימייל או סיסמא לא נכונים");
                                 editTextPassword.requestFocus();
+                                
                                 Toast.makeText(MainActivity.this, "הכניסה נכשלה", Toast.LENGTH_SHORT).show();
                             }
                             // progressDialog.dismiss();
@@ -503,7 +495,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }
+
 
 
 
