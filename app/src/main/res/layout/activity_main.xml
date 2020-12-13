@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
 
             android:layout_marginTop="17dp"
-            android:text="Rentit!- השכרת רכבים"
+            android:text="Rentit!- השכרת רכבים אישיים"
 
             android:textSize="30dp"
             app:layout_constraintEnd_toEndOf="parent"

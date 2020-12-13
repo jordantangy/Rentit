@@ -8,6 +8,22 @@
     tools:context=".MainActivityCardView">
 
 
+    <TextView
+        android:id="@+id/textViewFeedbackGrade"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:layoutDirection="ltr"
+        android:text="דירוג: 9 מ 10"
+        android:textColor="#FFEB3B"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSeeFeedback"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <ImageView
         android:id="@+id/imageMainM"
         android:layout_width="300dp"
@@ -66,8 +82,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="15dp"
-        android:text="מגיל 25 ומעלה צד ג    יואב: 0544540189"
         android:layout_marginRight="10dp"
+        android:text="מגיל 25 ומעלה צד ג    יואב: 0544540189"
 
         android:textColor="#FFEB3B"
         android:textSize="20sp"
@@ -80,9 +96,9 @@
         android:id="@+id/textViewTypeCarAndYearM"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_marginRight="10dp"
-
         android:layout_marginTop="15dp"
+
+        android:layout_marginRight="10dp"
         android:text=" הונדה סיווק שנת 2000"
         android:textColor="#FFEB3B"
         android:textSize="20sp"
@@ -95,9 +111,9 @@
         android:id="@+id/textViewRemarksM"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginRight="10dp"
-
         android:layout_marginTop="15dp"
+
+        android:layout_marginRight="10dp"
         android:text="רק לשלושה ימים ורק אנשים אחראים"
         android:textColor="#FFEB3B"
         android:textSize="18sp"
@@ -110,11 +126,34 @@
         android:id="@+id/buttonMainM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="120dp"
         android:text="לעמוד הראשי"
         app:backgroundTint="#8BC34A"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSeeFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:text="לצפייה במשובים"
+        app:backgroundTint="#8BC34A"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSendFeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="120dp"
+        android:text="תן משוב"
+        app:backgroundTint="#8BC34A"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonMainM"
         app:layout_constraintStart_toStartOf="parent" />
 
 

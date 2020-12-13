@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         progressDialog = new ProgressDialog(this);
+
         flagCode = false;
         setmCallBacks();
         mAuth = FirebaseAuth.getInstance();
@@ -173,7 +174,29 @@ public class MainActivity extends AppCompatActivity {
         feedbekButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MainActivityFeedback.class);
+                FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+                String emailReport="";
+                if(firebaseUser!=null){
+                    try {
+                        if (!firebaseUser.getEmail().toString().isEmpty())
+                            emailReport = firebaseUser.getEmail().toString();
+                        else emailReport = firebaseUser.getPhoneNumber().toString();
+                    } catch (RuntimeException e) {
+                        emailReport = firebaseUser.getPhoneNumber().toString();
+                    }
+
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "אנא התחבר או הירשם", Toast.LENGTH_SHORT).show();
+
+                    feedbekButton.setError("אנא הירשם או התחבר");
+                    feedbekButton.requestFocus();
+                    return;
+                }
+
+                Intent intent = new Intent(MainActivity.this, MainActivity_Feedback.class);
+                intent.putExtra("flag",true);
+                intent.putExtra("emailReporting",emailReport);
                 startActivity(intent);
             }
         });
@@ -467,7 +490,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginIn() {
-
+        progressDialog.setMessage("נכנס...");
+        progressDialog.show();
         String emailLogin = editTextEmail.getText().toString();
        String passwordLogin = editTextPassword.getText().toString();
             mAuth.signInWithEmailAndPassword(emailLogin, passwordLogin)
@@ -477,18 +501,18 @@ public class MainActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(MainActivity.this, "הכניסה הצליחה", Toast.LENGTH_SHORT).show();
                                 loginButtonMain.setText("יציאה");
+                                progressDialog.dismiss();
                                 Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
                                 startActivity(intent);
                                 d.dismiss();
                             } else {
+                                progressDialog.dismiss();
 //                                textViewWarnAll.setText("אימייל או סיסמא לא נכונים");
 //                                textViewWarnAll.setVisibility(View.VISIBLE);
                                 editTextPassword.setError("אימייל או סיסמא לא נכונים");
                                 editTextPassword.requestFocus();
-                                
                                 Toast.makeText(MainActivity.this, "הכניסה נכשלה", Toast.LENGTH_SHORT).show();
                             }
-                            // progressDialog.dismiss();
                         }
                     });
 
@@ -551,6 +575,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        progressDialog.setMessage("נכנס...");
+        progressDialog.show();
+
         mAuth = FirebaseAuth.getInstance();
 
         mAuth.signInWithCredential(credential)
@@ -574,7 +601,9 @@ public class MainActivity extends AppCompatActivity {
                                         registerInformation.setEmail("+972" + mobile);
                                         saveRegisterDataFireBase();
                                     }
+
                                     else {
+                                        progressDialog.dismiss();
                                        d.dismiss();
                                         Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
                                         startActivity(intent);
@@ -590,7 +619,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
 
                             //verification unsuccessful.. display an error message
-
+                            progressDialog.dismiss();
                             editTextPassword.setError("Enter valid code");
                             editTextPassword.requestFocus();
 
@@ -605,6 +634,7 @@ public class MainActivity extends AppCompatActivity {
 
         DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("RegisterInformation").push();
         cardRef4.setValue(registerInformation);
+        progressDialog.dismiss();
         d.dismiss();
         Toast.makeText(MainActivity.this, "הייתי פה", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);

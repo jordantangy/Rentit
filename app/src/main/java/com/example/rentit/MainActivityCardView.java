@@ -1,5 +1,6 @@
 package com.example.rentit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,26 +9,40 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivityCardView extends AppCompatActivity {
     private TextView editTextCity, editTextTypeCar, editTextInsurance,
-            editTextDateStart,editTextRemarks;
+            editTextDateStart, editTextRemarks,textViewFeedbackGrade;
     private CardCar cardCar;
-    private Button buttonReturnMain, buttonImage;
+    private Button buttonReturnMain, buttonImage, buttonSendFeed,buttonSeeFeedback;
     private ImageView imageView;
     private int position;
+   // private Feedback feedback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_card_view);
 
-setCard();
+        setCard();
         position = 1;
+        textViewFeedbackGrade=findViewById(R.id.textViewFeedbackGrade);
         buttonImage = findViewById(R.id.buttonImage);
         buttonReturnMain = findViewById(R.id.buttonMainM);
+        buttonSendFeed = findViewById(R.id.buttonSendFeed);
+        buttonSeeFeedback=findViewById(R.id.buttonSeeFeedback);
 
         editTextCity = findViewById(R.id.textViewPriceAndAreaM);
         editTextDateStart = findViewById(R.id.textViewSrartDateM);
@@ -36,20 +51,20 @@ setCard();
         editTextTypeCar = findViewById(R.id.textViewTypeCarAndYearM);
         imageView = findViewById(R.id.imageMainM);
 
-        editTextTypeCar.setText("סוג רכב: " + cardCar.getTypeCar()+"   משנת: " + cardCar.getYearCar());
+        editTextTypeCar.setText("סוג רכב: " + cardCar.getTypeCar() + "   משנת: " + cardCar.getYearCar());
         editTextRemarks.setText("הערות: " + cardCar.getRemarks());
-        editTextInsurance.setText("ביטוח: " + cardCar.getInsurance()+"   "
-                +cardCar.getName() + ": " + cardCar.getPhone());
-        editTextDateStart.setText("מ-" + cardCar.getDateStart()+"   עד ה-" + cardCar.getDateEnd());
-        editTextCity.setText("מחיר ליום: " + cardCar.getPriceDay()+"     אזור " + cardCar.getArea() + ": " + cardCar.getCity());
+        editTextInsurance.setText("ביטוח: " + cardCar.getInsurance() + "   "
+                + cardCar.getName() + ": " + cardCar.getPhone());
+        editTextDateStart.setText("מ-" + cardCar.getDateStart() + "   עד ה-" + cardCar.getDateEnd());
+        editTextCity.setText("מחיר ליום: " + cardCar.getPriceDay() + "     אזור " + cardCar.getArea() + ": " + cardCar.getCity());
         Glide.with(this)
                 .load(cardCar.getImageViewArrayListName().get(0))
                 .into(imageView);
-if(cardCar.getImageViewArrayListName().size()==1)
-    buttonImage.setVisibility(View.GONE);
+        if (cardCar.getImageViewArrayListName().size() == 1)
+            buttonImage.setVisibility(View.GONE);
 
-if(cardCar.getRemarks().isEmpty())
-    editTextRemarks.setVisibility(View.GONE);
+        if (cardCar.getRemarks().isEmpty())
+            editTextRemarks.setVisibility(View.GONE);
         buttonReturnMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,16 +79,56 @@ if(cardCar.getRemarks().isEmpty())
                         .load(cardCar.getImageViewArrayListName().get(position))
                         .into(imageView);
                 position++;
-                if(position==cardCar.getImageViewArrayListName().size())
-                    position=0;
+                if (position == cardCar.getImageViewArrayListName().size())
+                    position = 0;
 
+            }
+        });
+
+        buttonSendFeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                String emailReport = "";
+                if (firebaseUser != null) {
+                    try {
+                        if (!firebaseUser.getEmail().toString().isEmpty())
+                            emailReport = firebaseUser.getEmail().toString();
+                        else emailReport = firebaseUser.getPhoneNumber().toString();
+                    } catch (RuntimeException e) {
+                        emailReport = firebaseUser.getPhoneNumber().toString();
+                    }
+
+                } else {
+                    buttonSendFeed.setError("אנא הירשם או התחבר");
+                    buttonImage.requestFocus();
+                    return;
+                }
+                Intent intent = new Intent(MainActivityCardView.this, MainActivity_Feedback.class);
+                intent.putExtra("email", cardCar.getEmail());
+                intent.putExtra("emailReporting", emailReport);
+                intent.putExtra("id", cardCar.getId());
+
+                startActivity(intent);
+            }
+        });
+        buttonSeeFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivityCardView.this, MainActivityListFeedbackPage.class);
+                intent.putExtra("email", cardCar.getEmail());
+                startActivity(intent);
             }
         });
 
     }
 
+
+
+
     private void setCard() {
-        cardCar=new CardCar();
+        cardCar = new CardCar();
         Bundle bundle = getIntent().getExtras();
         cardCar.setKey(bundle.getString("key"));
         cardCar.setEmail(bundle.getString("email"));
@@ -98,4 +153,4 @@ if(cardCar.getRemarks().isEmpty())
 
     }
 
-}
+    }

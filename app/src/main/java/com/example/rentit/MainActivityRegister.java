@@ -50,6 +50,7 @@ public class MainActivityRegister extends AppCompatActivity {
     private String mobile;
 
     private CheckBox checkBox;
+    private CheckBox checkBoxTerms;
 
     private Boolean flagCode = false;
 
@@ -64,7 +65,7 @@ public class MainActivityRegister extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         setmCallBacks();//register phone
 
-
+checkBoxTerms=findViewById(R.id.checkBoxTerms);
         textViewWarnEmail = findViewById(R.id.textWarnEmail);
         textViewWarnPassword1 = findViewById(R.id.textWarnPassword1);
         textViewWarnPassword2 = findViewById(R.id.textWarnPassword2);
@@ -102,7 +103,16 @@ public class MainActivityRegister extends AppCompatActivity {
             }
         });
 
+        checkBoxTerms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                textViewWarnAll.setText("תקנון חייב להיות מאושר");
+                checkBoxTerms.setChecked(true);
+                textViewWarnAll.setVisibility(View.VISIBLE);
 
+
+            }
+        });
     }
 
 
@@ -132,6 +142,7 @@ public class MainActivityRegister extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 
     public void register() {//warng err
@@ -179,7 +190,7 @@ public class MainActivityRegister extends AppCompatActivity {
         checkBox = (CheckBox) d.findViewById(R.id.checkBoxPhone);
 
         checkBox.setChecked(true);
-
+checkBox.setVisibility(View.GONE);
 
         editTextEmail = (EditText) d.findViewById(R.id.loginEmail);
         editTextPassword = (EditText) d.findViewById(R.id.loginPassword);
