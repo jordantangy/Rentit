@@ -9,6 +9,7 @@ import java.util.List;
 
 public class CardCar {
     private String key="";
+    private int seeCard=0;
     private String email="";
     private int numImage=0;
     private int id=0;
@@ -206,5 +207,15 @@ public class CardCar {
 
     public void setRejection(String rejection) {
         this.rejection = rejection;
+    }
+
+    public int getSeeCard() {
+        return seeCard;
+    }
+    public void addOneSeeCard() {
+        this.seeCard++;
+    }
+    public void setSeeCard(int seeCard) {
+        this.seeCard = seeCard;
     }
 }

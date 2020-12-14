@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="130dp"
-android:background="@color/colorAccent"
+    android:background="@color/colorAccent"
     tools:context=".CardList">
 
 
@@ -111,6 +111,29 @@ android:background="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/imageViewListCard"
             app:layout_constraintTop_toTopOf="@+id/areaListCard" />
+
+        <TextView
+            android:id="@+id/textViewSeeMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1999"
+            android:textColor="#FF3D00"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/typeCarListCard"
+            app:layout_constraintEnd_toEndOf="@+id/typeCarListCard"
+            app:layout_constraintStart_toStartOf="@+id/typeCarListCard" />
+
+        <ImageView
+            android:id="@+id/imageViewSee"
+            android:layout_width="12sp"
+            android:layout_height="12sp"
+            android:layout_marginEnd="1dp"
+            android:src="@mipmap/ic_eye_icon"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewSeeMe"
+            app:layout_constraintEnd_toStartOf="@+id/textViewSeeMe"
+            app:layout_constraintTop_toTopOf="@+id/textViewSeeMe" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

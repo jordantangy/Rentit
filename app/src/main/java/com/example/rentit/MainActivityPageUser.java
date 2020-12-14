@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class MainActivityPageUser extends AppCompatActivity {
     private Button cardButton;
     private Button pageMainButton;
@@ -29,11 +31,11 @@ public class MainActivityPageUser extends AppCompatActivity {
     private DatabaseReference cardRef2;
     private TextView textViewExplanation;
     private ProgressDialog progressDialog;
+    private ArrayList<CardCar> arrayListCards = new ArrayList<>();
 
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
     private String email = "";
-    private RegisterInformation registerInformation = null;
 
 
     @Override
@@ -60,49 +62,12 @@ public class MainActivityPageUser extends AppCompatActivity {
         if (email.equals("arielrentit@gmail.com")) {
             Intent intent = new Intent(MainActivityPageUser.this, MainActivityManagementCardsApprov.class);
             startActivityForResult(intent, 0);
+            //  return;
         }
-        cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-        // progressDialog.setMessage("Registering Please Wait...");
-        //   Toast.makeText(MainActivityPageUser.this, email, Toast.LENGTH_LONG).show();
+        dataBase("CardsApprov");
+        dataBase("CardsWaitApprov");
+        dataBase("CardsRejection");
 
-        // progressDialog.show();
-        cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("ResourceAsColor")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    registerInformation = child.getValue(RegisterInformation.class);
-                }
-                if (registerInformation != null && registerInformation.getCardsUser().size() > 0) {
-                    cardCarAdapter = new CardCarAdapter(MainActivityPageUser.this, 0, 0, registerInformation.getCardsUser());
-                    //phase 4 reference to listview
-                    lv = (ListView) findViewById(R.id.lv);
-                    lv.setAdapter(cardCarAdapter);
-
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Intent intent = new Intent(MainActivityPageUser.this, MainActivityRegisterCar.class);
-                            intent.putExtra("position", i);
-                            pass(intent, registerInformation.getCardsUser().get(i));
-                            startActivityForResult(intent, 0);
-                        }
-                    });
-                } else {
-                    textViewExplanation = findViewById(R.id.textViewExplanationPage);
-                    textViewExplanation.setText("אין כרטיסים להצגה");
-                    textViewExplanation.setTextColor(-65536);
-                }
-
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialog.dismiss();
-            }
-
-        });
         cardButton = findViewById(R.id.publish);
         pageMainButton = findViewById(R.id.pageMain2);
 
@@ -123,6 +88,50 @@ public class MainActivityPageUser extends AppCompatActivity {
         });
 
 
+    }
+
+    private void dataBase(final String type) {
+        cardRef2 = FirebaseDatabase.getInstance().getReference(type);
+
+        cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    CardCar cardCar = child.getValue(CardCar.class);
+                    arrayListCards.add(cardCar);
+                }
+                if (type.equals("CardsRejection") && arrayListCards.size() > 0) {
+                    cardCarAdapter = new CardCarAdapter(MainActivityPageUser.this, 0, 0, arrayListCards,true);
+                    //phase 4 reference to listview
+                    lv = (ListView) findViewById(R.id.lv);
+                    lv.setAdapter(cardCarAdapter);
+
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Intent intent = new Intent(MainActivityPageUser.this, MainActivityRegisterCar.class);
+                            intent.putExtra("position", i);
+                            pass(intent, arrayListCards.get(i));
+                            startActivityForResult(intent, 0);
+                        }
+                    });
+                }  if (type.equals("CardsRejection") && arrayListCards.size() == 0) {
+                    textViewExplanation = findViewById(R.id.textViewExplanationPage);
+                    textViewExplanation.setText("אין כרטיסים להצגה");
+                    textViewExplanation.setTextColor(-65536);
+                }
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+            }
+
+        });
     }
 
     private void pass(Intent intent, CardCar cardCar) {

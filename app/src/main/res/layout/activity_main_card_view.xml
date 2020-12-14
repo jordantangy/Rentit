@@ -148,6 +148,7 @@
         android:id="@+id/buttonSendFeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginEnd="23dp"
         android:layout_marginBottom="120dp"
         android:text="תן משוב"
@@ -155,6 +156,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonMainM"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewWarnFeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="אנא התחבר או הירשם "
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/buttonSendFeed"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSendFeed" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

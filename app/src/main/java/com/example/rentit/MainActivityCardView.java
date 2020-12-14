@@ -3,11 +3,14 @@ package com.example.rentit;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +27,12 @@ import java.util.ArrayList;
 
 public class MainActivityCardView extends AppCompatActivity {
     private TextView editTextCity, editTextTypeCar, editTextInsurance,
-            editTextDateStart, editTextRemarks,textViewFeedbackGrade;
+            editTextDateStart, editTextRemarks, textViewFeedbackGrade;
     private CardCar cardCar;
-    private Button buttonReturnMain, buttonImage, buttonSendFeed,buttonSeeFeedback;
+    private Button buttonReturnMain, buttonImage, buttonSendFeed, buttonSeeFeedback;
     private ImageView imageView;
     private int position;
-   // private Feedback feedback;
+    // private Feedback feedback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +41,11 @@ public class MainActivityCardView extends AppCompatActivity {
 
         setCard();
         position = 1;
-        textViewFeedbackGrade=findViewById(R.id.textViewFeedbackGrade);
+        textViewFeedbackGrade = findViewById(R.id.textViewFeedbackGrade);
         buttonImage = findViewById(R.id.buttonImage);
         buttonReturnMain = findViewById(R.id.buttonMainM);
         buttonSendFeed = findViewById(R.id.buttonSendFeed);
-        buttonSeeFeedback=findViewById(R.id.buttonSeeFeedback);
+        buttonSeeFeedback = findViewById(R.id.buttonSeeFeedback);
 
         editTextCity = findViewById(R.id.textViewPriceAndAreaM);
         editTextDateStart = findViewById(R.id.textViewSrartDateM);
@@ -100,8 +103,10 @@ public class MainActivityCardView extends AppCompatActivity {
                     }
 
                 } else {
+                    TextView textView = findViewById(R.id.textViewWarnFeed);
+                    textView.setVisibility(View.VISIBLE);
                     buttonSendFeed.setError("אנא הירשם או התחבר");
-                    buttonImage.requestFocus();
+                    buttonSendFeed.requestFocus();
                     return;
                 }
                 Intent intent = new Intent(MainActivityCardView.this, MainActivity_Feedback.class);
@@ -121,10 +126,41 @@ public class MainActivityCardView extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        String emailUser = "";
+//        if (firebaseUser != null) {
+//            try {
+//                if (!firebaseUser.getEmail().toString().isEmpty())
+//                    emailUser = firebaseUser.getEmail().toString();
+//                else emailUser = firebaseUser.getPhoneNumber().toString();
+//            } catch (RuntimeException e) {
+//                emailUser = firebaseUser.getPhoneNumber().toString();
+//            }
+//        }
+//if(!cardCar.getEmail().equals(emailUser))
+        seeMePlus();
 
     }
 
+    private void seeMePlus() {
+        DatabaseReference cardRef2 = FirebaseDatabase.getInstance().getReference("CardsApprov");
+        cardRef2.child(cardCar.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) return;
+                CardCar cardCar2 = new CardCar();
+                cardCar2 = dataSnapshot.getValue(CardCar.class);
+                cardCar2.addOneSeeCard();
+                DatabaseReference cardRef6 = FirebaseDatabase.getInstance().getReference();
+                cardRef6.child("CardsApprov").child(cardCar.getKey()).setValue(cardCar2);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+
+        });
+    }
 
 
     private void setCard() {
@@ -153,4 +189,4 @@ public class MainActivityCardView extends AppCompatActivity {
 
     }
 
-    }
+}

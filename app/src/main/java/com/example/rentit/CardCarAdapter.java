@@ -35,11 +35,20 @@ public class CardCarAdapter extends ArrayAdapter<CardCar> {
     private CardCar temp;
     private boolean go = false;
     private View view;
+    private boolean flagSee=false;
 
 
     public CardCarAdapter(Context context, int resource, int textViewResourceId, List<CardCar> objects) {
         super(context, resource, textViewResourceId, objects);
 
+        this.context = context;
+        this.objects = objects;
+
+    }
+
+    public CardCarAdapter(Context context, int resource, int textViewResourceId, List<CardCar> objects, boolean flagSee) {
+        super(context, resource, textViewResourceId, objects);
+        this.flagSee = flagSee;
         this.context = context;
         this.objects = objects;
 
@@ -71,13 +80,18 @@ public class CardCarAdapter extends ArrayAdapter<CardCar> {
         TextView insurance = (TextView) view.findViewById(R.id.insuranceListCard);
         TextView remark = (TextView) view.findViewById(R.id.remarksListCard);
         TextView typeCar = (TextView) view.findViewById(R.id.typeCarListCard);
-
-        if(temp.getPermissionToPublish()==1)permission.setVisibility(View.GONE);
-        else if(temp.getPermissionToPublish()==0){
+        TextView seeMe = (TextView) view.findViewById(R.id.textViewSeeMe);
+        ImageView imageSee = (ImageView) view.findViewById(R.id.imageViewSee);
+if(flagSee){
+    seeMe.setText(""+temp.getSeeCard());
+    seeMe.setVisibility(View.VISIBLE);
+    imageSee.setVisibility(View.VISIBLE);
+}
+        if (temp.getPermissionToPublish() == 1) permission.setVisibility(View.GONE);
+        else if (temp.getPermissionToPublish() == 0) {
             permission.setText("הכרטיס ממתין לאישור");
             permission.setVisibility(View.VISIBLE);
-        }
-        else if(temp.getPermissionToPublish()==2){
+        } else if (temp.getPermissionToPublish() == 2) {
             permission.setText("הכרטיס סורב");
             permission.setVisibility(View.VISIBLE);
         }
@@ -86,7 +100,7 @@ public class CardCarAdapter extends ArrayAdapter<CardCar> {
         area.setText("אזור " + temp.getArea() + ": " + temp.getCity());
         date.setText("מה-" + temp.getDateStart() + " עד ה-" + temp.getDateEnd());
         insurance.setText("ביטוח: " + temp.getInsurance());
-        if(!temp.getRemarks().equals(""))
+        if (!temp.getRemarks().equals(""))
             remark.setText("הערות: " + temp.getRemarks());
         else remark.setText("");
         typeCar.setText("סוג רכב: " + temp.getTypeCar());
