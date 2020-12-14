@@ -28,7 +28,7 @@
             android:id="@+id/lvMange"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="220dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
@@ -71,11 +71,11 @@
             style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="לעמוד הראשי"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonAprrovFeedbeck" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumFeedWait" />
 
         <TextView
             android:id="@+id/textViewNumWaitAprove"
@@ -117,6 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="מחכים לאישור"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="@+id/buttonWhite"
             app:layout_constraintTop_toBottomOf="@+id/textViewNumWaitAprove" />
 
@@ -151,6 +152,38 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/buttonWhite"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewNumFeedWait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20"
+            android:textColor="#FF9800"
+            app:layout_constraintEnd_toEndOf="@+id/buttonWiatAprrovFeedbeck"
+            app:layout_constraintStart_toStartOf="@+id/buttonWiatAprrovFeedbeck"
+            app:layout_constraintTop_toBottomOf="@+id/buttonWiatAprrovFeedbeck" />
+
+        <TextView
+            android:id="@+id/textViewNumFeedApprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="700"
+            android:textColor="#53CA53"
+            app:layout_constraintEnd_toEndOf="@+id/buttonAprrovFeedbeck"
+            app:layout_constraintStart_toStartOf="@+id/buttonAprrovFeedbeck"
+            app:layout_constraintTop_toBottomOf="@+id/buttonAprrovFeedbeck" />
+
+        <TextView
+            android:id="@+id/textViewNumFeedRejecsen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="1dp"
+            android:text="50"
+            android:textColor="#EA2C2C"
+            app:layout_constraintEnd_toEndOf="@+id/buttonRejecsanFeedback"
+            app:layout_constraintStart_toStartOf="@+id/buttonRejecsanFeedback"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRejecsanFeedback" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

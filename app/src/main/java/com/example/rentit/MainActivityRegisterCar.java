@@ -66,6 +66,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private ArrayList<String> areaList = new ArrayList<>();
     private ArrayList<ImageView> arrayListImageView = new ArrayList<>();
     private ImageView imageViewTemp = null;
+    private Uri uri1;
+    private Uri uri2;
+    private Uri uri3;
+    private Uri uri4;
+
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageView3;
@@ -539,6 +544,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
     public void openImage(ImageView imageView) {
         imageViewTemp = imageView;
+
 
         try {
             if (ActivityCompat.checkSelfPermission(MainActivityRegisterCar.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

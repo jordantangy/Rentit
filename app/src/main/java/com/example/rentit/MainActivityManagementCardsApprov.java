@@ -35,25 +35,21 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
     private Button buttonMainReturn, buttonRejection, buttonApprov, buttonWitheApprov,
       buttonRejectionFeed, buttonApprovFedd, buttonWitheApprovFeed;
     private TextView textViewRejection, textViewApprov, textViewWitheApprov;
-    private boolean flagNum = true;
+
     private int numCards = -1;
-    CardCar cardCar;
+    private CardCar cardCar;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_management_cards_approv);
-        textViewWitheApprov = findViewById(R.id.textViewNumWaitAprove);
-        textViewApprov = findViewById(R.id.textViewNumAprove);
-        textViewRejection = findViewById(R.id.textViewNumReject);
-        buttonApprovFedd=findViewById(R.id.buttonAprrovFeedbeck);
-        buttonRejectionFeed=findViewById(R.id.buttonRejecsanFeedback);
-        buttonWitheApprovFeed=findViewById(R.id.buttonWiatAprrovFeedbeck);
-        buttonApprov = findViewById(R.id.buttonApprov);
-        buttonWitheApprov = findViewById(R.id.buttonWhite);
-        buttonRejection = findViewById(R.id.buttonRejection);
-        buttonMainReturn = findViewById(R.id.buttonMainReturn);
+
+        setId();
+        numFeed("FeedbackWaitApprov");
+        numFeed("FeedbackApprov");
+        numFeed("FeedbackRejection");
         numCards();
         buttonApprov.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +87,7 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         buttonApprovFedd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 playFeed("FeedbackApprov");
 
             }
@@ -108,6 +105,63 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
 
 
 
+    }
+
+    private void numFeed(final String type) {
+        cardRef2 = FirebaseDatabase.getInstance().getReference(type);
+        cardRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                    numCards=0;
+                }
+                else {
+
+                    final ArrayList<Feedback> arrayListFeed = new ArrayList();
+                    Feedback feedback;
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                        feedback = child.getValue(Feedback.class);
+                        arrayListFeed.add(feedback);
+
+                    }
+                    numCards = arrayListFeed.size();
+                }
+
+                if (type.equals("FeedbackWaitApprov")) {
+                    TextView textView=findViewById(R.id.textViewNumFeedWait);
+                    textView.setText("" + numCards);
+                }
+                else if (type.equals("FeedbackRejection")) {
+                    TextView textView=findViewById(R.id.textViewNumFeedRejecsen);
+                    textView.setText("" + numCards);
+                }
+                else if (type.equals("FeedbackApprov")) {
+                    TextView textView=findViewById(R.id.textViewNumFeedApprove);
+                    textView.setText("" + numCards);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setId() {
+        textViewWitheApprov = findViewById(R.id.textViewNumWaitAprove);
+        textViewApprov = findViewById(R.id.textViewNumAprove);
+        textViewRejection = findViewById(R.id.textViewNumReject);
+        buttonApprovFedd=findViewById(R.id.buttonAprrovFeedbeck);
+        buttonRejectionFeed=findViewById(R.id.buttonRejecsanFeedback);
+        buttonWitheApprovFeed=findViewById(R.id.buttonWiatAprrovFeedbeck);
+        buttonApprov = findViewById(R.id.buttonApprov);
+        buttonWitheApprov = findViewById(R.id.buttonWhite);
+        buttonRejection = findViewById(R.id.buttonRejection);
+        buttonMainReturn = findViewById(R.id.buttonMainReturn);
     }
 
     private void numCards() {
@@ -136,9 +190,9 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
                 numCards = arrayListCards.size();
                 if (type.equals("CardsWaitApprov"))
                     textViewWitheApprov.setText("" + numCards);
-                if (type.equals("CardsRejection"))
+                else if (type.equals("CardsRejection"))
                     textViewRejection.setText("" + numCards);
-                if (type.equals("CardsApprov"))
+                else if (type.equals("CardsApprov"))
                     textViewApprov.setText("" + numCards);
 
 
@@ -227,7 +281,7 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
                     lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                          dialod(arrayListFeed.get(i));
+                          dialod(arrayListFeed.get(i),type);
                         }
                     });
                 }
@@ -269,7 +323,7 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
 
 
     }
-    private void dialod(final Feedback feedback) {
+    private void dialod(final Feedback feedback, final String type) {
         d = new Dialog(this);
         d.setContentView(R.layout.feedback_approve);
         d.setTitle("Manage");
@@ -277,8 +331,10 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         d.setCancelable(true);
         Button buttonApproveManage=(Button)d.findViewById(R.id.buttonApproveManage);
         Button buttonRejectionManege=(Button)d.findViewById(R.id.buttonRejectionManage);
+        Button buttonDeleteManege=(Button)d.findViewById(R.id.buttonDeleteFeed);
 
-      buttonApproveManage.setOnClickListener(new View.OnClickListener() {
+
+        buttonApproveManage.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View view) {
               DatabaseReference ref = FirebaseDatabase.getInstance().getReference("FeedbackApprov").push();
@@ -303,6 +359,17 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
               Intent intent = new Intent(MainActivityManagementCardsApprov.this, MainActivityManagementCardsApprov.class);
 
               startActivityForResult(intent, 0);
+          }
+      });
+      buttonDeleteManege.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference(type);
+              ref2.child(feedback.getKey()).removeValue();
+              Intent intent = new Intent(MainActivityManagementCardsApprov.this, MainActivityManagementCardsApprov.class);
+
+              startActivityForResult(intent, 0);
+
           }
       });
         d.show();
