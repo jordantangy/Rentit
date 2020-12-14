@@ -687,7 +687,7 @@ public class MainActivity extends AppCompatActivity {
                 Date endDate = rangeDate.second;
 //              Format the dates in ur desired display mode
 
-                SimpleDateFormat simpleFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 //              Display it by setText
                 dateStart=simpleFormat.format(startDate).toString();
                 dateEnd=simpleFormat.format(endDate);

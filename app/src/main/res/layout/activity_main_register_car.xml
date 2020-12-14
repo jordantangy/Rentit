@@ -37,7 +37,7 @@
             android:id="@+id/image23"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/ic_car"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image13" />
@@ -165,6 +165,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
+            android:layout_marginEnd="110dp"
             android:text="לפרסום"
             app:layout_constraintEnd_toEndOf="@+id/remarksRegisterCar3"
             app:layout_constraintStart_toStartOf="@+id/remarksRegisterCar3"
@@ -348,13 +349,13 @@
             app:layout_constraintTop_toBottomOf="@+id/city3" />
 
         <TextView
-            android:id="@+id/textViewData"
+            android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/city3"
-            app:layout_constraintTop_toBottomOf="@+id/city3" />
+            android:text="תמונה ראשית"
+            app:layout_constraintEnd_toEndOf="@+id/image43"
+            app:layout_constraintStart_toEndOf="@+id/image23"
+            app:layout_constraintTop_toBottomOf="@+id/image43" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

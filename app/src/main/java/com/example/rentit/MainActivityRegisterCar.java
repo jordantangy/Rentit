@@ -69,7 +69,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
     private TextView textViewWarnPhone, textViewWarnName, textViewWarnPrice, textViewWarnAll;
     private TextView textViewWarnTypeCar, textViewWarnYearCar, textViewWarnInsurance, textViewWarnArea;
-    private TextView  textViewWarnCity, textViewWarnRemarker, textViewWarnImage;
+    private TextView textViewWarnCity, textViewWarnRemarker, textViewWarnImage;
 
 
     private CardCar cardCar = new CardCar();
@@ -111,9 +111,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private String keyCard = "0";
 
     private int flagI;
-    private int num;
     private String url = "";
-    private int i;
     private String area = "";
     private boolean flag = false;
     private CardCar cardCarEdit;
@@ -241,9 +239,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     setWarnGone();
 
 
-                        setCardDetails();
+                    setCardDetails();
 
-                     if (!flag) retrieveData();
+                    if (!flag) retrieveData();
                 }
 
             }
@@ -305,7 +303,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         builder.setTitleText("בחר תאריך");
         final MaterialDatePicker materialDatePicker = builder.build();
 
-        final TextView textViewData = findViewById(R.id.textViewData);
         final Button buttonData = findViewById(R.id.buttonDate);
         buttonData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,7 +324,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 Date endDate = rangeDate.second;
 //              Format the dates in ur desired display mode
 
-                SimpleDateFormat simpleFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 //              Display it by setText
                 cardCar.setDateStart(simpleFormat.format(startDate).toString());
                 cardCar.setDateEnd(simpleFormat.format(endDate).toString());
@@ -470,8 +467,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         editTextYearCar.setText(cardCarEdit.getYearCar());
         editTextPriceForDay.setText(cardCarEdit.getPriceDay());
         editTextPhone.setText(cardCarEdit.getPhone());
-        TextView textViewDate = findViewById(R.id.textViewData);
-        textViewDate.setText("מ-" + cardCarEdit.getDateStart() + " עד-" + cardCarEdit.getDateEnd());
+        Button buttonDate = findViewById(R.id.buttonDate);
+        buttonDate.setText("מ-" + cardCarEdit.getDateStart() + " עד-" + cardCarEdit.getDateEnd());
+        cardCar.setDateEnd(cardCarEdit.getDateEnd());
+        cardCar.setDateStart(cardCarEdit.getDateStart());
         editTextRemarks.setText(cardCarEdit.getRemarks());
         if (cardCarEdit.getPermissionToPublish() == 2 && cardCarEdit.getRejection().length() > 0) {
             editTextRemarks.setText("סורב מפני: " + cardCarEdit.getRejection());
@@ -548,9 +547,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCar.setCity(edit);
 
         edit = cardCar.getDateStart();
-        if(edit.length()==0) {
+        if (edit.length() == 0) {
             flag2 = true;
-            Button button=findViewById(R.id.buttonDate);
+            Button button = findViewById(R.id.buttonDate);
             button.setTextColor(-65536);
             button.setText("אנא הכנס תאריכים");
         }
@@ -706,10 +705,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
                 }
                 arrayListImageViewUri = new ArrayList<>();
+                if (uri4 != null) arrayListImageViewUri.add(uri4);
                 if (uri1 != null) arrayListImageViewUri.add(uri1);
                 if (uri2 != null) arrayListImageViewUri.add(uri2);
                 if (uri3 != null) arrayListImageViewUri.add(uri3);
-                if (uri4 != null) arrayListImageViewUri.add(uri4);
                 Toast.makeText(MainActivityRegisterCar.this, "l" + arrayListImageViewUri.size(), Toast.LENGTH_LONG).show();
 
                 cardCar.setId(registerInformation.getId());
@@ -737,82 +736,84 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
         flagI = 0;
         final int length = arrayListImageViewUri.size();
-        if (flagEdit && length == 0) {
+        if (flagEdit ) {//TODO: image edit:&& length == 0)
             DatabaseReference cardRef5 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
-            cardCar.setKey(cardRef.toString());
-            cardRef5.child(keyCard).setValue(cardCar);
+            cardCar.setKey(cardRef5.getKey());
+            cardRef5.setValue(cardCar);
             registerInformation.addCardcar(cardCar);
-
-            cardRef.child("RegisterInformation").child(key2).setValue(registerInformation);
+            DatabaseReference cardRef7 = FirebaseDatabase.getInstance().getReference();
+            cardRef7.child("RegisterInformation").child(key2).setValue(registerInformation);
 
             Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
 
             deleteCard();
         } else {
-            for (i = 0; i < length && i < 4; i++) {
+            //  for (i = 0; i < length && i < 4; i++) {
 
 
-                num = i + 1;
-                String s = registerInformation.getEmail() + "/" + registerInformation.getId() + "" + num + ".jpg";
-                final StorageReference riversRef = mStorageRef.child(s);
-                riversRef.putFile(arrayListImageViewUri.get(i))
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            imageAndSave(1);
+
+        }
+    }
+
+    private void imageAndSave(final int num) {
+
+        String s = registerInformation.getEmail() + "/" + registerInformation.getId() + "" + num + ".jpg";
+        StorageReference riversRef = mStorageRef.child(s);
+        riversRef.putFile(arrayListImageViewUri.get(num - 1))
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            public void onSuccess(Uri uri) {
+                                url = uri.toString();
+                                cardCar.addImageViewArrayListName(url);
+                                if (arrayListImageViewUri.size() == num) {
+                                    fireBase();
+                                    return;
+                                }
+                                imageAndSave(num + 1);
 
-                                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        url = uri.toString();
-                                        flagI++;
-                                        if (!keyCard.equals("0"))
-                                            registerInformation.getCardsUser().get(registerInformation.getCardsUser().size() - 1).addImageViewArrayListName(url);
-                                        cardCar.addImageViewArrayListName(url);
-
-
-                                        if (keyCard.equals("0")) {
-                                            DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
-                                            keyCard = cardRef4.getKey();
-                                            cardCar.setKey(keyCard);
-                                            registerInformation.addCardcar(cardCar);
-                                            cardRef4.setValue(cardCar);
-                                        } else {
-                                            DatabaseReference cardRef5 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
-                                            cardRef5.child(keyCard).setValue(cardCar);
-                                        }
-
-                                        cardRef.child("RegisterInformation").child(key2).setValue(registerInformation);
-                                        Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
-
-                                        if (flagEdit) deleteCard();
-                                        else if (flagI == length) {
-                                            progressDialog.dismiss();
-                                            Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                                            startActivity(intent);
-
-                                        }
-
-
-                                    }
-                                });
-
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Toast.makeText(MainActivityRegisterCar.this, "תמונה לא נשמרה", Toast.LENGTH_SHORT).show();
                             }
                         });
-                //   Toast.makeText(MainActivityRegisterCar.this, "צלחה"+riversRef.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(MainActivityRegisterCar.this, "תמונה לא נשמרה", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-            }
+    }
+
+    private void fireBase() {
+        DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
+        keyCard = cardRef4.getKey();
+        cardCar.setKey(keyCard);
+        registerInformation.addCardcar(cardCar);
+        cardRef4.setValue(cardCar);
+
+        DatabaseReference cardRef6 = FirebaseDatabase.getInstance().getReference();
+        cardRef6.child("RegisterInformation").child(key2).setValue(registerInformation);
+        Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
+
+        if (flagEdit){
+            deleteCard();
+            return;
         }
 
+        progressDialog.dismiss();
+        Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+        startActivity(intent);
 
-        // finish();
+
     }
+
+    // finish();
+    //}
 
 
     private void setCard() {
@@ -875,6 +876,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsRejection");
                     ref2.child(cardCarEdit.getKey()).removeValue();
                 }
+                progressDialog.dismiss();
                 Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                 startActivity(intent);
 
