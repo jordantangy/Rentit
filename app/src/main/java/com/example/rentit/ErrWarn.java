@@ -56,7 +56,7 @@ public class ErrWarn {
     }
 
     public static boolean errInsurance(String insurance, TextView textView) {
-        if (insurance.length() < 5) {
+        if (insurance.length() < 3) {
             ErrWarn.earnEdit(textView, "ביטוח לא תקין");
             return true;
         }

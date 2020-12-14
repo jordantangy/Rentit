@@ -1,16 +1,21 @@
 package com.example.rentit;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.util.Pair;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,6 +30,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,8 +47,11 @@ import com.google.firebase.storage.UploadTask;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class MainActivityRegisterCar extends AppCompatActivity {
@@ -58,7 +69,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
     private TextView textViewWarnPhone, textViewWarnName, textViewWarnPrice, textViewWarnAll;
     private TextView textViewWarnTypeCar, textViewWarnYearCar, textViewWarnInsurance, textViewWarnArea;
-    private TextView textViewWarnDateStart, textViewWarnDateEnd, textViewWarnCity, textViewWarnRemarker, textViewWarnImage;
+    private TextView  textViewWarnCity, textViewWarnRemarker, textViewWarnImage;
 
 
     private CardCar cardCar = new CardCar();
@@ -66,10 +77,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private ArrayList<String> areaList = new ArrayList<>();
     private ArrayList<ImageView> arrayListImageView = new ArrayList<>();
     private ImageView imageViewTemp = null;
-    private Uri uri1;
-    private Uri uri2;
-    private Uri uri3;
-    private Uri uri4;
+    private Uri uri1 = null;
+    private Uri uri2 = null;
+    private Uri uri3 = null;
+    private Uri uri4 = null;
+    private Uri uriSave = null;
+    private int numImage = 0;
+
 
     private ImageView imageView1;
     private ImageView imageView2;
@@ -82,8 +96,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private EditText editTextYearCar;
     private EditText editTextPriceForDay;
     private EditText editTextPhone;
-    private EditText editTextDateStart;
-    private EditText editTextDateEnd;
+
     private EditText editTextRemarks;
     private EditText editTextRejection;
 
@@ -225,10 +238,12 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     cardsApprov();
 
                 } else {
-
                     setWarnGone();
-                    setCardDetails();
-                    if (!flag) retrieveData();
+
+
+                        setCardDetails();
+
+                     if (!flag) retrieveData();
                 }
 
             }
@@ -244,39 +259,83 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             imageView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    numImage = 1;
                     if (flagEdit) removeImage = cardCarEdit.getImageViewArrayListName().get(0);
-                    openImage(imageView1);
+                    openImage(imageView1, uri1);
 
                 }
             });
             imageView2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    numImage = 2;
                     if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 1)
                         removeImage = cardCarEdit.getImageViewArrayListName().get(1);
-                    openImage(imageView2);
+                    openImage(imageView2, uri2);
 
                 }
             });
             imageView3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    numImage = 3;
                     if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 2)
                         removeImage = cardCarEdit.getImageViewArrayListName().get(2);
-                    openImage(imageView3);
+                    openImage(imageView3, uri3);
 
                 }
             });
             imageView4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    numImage = 4;
                     if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 3)
                         removeImage = cardCarEdit.getImageViewArrayListName().get(3);
-                    openImage(imageView4);
+                    openImage(imageView4, uri4);
 
                 }
             });
         }
+//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//        calendar.clear();
+//        Long today = MaterialDatePicker.todayInUtcMilliseconds();
+
+        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
+        // MaterialDatePicker.Builder builder=MaterialDatePicker.Builder.dateRangePicker();
+        builder.setTitleText("בחר תאריך");
+        final MaterialDatePicker materialDatePicker = builder.build();
+
+        final TextView textViewData = findViewById(R.id.textViewData);
+        final Button buttonData = findViewById(R.id.buttonDate);
+        buttonData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
+            }
+        });
+
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                Pair selectedDates = (Pair) materialDatePicker.getSelection();
+//              then obtain the startDate & endDate from the range
+                final Pair<Date, Date> rangeDate = new Pair<>(new Date((Long) selectedDates.first), new Date((Long) selectedDates.second));
+//              assigned variables
+                Date startDate = rangeDate.first;
+                Date endDate = rangeDate.second;
+//              Format the dates in ur desired display mode
+
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+//              Display it by setText
+                cardCar.setDateStart(simpleFormat.format(startDate).toString());
+                cardCar.setDateEnd(simpleFormat.format(endDate).toString());
+
+                buttonData.setText(" " + simpleFormat.format(startDate) + " Second : " + simpleFormat.format(endDate));
+
+            }
+        });
 
         buttonMyPage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -360,7 +419,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 }
 
 
-
                 List<CardCar> cardCarList = registerInformation.getCardsUser();
                 for (int j = 0; j < cardCarList.size(); j++) {
                     if (cardCarList.get(j).getId() == cardCarEdit.getId()) {
@@ -412,12 +470,12 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         editTextYearCar.setText(cardCarEdit.getYearCar());
         editTextPriceForDay.setText(cardCarEdit.getPriceDay());
         editTextPhone.setText(cardCarEdit.getPhone());
-        editTextDateStart.setText(cardCarEdit.getDateStart());
-        editTextDateEnd.setText(cardCarEdit.getDateEnd());
+        TextView textViewDate = findViewById(R.id.textViewData);
+        textViewDate.setText("מ-" + cardCarEdit.getDateStart() + " עד-" + cardCarEdit.getDateEnd());
         editTextRemarks.setText(cardCarEdit.getRemarks());
         if (cardCarEdit.getPermissionToPublish() == 2 && cardCarEdit.getRejection().length() > 0) {
             editTextRemarks.setText("סורב מפני: " + cardCarEdit.getRejection());
-            editTextRemarks.setTextColor(-65536);
+            editTextRemarks.setTextColor(-65536);//TODO:COlER RED
         }
     }
 
@@ -433,8 +491,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         editTextYearCar = findViewById(R.id.yearCar3);
         editTextPriceForDay = findViewById(R.id.manyDay3);
         editTextPhone = findViewById(R.id.phone3);
-        editTextDateStart = findViewById(R.id.startDate23);
-        editTextDateEnd = findViewById(R.id.endDate23);
         editTextRemarks = findViewById(R.id.remarksRegisterCar3);
     }
 
@@ -443,8 +499,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         textViewWarnAll.setVisibility(View.GONE);
         textViewWarnArea.setVisibility(View.GONE);
         textViewWarnCity.setVisibility(View.GONE);
-        textViewWarnDateEnd.setVisibility(View.GONE);
-        textViewWarnDateStart.setVisibility(View.GONE);
         textViewWarnImage.setVisibility(View.GONE);
         textViewWarnInsurance.setVisibility(View.GONE);
         textViewWarnPhone.setVisibility(View.GONE);
@@ -460,8 +514,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         textViewWarnAll = findViewById(R.id.warnAll);
         textViewWarnArea = findViewById(R.id.warnArea);
         textViewWarnCity = findViewById(R.id.warnCity);
-        textViewWarnDateEnd = findViewById(R.id.warnDataEnd);
-        textViewWarnDateStart = findViewById(R.id.warnDateStart);
         textViewWarnImage = findViewById(R.id.warnImage);
         textViewWarnInsurance = findViewById(R.id.warnInsurance);
         textViewWarnPhone = findViewById(R.id.warnPhone);
@@ -472,13 +524,12 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
 
-
     private void setCardDetails() {
         flag = false;
         boolean flag2 = false;
 
         if (!flagEdit) {
-            flag2 = ErrWarn.errImage(area, arrayListImageViewUri.size(), textViewWarnImage);
+            flag2 = ErrWarn.errImage(area, arrayListImageViewUri.size(), textViewWarnImage);//TODO:b
             if (!flag && flag2) flag = true;
         }
 
@@ -496,15 +547,15 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         if (!flag && flag2) flag = true;
         cardCar.setCity(edit);
 
-        edit = editTextDateStart.getText().toString();
-        flag2 = ErrWarn.errStartDate(edit, textViewWarnDateStart);
+        edit = cardCar.getDateStart();
+        if(edit.length()==0) {
+            flag2 = true;
+            Button button=findViewById(R.id.buttonDate);
+            button.setTextColor(-65536);
+            button.setText("אנא הכנס תאריכים");
+        }
         if (!flag && flag2) flag = true;
-        cardCar.setDateStart(edit);
 
-        edit = editTextDateEnd.getText().toString();
-        flag2 = ErrWarn.errEndData(edit, textViewWarnDateEnd);
-        if (!flag && flag2) flag = true;
-        cardCar.setDateEnd(edit);
 
         edit = editTextInsurance.getText().toString();
         flag2 = ErrWarn.errInsurance(edit, textViewWarnInsurance);
@@ -542,8 +593,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         }
     }
 
-    public void openImage(ImageView imageView) {
+    public void openImage(ImageView imageView, Uri uri) {
         imageViewTemp = imageView;
+        uriSave = uri;
 
 
         try {
@@ -569,6 +621,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     Uri selectedImage = imageReturnedIntent.getData();
                     arrayListImageViewUri.add(selectedImage);
                     imageViewTemp.setImageURI(selectedImage);
+                    setUriImage(selectedImage);
                     arrayListImageView.add(imageViewTemp);
                     if (flagEdit && removeImage.length() > 0) {
                         cardCar.removeImageViewArrayListName(removeImage);
@@ -582,6 +635,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     Uri selectedImage = imageReturnedIntent.getData();
                     arrayListImageViewUri.add(selectedImage);
                     imageViewTemp.setImageURI(selectedImage);
+                    setUriImage(selectedImage);
+
                     arrayListImageView.add(imageViewTemp);
                     if (flagEdit && removeImage.length() > 0) {
                         cardCar.removeImageViewArrayListName(removeImage);
@@ -590,6 +645,17 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    private void setUriImage(Uri selectedImage) {
+        if (numImage == 1)
+            uri1 = selectedImage;
+        if (numImage == 2)
+            uri2 = selectedImage;
+        if (numImage == 3)
+            uri3 = selectedImage;
+        if (numImage == 4)
+            uri4 = selectedImage;
     }
 
 
@@ -639,6 +705,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     key2 = child.getKey();
 
                 }
+                arrayListImageViewUri = new ArrayList<>();
+                if (uri1 != null) arrayListImageViewUri.add(uri1);
+                if (uri2 != null) arrayListImageViewUri.add(uri2);
+                if (uri3 != null) arrayListImageViewUri.add(uri3);
+                if (uri4 != null) arrayListImageViewUri.add(uri4);
+                Toast.makeText(MainActivityRegisterCar.this, "l" + arrayListImageViewUri.size(), Toast.LENGTH_LONG).show();
+
                 cardCar.setId(registerInformation.getId());
                 upladUriFirebase();
                 // Toast.makeText(MainActivityRegisterCar.this, dataSnapshot.toString(), Toast.LENGTH_LONG).show();

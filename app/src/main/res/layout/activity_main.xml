@@ -11,13 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/buttonDate2"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="תאריכים"
+            android:textColor="#1B1414"
+            android:textColorHighlight="#00E5FF"
+            app:backgroundTint="#DDD2D2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/price" />
+
         <ListView
             android:id="@+id/lvMange2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="320dp"
 
-             />
+            />
 
         <TextView
             android:id="@+id/title"
@@ -85,39 +98,15 @@
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
-        <EditText
-            android:id="@+id/endData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="14dp"
-            android:ems="6"
-            android:hint="עד תאריך"
-            android:inputType="date"
-            app:layout_constraintEnd_toEndOf="@+id/area"
-            app:layout_constraintTop_toBottomOf="@+id/area" />
-
-        <EditText
-            android:id="@+id/startData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="5dp"
-            android:ems="6"
-            android:hint="מתאריך"
-            android:inputType="date"
-            app:layout_constraintEnd_toStartOf="@+id/endData"
-            app:layout_constraintTop_toBottomOf="@+id/price" />
-
         <Button
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:text="חיפוש"
-            app:layout_constraintEnd_toEndOf="@+id/endData"
-            app:layout_constraintStart_toStartOf="@+id/startData"
-            app:layout_constraintTop_toBottomOf="@+id/startData" />
+            app:layout_constraintEnd_toEndOf="@+id/buttonDate2"
+            app:layout_constraintStart_toStartOf="@+id/buttonDate2"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDate2" />
 
 
         <Button
@@ -126,12 +115,13 @@
             android:layout_width="wrap_content"
 
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="10dp"
             android:text="כל הכרטיסים"
             android:visibility="gone"
-            app:layout_constraintStart_toEndOf="@+id/search"
-            app:layout_constraintTop_toBottomOf="@+id/endData" />
+            app:layout_constraintEnd_toStartOf="@+id/search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDate2" />
 
         <TextView
             android:id="@+id/textViewWarnSearch"

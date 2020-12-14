@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@android:style/Widget.ScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -136,30 +137,6 @@
             app:layout_constraintTop_toBottomOf="@+id/insurance3" />
 
 
-        <EditText
-            android:id="@+id/endDate23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:hint="עד תאריך"
-            android:inputType="date"
-            app:layout_constraintBottom_toBottomOf="@+id/startDate23"
-            app:layout_constraintStart_toEndOf="@+id/startDate23"
-            app:layout_constraintTop_toTopOf="@+id/startDate23" />
-
-        <EditText
-            android:id="@+id/startDate23"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:ems="8"
-            android:hint="מתאריך"
-            android:inputType="date"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/city3" />
-
-
         <Button
             android:id="@+id/upgrade3"
             style="@style/Widget.AppCompat.Button.Small"
@@ -180,7 +157,6 @@
             android:layout_width="150dp"
             android:layout_height="20dp"
             android:layout_marginStart="70dp"
-            app:layout_constraintBottom_toTopOf="@+id/endDate23"
             app:layout_constraintStart_toEndOf="@+id/city3"
             app:layout_constraintTop_toTopOf="@+id/city3" />
 
@@ -188,25 +164,23 @@
             android:id="@+id/buttonReturnMainPage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="48dp"
             android:text="לפרסום"
-            app:layout_constraintEnd_toEndOf="@+id/startDate23"
-            app:layout_constraintStart_toStartOf="@+id/endDate23"
+            app:layout_constraintEnd_toEndOf="@+id/remarksRegisterCar3"
+            app:layout_constraintStart_toStartOf="@+id/remarksRegisterCar3"
             app:layout_constraintTop_toBottomOf="@+id/remarksRegisterCar3" />
 
         <EditText
             android:id="@+id/remarksRegisterCar3"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="20dp"
             android:ems="8"
             android:hint="הוסף הערות כגון: לפחות להשכרה של שלושה ימים"
             android:inputType="textPersonName"
             android:textSize="12dp"
-            app:layout_constraintEnd_toEndOf="@+id/endDate23"
-            app:layout_constraintStart_toStartOf="@+id/startDate23"
-            app:layout_constraintTop_toBottomOf="@+id/startDate23" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDate" />
 
         <Button
             android:id="@+id/buttonMyPage"
@@ -301,26 +275,6 @@
             app:layout_constraintBottom_toTopOf="@+id/spinnerArea3"
             app:layout_constraintEnd_toEndOf="@+id/spinnerArea3" />
 
-        <TextView
-            android:id="@+id/warnDataEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/endDate23"
-            app:layout_constraintEnd_toEndOf="@+id/endDate23" />
-
-        <TextView
-            android:id="@+id/warnDateStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/startDate23"
-            app:layout_constraintEnd_toEndOf="@+id/startDate23" />
 
         <TextView
             android:id="@+id/warnRemarker"
@@ -377,6 +331,30 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/buttonMyPage"
             app:layout_constraintEnd_toEndOf="@+id/buttonMyPage" />
+
+        <Button
+            android:id="@+id/buttonDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            android:text="תאריכים"
+            android:textColor="#1B1414"
+            android:textColorHighlight="#00E5FF"
+            app:backgroundTint="#DDD2D2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/city3" />
+
+        <TextView
+            android:id="@+id/textViewData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/city3"
+            app:layout_constraintTop_toBottomOf="@+id/city3" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

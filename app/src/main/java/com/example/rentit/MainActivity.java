@@ -1,11 +1,15 @@
 package com.example.rentit;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,11 +24,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     private Boolean flagCode = false;
     private Dialog d;
     private EditText editTextEmail, editTextPassword;
-    private EditText editTextStartdate, editTextEndData;
     private Button loginButtonMain, loginButtonIn, searchButton, buttonSeeAll;
     private ProgressDialog progressDialog;
     private Button registerButton;
@@ -60,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> priceList = new ArrayList<>();
     private DatabaseReference cardRef2;
     private DatabaseReference cardRef;
+    private  String dateStart="",dateEnd="";
 
     private TextView textViewWarnEmail, textViewWarnPassword, textViewWarnAll, textVieeTittel;
 
@@ -90,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
         setmCallBacks();
         mAuth = FirebaseAuth.getInstance();
         textVieeTittel = findViewById(R.id.title);
-        editTextStartdate = findViewById(R.id.startData);
-        editTextEndData = findViewById(R.id.endData);
+
         areaSpinner = findViewById(R.id.area);
         textViewWarnSearch = findViewById(R.id.textViewWarnSearch);
         priceSpinner = findViewById(R.id.price);
@@ -200,7 +207,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        setDate();
     }
+
+
 
     private void search() {
         textViewWarnSearch.setVisibility(View.GONE);
@@ -214,8 +224,8 @@ public class MainActivity extends AppCompatActivity {
                 CardCar cardCar;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     cardCar = child.getValue(CardCar.class);
-                    searchMatch(area, price, "" + editTextStartdate.getText().toString(),
-                            "" + editTextEndData.getText().toString(), cardCar);
+                    searchMatch(area, price, "" + dateStart,
+                            "" + dateEnd, cardCar);
                 }
                 if (arrayListCards2.size() > 0) {
                     if (cardCarAdapter != null) cardCarAdapter.clear();
@@ -296,10 +306,10 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 arrayListCards = new ArrayList();
                 CardCar card;
-               // int i = 0;
+                int i = 0;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                   // i++;
-                  //  if (i > 30) break;
+                    i++;
+                    if (i > 30) break;
                     card = child.getValue(CardCar.class);
                     arrayListCards.add(card);
                 }
@@ -650,5 +660,42 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+    private void setDate() {
+        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
+        // MaterialDatePicker.Builder builder=MaterialDatePicker.Builder.dateRangePicker();
+        builder.setTitleText("בחר תאריך");
+        final MaterialDatePicker materialDatePicker = builder.build();
 
+        final Button buttonData = findViewById(R.id.buttonDate2);
+        buttonData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
+            }
+        });
+
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                Pair selectedDates = (Pair) materialDatePicker.getSelection();
+//              then obtain the startDate & endDate from the range
+                final Pair<Date, Date> rangeDate = new Pair<>(new Date((Long) selectedDates.first), new Date((Long) selectedDates.second));
+//              assigned variables
+                Date startDate = rangeDate.first;
+                Date endDate = rangeDate.second;
+//              Format the dates in ur desired display mode
+
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+//              Display it by setText
+                dateStart=simpleFormat.format(startDate).toString();
+                dateEnd=simpleFormat.format(endDate);
+
+                buttonData.setText(" " + simpleFormat.format(startDate) + " Second : " + simpleFormat.format(endDate));
+buttonData.setTextSize(12);
+            }
+        });
+
+    }
 }
