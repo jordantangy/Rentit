@@ -9,8 +9,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
+import android.icu.util.LocaleData;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +25,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> priceList = new ArrayList<>();
     private DatabaseReference cardRef2;
     private DatabaseReference cardRef;
-    private  String dateStart="",dateEnd="";
+    private String dateStart = "", dateEnd = "";
 
     private TextView textViewWarnEmail, textViewWarnPassword, textViewWarnAll, textVieeTittel;
 
@@ -181,9 +185,9 @@ public class MainActivity extends AppCompatActivity {
         feedbekButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-                String emailReport="";
-                if(firebaseUser!=null){
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                String emailReport = "";
+                if (firebaseUser != null) {
                     try {
                         if (!firebaseUser.getEmail().toString().isEmpty())
                             emailReport = firebaseUser.getEmail().toString();
@@ -192,8 +196,7 @@ public class MainActivity extends AppCompatActivity {
                         emailReport = firebaseUser.getPhoneNumber().toString();
                     }
 
-                }
-                else{
+                } else {
                     Toast.makeText(MainActivity.this, "אנא התחבר או הירשם", Toast.LENGTH_SHORT).show();
 
                     feedbekButton.setError("אנא הירשם או התחבר");
@@ -202,14 +205,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(MainActivity.this, MainActivity_Feedback.class);
-                intent.putExtra("flag",true);
-                intent.putExtra("emailReporting",emailReport);
+                intent.putExtra("flag", true);
+                intent.putExtra("emailReporting", emailReport);
                 startActivity(intent);
             }
         });
         setDate();
     }
-
 
 
     private void search() {
@@ -263,10 +265,13 @@ public class MainActivity extends AppCompatActivity {
     private void searchMatch(String area, String price, String startDate, String endDate, CardCar card) {
 
 
-        if (area.equals(card.getArea())) {
+        if (area.equals(card.getArea()) || area.length() == 0 || area.equals("בחר אזור")) {
 
-            if (dateMatch(card, startDate, endDate)) {
-
+            if ((dateStart.length() == 0) || dateSearch(card.getDateStart(), card.getDateEnd())) {
+                if (price.length() == 0 || price.equals("טווח מחיר")) {
+                    arrayListCards2.add(card);
+                    return;
+                }
                 String priceCardString = card.getPriceDay();
                 int priceCard = Integer.valueOf(priceCardString);
                 if (price.equals("50-150")) {
@@ -290,9 +295,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean dateMatch(CardCar card, String startDate, String endDate) {
-        return true;
-    }//TODO:this
+
 
     private void viewCards() {
         progressDialog.setMessage("טוען כרטיסים...");
@@ -342,7 +345,6 @@ public class MainActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
-
 
 
     }
@@ -416,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     private void dialod() {
         d = new Dialog(this);
         d.setContentView(R.layout.login);
@@ -430,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
         editTextEmail = (EditText) d.findViewById(R.id.loginEmail);
         editTextPassword = (EditText) d.findViewById(R.id.loginPassword);
         loginButtonIn = (Button) d.findViewById(R.id.loginButton2);
-        textViewWarnAll=(TextView) d.findViewById(R.id.textWarnAll);
+        textViewWarnAll = (TextView) d.findViewById(R.id.textWarnAll);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -455,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!checkBox.isChecked()) {//login email
 
-                    if (editTextEmail.getText().toString().isEmpty()||
+                    if (editTextEmail.getText().toString().isEmpty() ||
                             ErrWarn.errEmail(editTextEmail.getText().toString())) {
                         editTextEmail.setError("אימייל לא תקין");
                         editTextEmail.requestFocus();
@@ -467,8 +470,7 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                     loginIn();
-                }
-                else {        //login phome
+                } else {        //login phome
                     if (flagCode) {//VerificationCode
                         String code = editTextPassword.getText().toString().trim();
                         if (code.isEmpty() || code.length() < 6) {
@@ -503,37 +505,30 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setMessage("נכנס...");
         progressDialog.show();
         String emailLogin = editTextEmail.getText().toString();
-       String passwordLogin = editTextPassword.getText().toString();
-            mAuth.signInWithEmailAndPassword(emailLogin, passwordLogin)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "הכניסה הצליחה", Toast.LENGTH_SHORT).show();
-                                loginButtonMain.setText("יציאה");
-                                progressDialog.dismiss();
-                                Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
-                                startActivity(intent);
-                                d.dismiss();
-                            } else {
-                                progressDialog.dismiss();
+        String passwordLogin = editTextPassword.getText().toString();
+        mAuth.signInWithEmailAndPassword(emailLogin, passwordLogin)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "הכניסה הצליחה", Toast.LENGTH_SHORT).show();
+                            loginButtonMain.setText("יציאה");
+                            progressDialog.dismiss();
+                            Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
+                            startActivity(intent);
+                            d.dismiss();
+                        } else {
+                            progressDialog.dismiss();
 //                                textViewWarnAll.setText("אימייל או סיסמא לא נכונים");
 //                                textViewWarnAll.setVisibility(View.VISIBLE);
-                                editTextPassword.setError("אימייל או סיסמא לא נכונים");
-                                editTextPassword.requestFocus();
-                                Toast.makeText(MainActivity.this, "הכניסה נכשלה", Toast.LENGTH_SHORT).show();
-                            }
+                            editTextPassword.setError("אימייל או סיסמא לא נכונים");
+                            editTextPassword.requestFocus();
+                            Toast.makeText(MainActivity.this, "הכניסה נכשלה", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                });
 
-        }
-
-
-
-
-
-
-
+    }
 
 
     private void setmCallBacks() {
@@ -569,19 +564,18 @@ public class MainActivity extends AppCompatActivity {
         PhoneAuthCredential credential;
         //creating the credential
         Toast.makeText(MainActivity.this, mVerificationId, Toast.LENGTH_LONG).show();
-      // editTextEmail.setText(mVerificationId);
-      try{
-           credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-      }
-      catch (RuntimeException e){
-          editTextPassword.setError("משו השתבש לחץ כניסה שוב");
-          editTextPassword.requestFocus();
-       return;
+        // editTextEmail.setText(mVerificationId);
+        try {
+            credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+        } catch (RuntimeException e) {
+            editTextPassword.setError("משו השתבש לחץ כניסה שוב");
+            editTextPassword.requestFocus();
+            return;
 
-      }
+        }
 
         //signing the user
-      signInWithPhoneAuthCredential(credential);
+        signInWithPhoneAuthCredential(credential);
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -601,7 +595,7 @@ public class MainActivity extends AppCompatActivity {
                             ref3.orderByChild("email").equalTo("+972" + mobile).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot child : snapshot.getChildren()) {
+                                    for (DataSnapshot child : snapshot.getChildren()) {
 
                                         registerInformation = child.getValue(RegisterInformation.class);
                                     }
@@ -610,11 +604,9 @@ public class MainActivity extends AppCompatActivity {
                                         registerInformation = new RegisterInformation();
                                         registerInformation.setEmail("+972" + mobile);
                                         saveRegisterDataFireBase();
-                                    }
-
-                                    else {
+                                    } else {
                                         progressDialog.dismiss();
-                                       d.dismiss();
+                                        d.dismiss();
                                         Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
                                         startActivity(intent);
                                     }
@@ -660,6 +652,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+
     private void setDate() {
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
         // MaterialDatePicker.Builder builder=MaterialDatePicker.Builder.dateRangePicker();
@@ -689,13 +682,44 @@ public class MainActivity extends AppCompatActivity {
 
                 SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 //              Display it by setText
-                dateStart=simpleFormat.format(startDate).toString();
-                dateEnd=simpleFormat.format(endDate);
+                dateStart = simpleFormat.format(startDate).toString();
+                dateEnd = simpleFormat.format(endDate);
 
                 buttonData.setText(" " + simpleFormat.format(startDate) + " Second : " + simpleFormat.format(endDate));
-buttonData.setTextSize(12);
+                buttonData.setTextSize(12);
             }
         });
 
+    }
+
+    public boolean dateSearch(String dateStartUser, String dateEndUser) {
+//        Toast.makeText(MainActivity.this, "" + dateStartUser + " " + dateEndUser + ";" + dateStart + " " + dateEnd, Toast.LENGTH_LONG).show();
+//        final Button buttonData = findViewById(R.id.buttonDate2);
+//        buttonData.setTextSize(8);
+
+        int yearStartUser = Integer.valueOf(dateStartUser.substring(6));
+        int yearEndUser = Integer.valueOf(dateEndUser.substring(6));
+        int monthStartUser = Integer.valueOf(dateStartUser.substring(3, 5));
+        int monthEndUser = Integer.valueOf(dateEndUser.substring(3, 5));
+        int dayStartUser = Integer.valueOf(dateStartUser.substring(0, 2));
+        int dayEndUser = Integer.valueOf(dateEndUser.substring(0, 2));
+
+        int yearStart = Integer.valueOf(dateStart.substring(6));
+        int yearEnd = Integer.valueOf(dateEnd.substring(6));
+        int monthStart = Integer.valueOf(dateStart.substring(3, 5));
+        int monthEnd = Integer.valueOf(dateEnd.substring(3, 5));
+        int dayStart = Integer.valueOf(dateStart.substring(0, 2));
+        int dayEnd = Integer.valueOf(dateEnd.substring(0, 2));
+
+        if(yearStart < yearStartUser)return false;
+        if(yearStart == yearStartUser &&monthStart<monthStartUser)return false;
+        if(yearStart == yearStartUser &&monthStart==monthStartUser&&dayStart<dayStartUser)return false;
+        if(yearEnd > yearEndUser)return false;
+        if(yearEnd == yearEndUser &&monthEnd>monthEndUser)return false;
+        if(yearEnd == yearEndUser &&monthEnd==monthEndUser&&dayEnd>dayEndUser)return false;
+
+
+
+        return true;
     }
 }

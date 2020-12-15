@@ -1,6 +1,7 @@
 package com.example.rentit;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -12,17 +13,19 @@ public class ErrWarn {
     public ErrWarn() {
     }
 
-    public static boolean errName(String name, TextView textView) {
+    public static boolean errName(String name, EditText editText) {
         if (name.length() < 1) {
-            ErrWarn.earnEdit(textView, "השם לא תקין");
+            editText.setError("שם לא תקין");
+            editText.requestFocus();
             return true;
         }
         return false;
     }
 
-    public static boolean errPhone(String phone, TextView textView) {
+    public static boolean errPhone(String phone, EditText editText) {
         if (phone.length() < 7) {
-            ErrWarn.earnEdit(textView, "מספר לא תקין");
+            editText.setError("מספר לא תקין");
+            editText.requestFocus();
             return true;
         }
         return false;
@@ -30,42 +33,46 @@ public class ErrWarn {
 
     public static boolean errArea(String area, TextView textView) {
         if (area.length() < 1||area.equals("בחר אזור")) {
-            ErrWarn.earnEdit(textView, "לא בחרת אזור");
+            earnEdit(textView, "אזור לא תקין");
             return true;
         }
         return false;
 
     }
 
-    public static boolean errPrice(String price, TextView textView) {
+    public static boolean errPrice(String price, EditText editText) {
         int priseInt = 0;
         try {
             priseInt = Integer.valueOf(price);
         } catch (RuntimeException e) {
-            ErrWarn.earnEdit(textView, "אנא הכנס רק מספרים שלמים");
+            editText.setError("אנא הכנס רק מספרים שלמים");
+            editText.requestFocus();
             return true;
 
 
         }
         if (priseInt < 1 || priseInt > 15000) {
-            ErrWarn.earnEdit(textView, "אנא הכנס רק מספרים שלמים");
+            editText.setError("אנא הכנס רק מספרים שלמים");
+            editText.requestFocus();
             return true;
         }
         return false;
 
     }
 
-    public static boolean errInsurance(String insurance, TextView textView) {
+    public static boolean errInsurance(String insurance, EditText editText) {
         if (insurance.length() < 3) {
-            ErrWarn.earnEdit(textView, "ביטוח לא תקין");
+            editText.setError("ביטוח לא תקין");
+            editText.requestFocus();
             return true;
         }
         return false;
     }
 
-    public static boolean errTypeCar(String typeCar, TextView textView) {
+    public static boolean errTypeCar(String typeCar, EditText editText) {
         if (typeCar.length() < 2) {
-            ErrWarn.earnEdit(textView, "סוג רכב לא קיים");
+            editText.setError("סוג רכב לא קיים");
+            editText.requestFocus();
             return true;
         }
 
@@ -73,16 +80,18 @@ public class ErrWarn {
 
     }
 
-    public static boolean errYearCar(String yearCar, TextView textView) {
+    public static boolean errYearCar(String yearCar, EditText editText) {
         int priseInt = 0;
         try {
             priseInt = Integer.valueOf(yearCar);
         } catch (RuntimeException e) {
-            ErrWarn.earnEdit(textView, "אנא הכנס רק מספרים שלמים");
+            editText.setError("אנא הכנס רק מספרים שלמים");
+            editText.requestFocus();
             return true;
         }
         if (priseInt < 1800 || priseInt > 2030) {
-            ErrWarn.earnEdit(textView, "אנא הכנס שנה מציאותית");
+            editText.setError("אנא הכנס רק מספרים שלמים");
+            editText.requestFocus();
             return true;
         }
 
@@ -90,9 +99,10 @@ public class ErrWarn {
 
     }
 
-    public static boolean errCity(String city, TextView textView) {
+    public static boolean errCity(String city, EditText editText) {
         if (city.length() < 2){
-            earnEdit(textView, "שם עיר לא תקין");
+            editText.setError("שם עיר לא תקין");
+            editText.requestFocus();
             return true;
         }
         return false;

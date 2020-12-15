@@ -29,7 +29,9 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
     private Dialog d;
 
     private DatabaseReference cardRef2;
-    private List<CardCar> arrayListCards;
+    private ArrayList<CardCar> arrayListCards;
+    private ArrayList<CardCar> arrayListCards2;
+
     private CardCarAdapter cardCarAdapter = null;
     private ListView lv1;
     private Button buttonMainReturn, buttonRejection, buttonApprov, buttonWitheApprov,
@@ -209,23 +211,23 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         cardRef2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                arrayListCards = new ArrayList();
+                arrayListCards2 = new ArrayList();
                 CardCar cardCar;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
 
                     try {
                         cardCar = child.getValue(CardCar.class);
-                        arrayListCards.add(cardCar);
+                        arrayListCards2.add(cardCar);
 
                     } catch (RuntimeException e) {
 
                     }
                 }
 
-                if (arrayListCards.size() > 0) {
+                if (arrayListCards2.size() > 0) {
                     // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
 
-                    cardCarAdapter = new CardCarAdapter(MainActivityManagementCardsApprov.this, 0, 0, arrayListCards);
+                    cardCarAdapter = new CardCarAdapter(MainActivityManagementCardsApprov.this, 0, 0, arrayListCards2,false);
                     //phase 4 reference to listview
                     lv1 = (ListView) findViewById(R.id.lvMange);
                     lv1.setAdapter(cardCarAdapter);
@@ -235,8 +237,11 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             Intent intent = new Intent(MainActivityManagementCardsApprov.this, MainActivityRegisterCar.class);
                             intent.putExtra("flagManagement", true);
+                            intent.putExtra("flagEdit", false);
                             intent.putExtra("flagMain", true);
-                            pass(intent, arrayListCards.get(i));
+                            Toast.makeText(MainActivityManagementCardsApprov.this, ""+i+"kk"+arrayListCards2.size(), Toast.LENGTH_LONG).show();
+
+                             pass(intent, arrayListCards2.get(i));
                             startActivityForResult(intent, 0);
                         }
                     });

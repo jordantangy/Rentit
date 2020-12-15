@@ -67,9 +67,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
 
-    private TextView textViewWarnPhone, textViewWarnName, textViewWarnPrice, textViewWarnAll;
-    private TextView textViewWarnTypeCar, textViewWarnYearCar, textViewWarnInsurance, textViewWarnArea;
-    private TextView textViewWarnCity, textViewWarnRemarker, textViewWarnImage;
+    private TextView  textViewWarnAll;
+    private TextView  textViewWarnArea;
+    private TextView  textViewWarnImage;
 
 
     private CardCar cardCar = new CardCar();
@@ -155,7 +155,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         if (flagEdit || flagMain) {
             cardCarEdit = new CardCar();
             setCard();
-            setTextCard();
+          setTextCard();
         }
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -172,7 +172,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             editTextPhone.setText(email);
         }
 
-        // progressDialog = new ProgressDialog(this);
+         progressDialog = new ProgressDialog(this);
 
 
         setListSpinerArea();
@@ -494,32 +494,18 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
     private void setWarnGone() {
-        textViewWarnName.setVisibility(View.GONE);
         textViewWarnAll.setVisibility(View.GONE);
         textViewWarnArea.setVisibility(View.GONE);
-        textViewWarnCity.setVisibility(View.GONE);
         textViewWarnImage.setVisibility(View.GONE);
-        textViewWarnInsurance.setVisibility(View.GONE);
-        textViewWarnPhone.setVisibility(View.GONE);
-        textViewWarnPrice.setVisibility(View.GONE);
-        textViewWarnRemarker.setVisibility(View.GONE);
-        textViewWarnTypeCar.setVisibility(View.GONE);
-        textViewWarnYearCar.setVisibility(View.GONE);
+
     }
 
     private void setTextViewWarn() {
 
-        textViewWarnName = findViewById(R.id.warnName);
         textViewWarnAll = findViewById(R.id.warnAll);
         textViewWarnArea = findViewById(R.id.warnArea);
-        textViewWarnCity = findViewById(R.id.warnCity);
         textViewWarnImage = findViewById(R.id.warnImage);
-        textViewWarnInsurance = findViewById(R.id.warnInsurance);
-        textViewWarnPhone = findViewById(R.id.warnPhone);
-        textViewWarnPrice = findViewById(R.id.warnPrice);
-        textViewWarnRemarker = findViewById(R.id.warnRemarker);
-        textViewWarnTypeCar = findViewById(R.id.warnTypeCar);
-        textViewWarnYearCar = findViewById(R.id.warnYearCar);
+
     }
 
 
@@ -537,12 +523,12 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCar.setArea(area);
 
         String edit = editTextName.getText().toString();
-        flag2 = ErrWarn.errName(edit, textViewWarnName);
+        flag2 = ErrWarn.errName(edit, editTextName);
         if (!flag && flag2) flag = true;
         cardCar.setName(edit);
 
         edit = editTextCity.getText().toString();
-        flag2 = ErrWarn.errCity(edit, textViewWarnCity);
+        flag2 = ErrWarn.errCity(edit, editTextCity);
         if (!flag && flag2) flag = true;
         cardCar.setCity(edit);
 
@@ -557,32 +543,29 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
 
         edit = editTextInsurance.getText().toString();
-        flag2 = ErrWarn.errInsurance(edit, textViewWarnInsurance);
+        flag2 = ErrWarn.errInsurance(edit, editTextInsurance);
         if (!flag && flag2) flag = true;
         cardCar.setInsurance(edit);
 
         edit = editTextPhone.getText().toString();
-        flag2 = ErrWarn.errPhone(edit, textViewWarnPhone);
+        flag2 = ErrWarn.errPhone(edit, editTextPhone);
         if (!flag && flag2) flag = true;
         cardCar.setPhone(edit);
 
         edit = editTextPriceForDay.getText().toString();
-        flag2 = ErrWarn.errPrice(edit, textViewWarnPrice);
+        flag2 = ErrWarn.errPrice(edit, editTextPriceForDay);
         if (!flag && flag2) flag = true;
         cardCar.setPriceDay(edit);
 
-        edit = editTextRemarks.getText().toString();
-        flag2 = ErrWarn.errRemarker(edit, textViewWarnRemarker);
-        if (!flag && flag2) flag = true;
-        cardCar.setRemarks(edit);
+
 
         edit = editTextTypeCar.getText().toString();
-        flag2 = ErrWarn.errTypeCar(edit, textViewWarnTypeCar);
+        flag2 = ErrWarn.errTypeCar(edit, editTextTypeCar);
         if (!flag && flag2) flag = true;
         cardCar.setTypeCar(edit);
 
         edit = editTextYearCar.getText().toString();
-        flag2 = ErrWarn.errYearCar(edit, textViewWarnYearCar);
+        flag2 = ErrWarn.errYearCar(edit, editTextYearCar);
         if (!flag && flag2) flag = true;
         cardCar.setYearCar(edit);
 
@@ -842,30 +825,29 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
     public void deleteCard() {
-        Toast.makeText(MainActivityRegisterCar.this, email + "lklk", Toast.LENGTH_SHORT).show();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-
-        cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-
-        cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    registerInformation = child.getValue(RegisterInformation.class);
-                    key = child.getKey();
-
-                }
-
-                for (int i = 0; i < registerInformation.getCardsUser().size(); i++) {
-                    if (cardCarEdit.getId() == registerInformation.getCardsUser().get(i).getId()) {
-                        registerInformation.removeCardCar(i);
-                        // Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                }
-
-                mDatabase.child(key).setValue(registerInformation);
+//        mDatabase = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+//
+//        cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+//
+//        cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                    registerInformation = child.getValue(RegisterInformation.class);
+//                    key = child.getKey();
+//
+//                }
+//
+//                for (int i = 0; i < registerInformation.getCardsUser().size(); i++) {
+//                    if (cardCarEdit.getId() == registerInformation.getCardsUser().get(i).getId()) {
+//                        registerInformation.removeCardCar(i);
+//                        // Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
+//                        break;
+//                    }
+//                }
+//
+//                mDatabase.child(key).setValue(registerInformation);
                 if (cardCarEdit.getPermissionToPublish() == 0) {
                     DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
                     ref2.child(cardCarEdit.getKey()).removeValue();
@@ -880,13 +862,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                 startActivity(intent);
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
     }
 }

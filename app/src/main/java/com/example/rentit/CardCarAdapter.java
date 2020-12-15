@@ -40,7 +40,7 @@ public class CardCarAdapter extends ArrayAdapter<CardCar> {
 
     public CardCarAdapter(Context context, int resource, int textViewResourceId, List<CardCar> objects) {
         super(context, resource, textViewResourceId, objects);
-
+        this.flagSee = false;
         this.context = context;
         this.objects = objects;
 

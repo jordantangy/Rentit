@@ -162,130 +162,51 @@
 
         <Button
             android:id="@+id/buttonReturnMainPage"
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="110dp"
+            android:layout_marginEnd="10dp"
             android:text="לפרסום"
-            app:layout_constraintEnd_toEndOf="@+id/remarksRegisterCar3"
-            app:layout_constraintStart_toStartOf="@+id/remarksRegisterCar3"
-            app:layout_constraintTop_toBottomOf="@+id/remarksRegisterCar3" />
+            app:layout_constraintBottom_toBottomOf="@+id/buttonMyPage"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMyPage"
+            app:layout_constraintTop_toTopOf="@+id/buttonMyPage" />
 
         <EditText
             android:id="@+id/remarksRegisterCar3"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:ems="8"
             android:hint="הוסף הערות כגון: לפחות להשכרה של שלושה ימים"
             android:inputType="textPersonName"
             android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonDate" />
 
         <Button
             android:id="@+id/buttonMyPage"
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:text="לעמוד שלי"
-            app:layout_constraintStart_toEndOf="@+id/buttonReturnMainPage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/remarksRegisterCar3" />
 
-        <TextView
-            android:id="@+id/warnName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/nameMen3"
-            app:layout_constraintEnd_toEndOf="@+id/nameMen3" />
-
-        <TextView
-            android:id="@+id/warnTypeCar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/typeCar3"
-            app:layout_constraintEnd_toEndOf="@+id/typeCar3" />
-
-        <TextView
-            android:id="@+id/warnPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/phone3"
-            app:layout_constraintEnd_toEndOf="@+id/phone3" />
-
-        <TextView
-            android:id="@+id/warnYearCar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/yearCar3"
-            app:layout_constraintEnd_toEndOf="@+id/yearCar3" />
-
-        <TextView
-            android:id="@+id/warnPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/manyDay3"
-            app:layout_constraintEnd_toEndOf="@+id/manyDay3" />
-
-        <TextView
-            android:id="@+id/warnInsurance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/insurance3"
-            app:layout_constraintEnd_toEndOf="@+id/insurance3" />
-
-        <TextView
-            android:id="@+id/warnCity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/city3"
-            app:layout_constraintEnd_toEndOf="@+id/city3" />
 
         <TextView
             android:id="@+id/warnArea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
             android:text="TextView"
             android:textColor="#EF2B2B"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/spinnerArea3"
-            app:layout_constraintEnd_toEndOf="@+id/spinnerArea3" />
+            app:layout_constraintEnd_toEndOf="@+id/spinnerArea3"
+            app:layout_constraintStart_toStartOf="@+id/spinnerArea3" />
 
-
-        <TextView
-            android:id="@+id/warnRemarker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#EF2B2B"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/remarksRegisterCar3"
-            app:layout_constraintEnd_toEndOf="@+id/remarksRegisterCar3" />
 
         <TextView
             android:id="@+id/warnAll"
@@ -293,9 +214,11 @@
             android:layout_height="wrap_content"
             android:text="TextView"
             android:textColor="#EF2B2B"
+
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/buttonReturnMainPage"
-            app:layout_constraintEnd_toEndOf="@+id/buttonReturnMainPage" />
+            app:layout_constraintEnd_toEndOf="@+id/buttonReturnMainPage"
+            app:layout_constraintStart_toStartOf="@+id/buttonReturnMainPage" />
 
         <TextView
             android:id="@+id/warnImage"
@@ -306,20 +229,23 @@
             android:textColor="#EF2B2B"
 
             android:textSize="10sp"
+
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/upgrade3"
+            app:layout_constraintStart_toStartOf="@+id/upgrade3"
             app:layout_constraintTop_toBottomOf="@+id/upgrade3" />
 
         <Button
             android:id="@+id/buttonDelete"
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginStart="5dp"
             android:text="מחיקת כרטיס"
             android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/buttonReturnMainPage"
-            app:layout_constraintTop_toBottomOf="@+id/remarksRegisterCar3" />
+            app:layout_constraintBottom_toBottomOf="@+id/buttonMyPage"
+            app:layout_constraintStart_toEndOf="@+id/buttonMyPage"
+            app:layout_constraintTop_toTopOf="@+id/buttonMyPage" />
 
         <EditText
             android:id="@+id/editTextRejection"
@@ -338,7 +264,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
             android:text="תאריכים"
             android:textColor="#1B1414"
