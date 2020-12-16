@@ -84,6 +84,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="10dp"
         android:text="מגיל 25 ומעלה צד ג    יואב: 0544540189"
+        android:textIsSelectable="true"
 
         android:textColor="#FFEB3B"
         android:textSize="20sp"
