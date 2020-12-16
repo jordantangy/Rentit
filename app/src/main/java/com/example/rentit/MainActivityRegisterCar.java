@@ -543,14 +543,14 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         if (!flag && flag2) flag = true;
         cardCar.setCity(edit);
 
-        edit = cardCar.getDateStart();
-        if (edit.length() == 0||MainActivityManagementCardsApprov.passDate(edit)) {
-            flag2 = true;
-            Button button = findViewById(R.id.buttonDate);
-            button.setTextColor(-65536);
-            button.setText("אנא הכנס תאריכים תקינים");
-        }
-        if (!flag && flag2) flag = true;
+//        edit = cardCar.getDateStart();
+//        if (edit.length() == 0||MainActivityManagementCardsApprov.passDate(edit)) {//TODO: HERE
+//            flag2 = true;
+//            Button button = findViewById(R.id.buttonDate);
+//            button.setTextColor(-65536);
+//            button.setText("אנא הכנס תאריכים תקינים");
+//        }
+//        if (!flag && flag2) flag = true;
 
 
         edit = editTextInsurance.getText().toString();

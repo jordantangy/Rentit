@@ -113,6 +113,7 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
 
     private int numCards = -1;
     private CardCar cardCar;
+    private ArrayList<CardCar> arrayListCardsPassDate ;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -307,7 +308,7 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
                     lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            if(type.equals("CardsDeleteHistory")){
+                            if (type.equals("CardsDeleteHistory")) {
                                 Intent intent = new Intent(MainActivityManagementCardsApprov.this, MainActivityCardView.class);
                                 intent.putExtra("flagMain", true);
                                 pass(intent, arrayListCards2.get(i));
@@ -525,13 +526,14 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
                 playFeed("FeedbackWaitApprov");
                 return true;
             case R.id.deletePassDateMenu:
+                arrayListCardsPassDate = new ArrayList<>();
                 deletePassDate("CardsApprov");
                 deletePassDate("CardsRejection");
                 deletePassDate("CardsWaitApprov");
 
                 return true;
             case R.id.cardsDeleteHistotyMenu:
-               playCards2("CardsDeleteHistory");
+                playCards2("CardsDeleteHistory");
 
                 return true;
 
@@ -546,22 +548,33 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists()) {
-                    return;
-                }
+
 
                 for (DataSnapshot child : snapshot.getChildren()) {
                     CardCar temp = child.getValue(CardCar.class);
                     if (passDate(temp.getDateStart())) {//delete crad if pass daete and save in history
-                        DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("CardsDeleteHistory").push();
-                        DatabaseReference cardRef3 = FirebaseDatabase.getInstance().getReference(type);
-                        cardRef3.child(temp.getKey()).removeValue();
-                        temp.setKey(cardRef4.getKey());
-                        cardRef4.setValue(temp);
+                        arrayListCardsPassDate.add(child.getValue(CardCar.class));
                     }
 
                 }
+                if (type.equals("CardsWaitApprov")) {
+                    if (arrayListCardsPassDate.size() == 0) {
 
+                        return;
+                    }
+                    CardCarAdapter cardCarAdapter = new CardCarAdapter(MainActivityManagementCardsApprov.this, 0, 0, arrayListCardsPassDate, true);
+                    //phase 4 reference to listview
+                    lv1 = (ListView) findViewById(R.id.lvMange);
+                    lv1.setAdapter(cardCarAdapter);
+//
+                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            dialogCardPassDate(arrayListCardsPassDate.get(i));
+                        }
+                    });
+
+                }
             }
 
             @Override
@@ -571,12 +584,58 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         });
     }
 
+    private void dialogCardPassDate(final CardCar cardCarPass) {
+        d = new Dialog(this);
+        d.setContentView(R.layout.delet_pass_date);
+        d.setTitle("Manage");
+        d.setCancelable(true);
+        Button buttonDelete = (Button) d.findViewById(R.id.buttonDeletePassDate);
+        Button buttonView = (Button) d.findViewById(R.id.buttonViewCards);
+        Button buttonCloseDialog = (Button) d.findViewById(R.id.buttonCloseWindow);
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("CardsDeleteHistory").push();
+                DatabaseReference cardRef3;
+                if (cardCarPass.getPermissionToPublish()==0)
+                    cardRef3 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
+                else if (cardCarPass.getPermissionToPublish()==2)
+                    cardRef3 = FirebaseDatabase.getInstance().getReference("CardsRejection");
+                else
+                    cardRef3 = FirebaseDatabase.getInstance().getReference("CardsApprov");
+                cardRef3.child(cardCarPass.getKey()).removeValue();
+                cardCarPass.setKey(cardRef4.getKey());
+                cardRef4.setValue(cardCarPass);
+                Intent intent = new Intent(MainActivityManagementCardsApprov.this, MainActivityManagementCardsApprov.class);
+
+                startActivityForResult(intent, 0);
+
+            }
+        });
+        buttonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivityManagementCardsApprov.this, MainActivityCardView.class);
+                intent.putExtra("flagMain", true);
+                pass(intent, cardCarPass);
+                startActivityForResult(intent, 0);
+            }
+        });
+        buttonCloseDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                d.dismiss();
+            }
+        });
+        d.show();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static boolean passDate(String dateStart) {
         Date dNow = new Date();
         SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
-        String thisData=simpleFormat.format(dNow);
+        String thisData = simpleFormat.format(dNow);
         int yearStartToday = Integer.valueOf(thisData.substring(6));
         int monthStartToday = Integer.valueOf(thisData.substring(3, 5));
         int dayStartToday = Integer.valueOf(thisData.substring(0, 2));
@@ -585,9 +644,10 @@ public class MainActivityManagementCardsApprov extends AppCompatActivity {
         int monthStart = Integer.valueOf(dateStart.substring(3, 5));
         int dayStart = Integer.valueOf(dateStart.substring(0, 2));
 
-        if(yearStart<yearStartToday)return true;
-        if(yearStart==yearStartToday&&monthStart<monthStartToday)return true;
-        if(yearStart==yearStartToday&&monthStart==monthStartToday&&dayStart<dayStartToday)return true;
+        if (yearStart < yearStartToday) return true;
+        if (yearStart == yearStartToday && monthStart < monthStartToday) return true;
+        if (yearStart == yearStartToday && monthStart == monthStartToday && dayStart < dayStartToday)
+            return true;
 
         return false;
     }
