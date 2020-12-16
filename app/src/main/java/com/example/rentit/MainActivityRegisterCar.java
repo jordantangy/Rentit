@@ -7,9 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -78,7 +76,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private CardCar cardCar = new CardCar();
     private ArrayList<Uri> arrayListImageViewUri = new ArrayList<>();
     private ArrayList<String> areaList = new ArrayList<>();
-    // private ArrayList<ImageView> arrayListImageView = new ArrayList<>();
     private ImageView imageViewTemp = null;
     private Uri uri1 = null;
     private Uri uri2 = null;
@@ -485,7 +482,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         editTextRemarks.setText(cardCarEdit.getRemarks());
         if (cardCarEdit.getPermissionToPublish() == 2 && cardCarEdit.getRejection().length() > 0) {
             editTextRemarks.setText("סורב מפני: " + cardCarEdit.getRejection());
-            editTextRemarks.setTextColor(-65536);//TODO:COlER RED
+            editTextRemarks.setTextColor(-65536);
         }
     }
 
@@ -681,7 +678,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
         cardRef = FirebaseDatabase.getInstance().getReference();
         cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-        Toast.makeText(MainActivityRegisterCar.this, "לפני", Toast.LENGTH_SHORT).show();
 
         cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -699,11 +695,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 if (uri2 != null) arrayListImageViewUri.add(uri2);
                 if (uri3 != null) arrayListImageViewUri.add(uri3);
 
-                Toast.makeText(MainActivityRegisterCar.this, "l" + arrayListImageViewUri.size(), Toast.LENGTH_LONG).show();
 
                 cardCar.setId(registerInformation.getId());
                 upladUriFirebase();
-                // Toast.makeText(MainActivityRegisterCar.this, dataSnapshot.toString(), Toast.LENGTH_LONG).show();
 
             }
 
@@ -724,7 +718,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
         flagI = 0;
         //  final int length = arrayListImageViewUri.size();
-        if (flagEdit && flagImageDeleteConfirmation != 1) {//TODO: image edit:&& length == 0)
+        if (flagEdit && flagImageDeleteConfirmation != 1) {
             DatabaseReference cardRef5 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
             cardCar.setKey(cardRef5.getKey());
             cardRef5.setValue(cardCar);
@@ -934,7 +928,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             public void onClick(View view) {
                 flagImageDeleteConfirmation = 2;
                 d.dismiss();
-                // arrayListImageViewUri=new ArrayList<>();
 
             }
         });

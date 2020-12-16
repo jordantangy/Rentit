@@ -60,7 +60,6 @@ public class MainActivityPageUser extends AppCompatActivity {
             email = firebaseUser.getPhoneNumber().toString();
         }
 
-        //Toast.makeText(MainActivityPageUser.this, "" + email, Toast.LENGTH_LONG).show();
 
         if (email.equals("arielrentit@gmail.com")) {
             Intent intent = new Intent(MainActivityPageUser.this, MainActivityManagementCardsApprov.class);

@@ -222,8 +222,7 @@ public class MainActivity extends AppCompatActivity {
     private void search() {
         textViewWarnSearch.setVisibility(View.GONE);
         cardRef = FirebaseDatabase.getInstance().getReference("CardsApprov");
-        //   Toast.makeText(MainActivityPageUser.this, email, Toast.LENGTH_LONG).show();
-        //cardRef2.child("cardsUser").orderByChild("priceDay").equalTo("100");
+
         cardRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -321,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
                     arrayListCards.add(card);
                 }
                 if (arrayListCards.size() > 0) {
-                    // Toast.makeText(MainActivityPageUser.this, ""+registerInformation.getCardsUser().get(0).getImageViewArrayListName().get(0), Toast.LENGTH_LONG).show();
                     buttonSeeAll.setVisibility(View.GONE);
 
                     cardCarAdapter = new CardCarAdapter(MainActivity.this, 0, 0, arrayListCards);
@@ -567,7 +565,6 @@ public class MainActivity extends AppCompatActivity {
     private void verifyVerificationCode(String code) {
         PhoneAuthCredential credential;
         //creating the credential
-        Toast.makeText(MainActivity.this, mVerificationId, Toast.LENGTH_LONG).show();
         // editTextEmail.setText(mVerificationId);
         try {
             credential = PhoneAuthProvider.getCredential(mVerificationId, code);
@@ -642,7 +639,6 @@ public class MainActivity extends AppCompatActivity {
         cardRef4.setValue(registerInformation);
         progressDialog.dismiss();
         d.dismiss();
-        Toast.makeText(MainActivity.this, "הייתי פה", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
         startActivity(intent);
     }

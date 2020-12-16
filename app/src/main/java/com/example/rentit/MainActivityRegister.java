@@ -129,7 +129,6 @@ checkBoxTerms=findViewById(R.id.checkBoxTerms);
 
     private void registerFirebase(String email, String password) {
         final String TAG = "tag";
-        Toast.makeText(MainActivityRegister.this, email, Toast.LENGTH_SHORT).show();
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -282,7 +281,6 @@ checkBox.setVisibility(View.GONE);
 
         PhoneAuthCredential credential;
         //creating the credential
-        Toast.makeText(MainActivityRegister.this, mVerificationId, Toast.LENGTH_LONG).show();
         // editTextEmail.setText(mVerificationId);
         try {
             credential = PhoneAuthProvider.getCredential(mVerificationId, code);
