@@ -8,6 +8,7 @@ import androidx.core.util.Pair;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,6 +18,9 @@ import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -56,7 +60,6 @@ import java.util.TimeZone;
 
 public class MainActivityRegisterCar extends AppCompatActivity {
     private RegisterInformation registerInformation;
-    private ArrayList<String> arrayListImageName;
 
 
     private DatabaseReference cardRef2;
@@ -67,15 +70,15 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
 
-    private TextView  textViewWarnAll;
-    private TextView  textViewWarnArea;
-    private TextView  textViewWarnImage;
+    private TextView textViewWarnAll;
+    private TextView textViewWarnArea;
+    private TextView textViewWarnImage;
 
 
     private CardCar cardCar = new CardCar();
     private ArrayList<Uri> arrayListImageViewUri = new ArrayList<>();
     private ArrayList<String> areaList = new ArrayList<>();
-    private ArrayList<ImageView> arrayListImageView = new ArrayList<>();
+    // private ArrayList<ImageView> arrayListImageView = new ArrayList<>();
     private ImageView imageViewTemp = null;
     private Uri uri1 = null;
     private Uri uri2 = null;
@@ -122,6 +125,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private Bundle bundle;
     private DatabaseReference mDatabase;
     private String removeImage = "";
+    private int flagImageDeleteConfirmation = 0;
 
 
     @Override
@@ -155,7 +159,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         if (flagEdit || flagMain) {
             cardCarEdit = new CardCar();
             setCard();
-          setTextCard();
+            setTextCard();
         }
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -172,7 +176,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             editTextPhone.setText(email);
         }
 
-         progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
 
 
         setListSpinerArea();
@@ -228,9 +232,10 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         }
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                progressDialog.setMessage("Registering Please Wait...");
+                progressDialog.setMessage("שומר כרטיס אנא חכה להשלמת התהליך...");
 
                 if (flagManagementCardsApprov) {
                     cardsApprov();
@@ -248,18 +253,16 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         });
 
 
-        arrayListImageView.add(imageView1);
-        arrayListImageView.add(imageView2);
-        arrayListImageView.add(imageView3);
-        arrayListImageView.add(imageView4);
-
         if (!flagMain) {
             imageView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     numImage = 1;
-                    if (flagEdit) removeImage = cardCarEdit.getImageViewArrayListName().get(0);
-                    openImage(imageView1, uri1);
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView1, uri1);
 
                 }
             });
@@ -267,9 +270,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     numImage = 2;
-                    if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 1)
-                        removeImage = cardCarEdit.getImageViewArrayListName().get(1);
-                    openImage(imageView2, uri2);
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView2, uri1);
 
                 }
             });
@@ -277,9 +282,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     numImage = 3;
-                    if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 2)
-                        removeImage = cardCarEdit.getImageViewArrayListName().get(2);
-                    openImage(imageView3, uri3);
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView3, uri1);
 
                 }
             });
@@ -287,9 +294,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     numImage = 4;
-                    if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 3)
-                        removeImage = cardCarEdit.getImageViewArrayListName().get(3);
-                    openImage(imageView4, uri4);
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView4, uri1);
 
                 }
             });
@@ -329,6 +338,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                 cardCar.setDateStart(simpleFormat.format(startDate).toString());
                 cardCar.setDateEnd(simpleFormat.format(endDate).toString());
 
+                buttonData.setTextColor((int)R.color.colorBlack);
                 buttonData.setText(" " + simpleFormat.format(startDate) + " Second : " + simpleFormat.format(endDate));
 
             }
@@ -345,6 +355,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         });
 
     }
+
 
     private void cardsApprov() {
         cardCarEdit.setPermissionToPublish(1);
@@ -448,7 +459,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private void setTextCard() {
         List<String> urlImage = cardCarEdit.getImageViewArrayListName();
         cardCar.setImageViewArrayListName(urlImage);
-        Glide.with(this).load(urlImage.get(0)).into(imageView1);
+        Glide.with(this).load(urlImage.get(0)).into(imageView4);
         if (urlImage.size() > 1) {
             Glide.with(this).load(urlImage.get(1)).into(imageView2);
         }
@@ -456,7 +467,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             Glide.with(this).load(urlImage.get(2)).into(imageView3);
         }
         if (urlImage.size() > 3) {
-            Glide.with(this).load(urlImage.get(3)).into(imageView4);
+            Glide.with(this).load(urlImage.get(3)).into(imageView1);
         }
 
 
@@ -498,6 +509,8 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         textViewWarnArea.setVisibility(View.GONE);
         textViewWarnImage.setVisibility(View.GONE);
 
+
+
     }
 
     private void setTextViewWarn() {
@@ -509,12 +522,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setCardDetails() {
         flag = false;
         boolean flag2 = false;
 
         if (!flagEdit) {
-            flag2 = ErrWarn.errImage(area, arrayListImageViewUri.size(), textViewWarnImage);//TODO:b
+            flag2 = ErrWarn.errImage(arrayListImageViewUri.size(), textViewWarnImage);//TODO:b
             if (!flag && flag2) flag = true;
         }
 
@@ -533,11 +547,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCar.setCity(edit);
 
         edit = cardCar.getDateStart();
-        if (edit.length() == 0) {
+        if (edit.length() == 0||MainActivityManagementCardsApprov.passDate(edit)) {
             flag2 = true;
             Button button = findViewById(R.id.buttonDate);
             button.setTextColor(-65536);
-            button.setText("אנא הכנס תאריכים");
+            button.setText("אנא הכנס תאריכים תקינים");
         }
         if (!flag && flag2) flag = true;
 
@@ -556,7 +570,6 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         flag2 = ErrWarn.errPrice(edit, editTextPriceForDay);
         if (!flag && flag2) flag = true;
         cardCar.setPriceDay(edit);
-
 
 
         edit = editTextTypeCar.getText().toString();
@@ -601,29 +614,21 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             case 0:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    arrayListImageViewUri.add(selectedImage);
                     imageViewTemp.setImageURI(selectedImage);
                     setUriImage(selectedImage);
-                    arrayListImageView.add(imageViewTemp);
-                    if (flagEdit && removeImage.length() > 0) {
-                        cardCar.removeImageViewArrayListName(removeImage);
-                        removeImage = "";
-                    }
+                    arrayListImageViewUri.add(selectedImage);
+
                 }
 
                 break;
             case 1:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    arrayListImageViewUri.add(selectedImage);
                     imageViewTemp.setImageURI(selectedImage);
                     setUriImage(selectedImage);
+                    arrayListImageViewUri.add(selectedImage);
 
-                    arrayListImageView.add(imageViewTemp);
-                    if (flagEdit && removeImage.length() > 0) {
-                        cardCar.removeImageViewArrayListName(removeImage);
-                        removeImage = "";
-                    }
+
                 }
                 break;
         }
@@ -687,11 +692,13 @@ public class MainActivityRegisterCar extends AppCompatActivity {
                     key2 = child.getKey();
 
                 }
+
                 arrayListImageViewUri = new ArrayList<>();
                 if (uri4 != null) arrayListImageViewUri.add(uri4);
                 if (uri1 != null) arrayListImageViewUri.add(uri1);
                 if (uri2 != null) arrayListImageViewUri.add(uri2);
                 if (uri3 != null) arrayListImageViewUri.add(uri3);
+
                 Toast.makeText(MainActivityRegisterCar.this, "l" + arrayListImageViewUri.size(), Toast.LENGTH_LONG).show();
 
                 cardCar.setId(registerInformation.getId());
@@ -713,13 +720,11 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCar.setEmail(email);
         cardCar.setNumImage(arrayListImageViewUri.size());
 
-        arrayListImageName = new ArrayList<String>();
         registerInformation.setId(registerInformation.getId() + 1);
-        if (flagEdit) cardCar.setImageViewArrayListName(cardCarEdit.getImageViewArrayListName());
 
         flagI = 0;
-        final int length = arrayListImageViewUri.size();
-        if (flagEdit ) {//TODO: image edit:&& length == 0)
+        //  final int length = arrayListImageViewUri.size();
+        if (flagEdit && flagImageDeleteConfirmation != 1) {//TODO: image edit:&& length == 0)
             DatabaseReference cardRef5 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
             cardCar.setKey(cardRef5.getKey());
             cardRef5.setValue(cardCar);
@@ -783,7 +788,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardRef6.child("RegisterInformation").child(key2).setValue(registerInformation);
         Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
 
-        if (flagEdit){
+        if (flagEdit) {
             deleteCard();
             return;
         }
@@ -848,19 +853,19 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 //                }
 //
 //                mDatabase.child(key).setValue(registerInformation);
-                if (cardCarEdit.getPermissionToPublish() == 0) {
-                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
-                    ref2.child(cardCarEdit.getKey()).removeValue();
-                } else if (cardCarEdit.getPermissionToPublish() == 1) {
-                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsApprov");
-                    ref2.child(cardCarEdit.getKey()).removeValue();
-                } else if (cardCarEdit.getPermissionToPublish() == 2) {
-                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsRejection");
-                    ref2.child(cardCarEdit.getKey()).removeValue();
-                }
-                progressDialog.dismiss();
-                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                startActivity(intent);
+        if (cardCarEdit.getPermissionToPublish() == 0) {
+            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
+            ref2.child(cardCarEdit.getKey()).removeValue();
+        } else if (cardCarEdit.getPermissionToPublish() == 1) {
+            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsApprov");
+            ref2.child(cardCarEdit.getKey()).removeValue();
+        } else if (cardCarEdit.getPermissionToPublish() == 2) {
+            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsRejection");
+            ref2.child(cardCarEdit.getKey()).removeValue();
+        }
+        progressDialog.dismiss();
+        Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+        startActivity(intent);
 
 //            }
 //
@@ -869,6 +874,71 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 //
 //            }
 //        });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_app, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent2;
+        switch (item.getItemId()) {
+            case R.id.mainMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.mainIconMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.myPageMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+                startActivity(intent2);
+                return true;
+            case R.id.cardCarMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivityRegisterCar.class);
+                startActivity(intent2);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void dialogeImageDeleteConfirmation() {
+        final Dialog d = new Dialog(this);
+        d.setContentView(R.layout.dialog_image_delete);
+        d.setTitle("Image delete confirmation");
+
+        d.setCancelable(true);
+        Button buttonYes = (Button) d.findViewById(R.id.buttonYes);
+        Button buttonNo = (Button) d.findViewById(R.id.buttonNo);
+        buttonYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flagImageDeleteConfirmation = 1;
+                imageView1.setImageResource(R.drawable.ic_car);
+                imageView2.setImageResource(R.drawable.ic_car);
+                imageView3.setImageResource(R.drawable.ic_car);
+                imageView4.setImageResource(R.drawable.ic_car);
+                cardCar.setImageViewArrayListName(new ArrayList<String>());
+                d.dismiss();
+            }
+        });
+        buttonNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flagImageDeleteConfirmation = 2;
+                d.dismiss();
+                // arrayListImageViewUri=new ArrayList<>();
+
+            }
+        });
+        d.show();
 
     }
 }

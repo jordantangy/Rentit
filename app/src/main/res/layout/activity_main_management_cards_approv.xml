@@ -13,6 +13,16 @@
 
 
         <TextView
+            android:id="@+id/textViewNumUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="500"
+            android:textColor="#D500F9"
+            app:layout_constraintEnd_toEndOf="@+id/textView10"
+            app:layout_constraintStart_toStartOf="@+id/textView10"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <TextView
             android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="220dp"
+            android:cacheColorHint="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
@@ -184,6 +195,18 @@
             app:layout_constraintEnd_toEndOf="@+id/buttonRejecsanFeedback"
             app:layout_constraintStart_toStartOf="@+id/buttonRejecsanFeedback"
             app:layout_constraintTop_toBottomOf="@+id/buttonRejecsanFeedback" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:text="נרשמו לאפליקציה"
+            android:textColor="#7039EA"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonMainReturn"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMainReturn"
+            app:layout_constraintTop_toTopOf="@+id/buttonMainReturn" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

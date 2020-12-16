@@ -135,7 +135,7 @@ public class ErrWarn {
 
     }
 
-    public static boolean errImage(String image, int size, TextView textView) {
+    public static boolean errImage( int size, TextView textView) {
         if (size < 1){
             earnEdit(textView, "אנא הכנס לפחות תמונה אחת");
             return true;

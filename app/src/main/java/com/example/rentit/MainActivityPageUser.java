@@ -7,6 +7,9 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -159,6 +162,38 @@ public class MainActivityPageUser extends AppCompatActivity {
         }
 
 
+
+
+    }
+    @Override
+    public  boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.menu_app,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent2;
+        switch(item.getItemId()){
+            case R.id.mainMenu:
+                intent2 = new Intent(MainActivityPageUser.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.mainIconMenu:
+                intent2 = new Intent(MainActivityPageUser.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.myPageMenu:
+                intent2 = new Intent(MainActivityPageUser.this, MainActivityPageUser.class);
+                startActivity(intent2);
+                return true;
+            case R.id.cardCarMenu:
+                intent2 = new Intent(MainActivityPageUser.this, MainActivityRegisterCar.class);
+                startActivity(intent2);
+                return true;
+            default:   return super.onOptionsItemSelected(item);
+        }
     }
 
 }

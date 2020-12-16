@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/mainIconMenu"
+        android:icon="@mipmap/ic_car_icon"
+        android:title="לדף הראשי"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/mainMenu"
+        android:title="לדף הראשי"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/myPageMenu"
+        android:title="לעמוד שלי"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/cardCarMenu"
+        android:title="לפרסום רכב"
+        app:showAsAction="never"/>
+
+</menu>

@@ -7,6 +7,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -366,5 +369,30 @@ checkBox.setVisibility(View.GONE);
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+    @Override
+    public  boolean onCreateOptionsMenu(Menu menu) {
+            MenuInflater menuInflater=getMenuInflater();
+            menuInflater.inflate(R.menu.menu_app,menu);
+            return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent2;
+        switch(item.getItemId()){
+            case R.id.mainMenuRegister:
+                intent2 = new Intent(MainActivityRegister.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.mainIconMenuRegister:
+                intent2 = new Intent(MainActivityRegister.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+
+            default:   return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 }

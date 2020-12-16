@@ -35,7 +35,7 @@
             android:id="@+id/typeCarListCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="10dp"
             android:text="טויוטה קורולה"
             android:textColor="#100F0F"
             app:layout_constraintBottom_toBottomOf="parent"

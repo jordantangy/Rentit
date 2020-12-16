@@ -1,6 +1,7 @@
 package com.example.rentit;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
@@ -11,6 +12,9 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,12 +22,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -121,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
         firebaseUser = mAuth.getCurrentUser();
         flagConnected = false;
         if (firebaseUser != null) {
+            ImageView imageView=findViewById(R.id.imageViewConnected);
+            imageView.setVisibility(View.VISIBLE);
             flagConnected = true;
             loginButtonMain.setText("יציאה");
             registerButton.setText("לעמוד שלי");
@@ -142,9 +151,8 @@ public class MainActivity extends AppCompatActivity {
         loginButtonMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth = FirebaseAuth.getInstance();
-                firebaseUser = mAuth.getCurrentUser();
-                if (firebaseUser != null) {
+
+                if (flagConnected) {
                     Toast.makeText(MainActivity.this, "!!!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
                     mAuth.signOut();
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -159,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebaseUser = mAuth.getCurrentUser();
-                if (firebaseUser != null) {
+
+                if (flagConnected) {
                     Intent intent = new Intent(MainActivity.this, MainActivityPageUser.class);
                     startActivity(intent);
 
@@ -290,7 +298,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
 
 
@@ -719,4 +726,37 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+    @Override
+    public  boolean onCreateOptionsMenu(Menu menu) {
+        if(flagConnected){
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.menu_app,menu);
+        return true;}
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent2;
+        switch(item.getItemId()){
+            case R.id.mainMenu:
+                intent2 = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.mainIconMenu:
+                intent2 = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.myPageMenu:
+                intent2 = new Intent(MainActivity.this, MainActivityPageUser.class);
+                startActivity(intent2);
+                return true;
+            case R.id.cardCarMenu:
+                intent2 = new Intent(MainActivity.this, MainActivityRegisterCar.class);
+                startActivity(intent2);
+                return true;
+            default:   return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

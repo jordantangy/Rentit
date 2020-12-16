@@ -136,6 +136,16 @@
             app:layout_constraintStart_toStartOf="@+id/search"
             app:layout_constraintTop_toBottomOf="@+id/search" />
 
+        <ImageView
+            android:id="@+id/imageViewConnected"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/register"
+            app:layout_constraintEnd_toStartOf="@+id/register"
+            app:layout_constraintTop_toTopOf="@+id/register"
+            app:srcCompat="@mipmap/ic_connected_icon" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
