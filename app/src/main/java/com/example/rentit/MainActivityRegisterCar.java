@@ -62,7 +62,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
     private DatabaseReference cardRef2;
     private DatabaseReference cardRef;
-
+    int a;
     private ProgressDialog progressDialog;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
