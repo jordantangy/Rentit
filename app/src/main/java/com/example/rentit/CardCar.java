@@ -8,6 +8,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardCar {
+//    -key: String
+//    -seeCard: int
+//    -email: String
+//    -numImage: int
+//    -id: int
+//    -permissionToPublish: int
+//    -name: String
+//    -typeCar: String
+//    -yearCar: String
+//    -phone: String
+//    -priceDay: String
+//    -insurance: String
+//    -area: String
+//    -city: String
+//    -dateStart: String
+//    -dateEnd: String
+//    -remarks: String
+//    -rejection: String
+//    -imageViewArrayListName: List<String>
+
+
     private String key="";
     private int seeCard=0;
     private String email="";
@@ -32,26 +53,6 @@ public class CardCar {
 
     public CardCar() {
     }
-    public CardCar(String name) {
-        this.name=name;
-    }
-    public CardCar(CardCar c) {
-        this.id = c.id;
-        this.permissionToPublish = c.permissionToPublish;
-        this.name = c.name;
-        this.typeCar = c.typeCar;
-        this.yearCar = c.yearCar;
-        this.phone = c.phone;
-        this.priceDay = c.priceDay;
-        this.insurance = c.insurance;
-        this.area = c.area;
-        this.city = c.city;
-        this.dateStart = c.dateStart;
-        this.dateEnd = c.dateEnd;
-        this.remarks = c.remarks;
-        this.rejection=c.rejection;
-        this.imageViewArrayListName = c.imageViewArrayListName;
-    }
 
 
     public String getEmail() {
@@ -61,7 +62,9 @@ public class CardCar {
     public void setEmail(String email) {
         this.email = email;
     }
-
+//+removeImageViewArrayListName (String)
+//    +addImageViewArrayListName (String)
+//        +addOneSeeCard ()
     public void removeImageViewArrayListName(String url){
         imageViewArrayListName.remove(url);
 }

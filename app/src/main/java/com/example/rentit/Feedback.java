@@ -17,14 +17,7 @@ public class Feedback {
     public Feedback() {
     }
 
-    public Feedback(int grade) {
-        this.grade = grade;
-    }
 
-    public Feedback(int grade, String feedback) {
-        this.grade = grade;
-        this.feedback = feedback;
-    }
 
     public int getGrade() {
         return grade;
