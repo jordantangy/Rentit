@@ -1,19 +1,24 @@
 package com.example.rentit;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.util.Pair;
 
 import android.Manifest;
-import android.app.DownloadManager;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,10 +30,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,42 +47,44 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class MainActivityRegisterCar extends AppCompatActivity {
     private RegisterInformation registerInformation;
-    private ArrayList<String> arrayListImageName;
 
 
     private DatabaseReference cardRef2;
-
-
     private DatabaseReference cardRef;
 
-    // private ProgressDialog progressDialog;
-
+    private ProgressDialog progressDialog;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
 
-    private TextView textViewWarnPhone, textViewWarnName, textViewWarnPrice, textViewWarnAll;
-    private TextView textViewWarnTypeCar, textViewWarnYearCar, textViewWarnInsurance, textViewWarnArea;
-    private TextView textViewWarnDateStart, textViewWarnDateEnd, textViewWarnCity, textViewWarnRemarker, textViewWarnImage;
+    private TextView textViewWarnAll;
+    private TextView textViewWarnArea;
+    private TextView textViewWarnImage;
 
 
     private CardCar cardCar = new CardCar();
-    ArrayList<Uri> arrayListImageViewUri = new ArrayList<>();
-    ArrayList<String> areaList = new ArrayList<>();
-    ArrayList<ImageView> arrayListImageView = new ArrayList<>();
+    private ArrayList<Uri> arrayListImageViewUri = new ArrayList<>();
+    private ArrayList<String> areaList = new ArrayList<>();
     private ImageView imageViewTemp = null;
+    private Uri uri1 = null;
+    private Uri uri2 = null;
+    private Uri uri3 = null;
+    private Uri uri4 = null;
+    private Uri uriSave = null;
+    private int numImage = 0;
+
+
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageView3;
@@ -88,8 +96,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private EditText editTextYearCar;
     private EditText editTextPriceForDay;
     private EditText editTextPhone;
-    private EditText editTextDateStart;
-    private EditText editTextDateEnd;
+
     private EditText editTextRemarks;
     private EditText editTextRejection;
 
@@ -104,9 +111,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private String keyCard = "0";
 
     private int flagI;
-    private int num;
     private String url = "";
-    private int i;
     private String area = "";
     private boolean flag = false;
     private CardCar cardCarEdit;
@@ -117,12 +122,15 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private Bundle bundle;
     private DatabaseReference mDatabase;
     private String removeImage = "";
+    private int flagImageDeleteConfirmation = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_register_car);
+
+        progressDialog = new ProgressDialog(this);
         flagManagementCardsApprov = false;
         flagEdit = false;
         flagMain = false;
@@ -153,9 +161,19 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null)
-            email = firebaseUser.getEmail().toString();
-        // progressDialog = new ProgressDialog(this);
+        try {
+            if (!firebaseUser.getEmail().toString().isEmpty())
+                email = firebaseUser.getEmail().toString();
+            else {
+                email = firebaseUser.getPhoneNumber().toString();
+                editTextPhone.setText(email);
+            }
+        } catch (RuntimeException e) {
+            email = firebaseUser.getPhoneNumber().toString();
+            editTextPhone.setText(email);
+        }
+
+        progressDialog = new ProgressDialog(this);
 
 
         setListSpinerArea();
@@ -166,11 +184,19 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         buttonRegister = findViewById(R.id.buttonReturnMainPage);
 
         if (flagManagementCardsApprov) {
+            editTextRemarks.setHint("הסבר סירוב");
             editTextRejection = findViewById(R.id.editTextRejection);
-            buttonDelete.setText("סירוב");
-            buttonDelete.setVisibility(View.VISIBLE);
-            buttonRegister.setText("אישור");
-            buttonMyPage.setText("לעמוד הראשי");
+            if (cardCarEdit.getPermissionToPublish() == 0) {
+                buttonRegister.setText("אישור");
+                buttonDelete.setText("סירוב");
+                buttonDelete.setVisibility(View.VISIBLE);
+            } else {
+                email = cardCarEdit.getEmail();
+                buttonDelete.setText("מחיקת כרטיס");
+                buttonDelete.setVisibility(View.VISIBLE);
+                buttonRegister.setVisibility(View.GONE);
+            }
+            buttonMyPage.setText("לעמוד שלי");
 
         }
         if (flagEdit) {
@@ -182,7 +208,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (flagManagementCardsApprov) {
+                    if (!buttonDelete.getText().equals("מחיקת כרטיס")) {
                         cardsRejection();
 
 
@@ -203,14 +229,20 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         }
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
+                progressDialog.setMessage("שומר כרטיס אנא חכה להשלמת התהליך...");
+
                 if (flagManagementCardsApprov) {
                     cardsApprov();
 
                 } else {
                     setWarnGone();
+
+
                     setCardDetails();
+
                     if (!flag) retrieveData();
                 }
 
@@ -218,96 +250,142 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         });
 
 
-        arrayListImageView.add(imageView1);
-        arrayListImageView.add(imageView2);
-        arrayListImageView.add(imageView3);
-        arrayListImageView.add(imageView4);
-
         if (!flagMain) {
             imageView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (flagEdit) removeImage = cardCarEdit.getImageViewArrayListName().get(0);
-                    openImage(imageView1);
+                    numImage = 1;
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView1, uri1);
 
                 }
             });
             imageView2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 1)
-                        removeImage = cardCarEdit.getImageViewArrayListName().get(1);
-                    openImage(imageView2);
+                    numImage = 2;
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView2, uri1);
 
                 }
             });
             imageView3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 2)
-                        removeImage = cardCarEdit.getImageViewArrayListName().get(2);
-                    openImage(imageView3);
+                    numImage = 3;
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView3, uri1);
 
                 }
             });
             imageView4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (flagEdit && cardCarEdit.getImageViewArrayListName().size() > 3)
-                        removeImage = cardCarEdit.getImageViewArrayListName().get(3);
-                    openImage(imageView4);
+                    numImage = 4;
+                    if (flagEdit && flagImageDeleteConfirmation != 1) {
+                        dialogeImageDeleteConfirmation();
+                        //           removeImage = cardCarEdit.getImageViewArrayListName().get(0);
+                    }
+                    if (!flagEdit || flagImageDeleteConfirmation == 1) openImage(imageView4, uri1);
 
                 }
             });
         }
+//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//        calendar.clear();
+//        Long today = MaterialDatePicker.todayInUtcMilliseconds();
+
+        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
+        // MaterialDatePicker.Builder builder=MaterialDatePicker.Builder.dateRangePicker();
+        builder.setTitleText("בחר תאריך");
+        final MaterialDatePicker materialDatePicker = builder.build();
+
+        final Button buttonData = findViewById(R.id.buttonDate);
+        buttonData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
+            }
+        });
+
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                Pair selectedDates = (Pair) materialDatePicker.getSelection();
+//              then obtain the startDate & endDate from the range
+                final Pair<Date, Date> rangeDate = new Pair<>(new Date((Long) selectedDates.first), new Date((Long) selectedDates.second));
+//              assigned variables
+                Date startDate = rangeDate.first;
+                Date endDate = rangeDate.second;
+//              Format the dates in ur desired display mode
+
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+//              Display it by setText
+                cardCar.setDateStart(simpleFormat.format(startDate).toString());
+                cardCar.setDateEnd(simpleFormat.format(endDate).toString());
+
+                buttonData.setTextColor((int)R.color.colorBlack);
+                buttonData.setText(" " + simpleFormat.format(startDate) + " Second : " + simpleFormat.format(endDate));
+
+            }
+        });
 
         buttonMyPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (flagMain) {
-                    Intent intent = new Intent(MainActivityRegisterCar.this, MainActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+                startActivity(intent);
+
             }
         });
+
     }
+
 
     private void cardsApprov() {
         cardCarEdit.setPermissionToPublish(1);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("CardsApprov").push();
         final String keyApprov = ref.getKey();
-        ref.setValue(cardCarEdit);
         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
         ref2.child(cardCarEdit.getKey()).removeValue();
+        cardCarEdit.setKey(keyApprov);
+        ref.setValue(cardCarEdit);
 
         DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-        ref3.child("cardsUser").orderByChild("email").equalTo(cardCarEdit.getEmail());
-        ref3.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref3.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
-                editTextRemarks.setText(snapshot.toString());
+                // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
                     key2 = child.getKey();
                 }
-                editTextRemarks.setText("lll" + registerInformation.getEmail());
+                //  editTextRemarks.setText("lll" + registerInformation.getEmail());
 
                 List<CardCar> cardCarList = registerInformation.getCardsUser();
                 for (int j = 0; j < cardCarList.size(); j++) {
                     if (cardCarList.get(j).getId() == cardCarEdit.getId()) {
                         registerInformation.getCardsUser().get(j).setPermissionToPublish(1);
                         registerInformation.getCardsUser().get(j).setKey(keyApprov);
-                        editTextRemarks.setText("lll" + registerInformation.getCardsUser().get(j).getPermissionToPublish());
+                        // editTextRemarks.setText("lll" + registerInformation.getCardsUser().get(j).getPermissionToPublish());
                         break;
                     }
                 }
                 DatabaseReference cardR = FirebaseDatabase.getInstance().getReference();
                 cardR.child("RegisterInformation").child(key2).setValue(registerInformation);
-
+                progressDialog.dismiss();
                 Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
                 startActivity(intent);
 
@@ -323,33 +401,37 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     }
 
     private void cardsRejection() {
+        cardCarEdit.setRejection(editTextRemarks.getText().toString());
         cardCarEdit.setPermissionToPublish(2);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("CardsRejection").push();
-         final String keyRejection = ref.getKey();
-        ref.setValue(cardCarEdit);
+        final String keyRejection = ref.getKey();
         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
         ref2.child(cardCarEdit.getKey()).removeValue();
+        cardCarEdit.setKey(keyRejection);
+        ref.setValue(cardCarEdit);
 
 
-        DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
-        ref3.child("cardsUser").orderByChild("email").equalTo(cardCarEdit.getEmail());
-        ref3.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+
+        cardRef2.orderByChild("email").equalTo(cardCarEdit.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
-                editTextRemarks.setText(snapshot.toString());
+                // Toast.makeText(MainActivityRegisterCar.this, snapshot.toString(), Toast.LENGTH_LONG).show();
+                //   editTextRemarks.setText(snapshot.toString());
                 for (DataSnapshot child : snapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
                     key2 = child.getKey();
                 }
-                editTextRemarks.setText("lll" + registerInformation.getEmail());
+
 
                 List<CardCar> cardCarList = registerInformation.getCardsUser();
                 for (int j = 0; j < cardCarList.size(); j++) {
                     if (cardCarList.get(j).getId() == cardCarEdit.getId()) {
                         registerInformation.getCardsUser().get(j).setPermissionToPublish(2);
+                        registerInformation.getCardsUser().get(j).setRejection(
+                                editTextRemarks.getText().toString());
+
                         registerInformation.getCardsUser().get(j).setKey(keyRejection);
-                        editTextRemarks.setText("lll" + registerInformation.getCardsUser().get(j).getPermissionToPublish());
                         break;
                     }
                 }
@@ -374,7 +456,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
     private void setTextCard() {
         List<String> urlImage = cardCarEdit.getImageViewArrayListName();
         cardCar.setImageViewArrayListName(urlImage);
-        Glide.with(this).load(urlImage.get(0)).into(imageView1);
+        Glide.with(this).load(urlImage.get(0)).into(imageView4);
         if (urlImage.size() > 1) {
             Glide.with(this).load(urlImage.get(1)).into(imageView2);
         }
@@ -382,7 +464,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             Glide.with(this).load(urlImage.get(2)).into(imageView3);
         }
         if (urlImage.size() > 3) {
-            Glide.with(this).load(urlImage.get(3)).into(imageView4);
+            Glide.with(this).load(urlImage.get(3)).into(imageView1);
         }
 
 
@@ -393,9 +475,15 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         editTextYearCar.setText(cardCarEdit.getYearCar());
         editTextPriceForDay.setText(cardCarEdit.getPriceDay());
         editTextPhone.setText(cardCarEdit.getPhone());
-        editTextDateStart.setText(cardCarEdit.getDateStart());
-        editTextDateEnd.setText(cardCarEdit.getDateEnd());
+        Button buttonDate = findViewById(R.id.buttonDate);
+        buttonDate.setText("מ-" + cardCarEdit.getDateStart() + " עד-" + cardCarEdit.getDateEnd());
+        cardCar.setDateEnd(cardCarEdit.getDateEnd());
+        cardCar.setDateStart(cardCarEdit.getDateStart());
         editTextRemarks.setText(cardCarEdit.getRemarks());
+        if (cardCarEdit.getPermissionToPublish() == 2 && cardCarEdit.getRejection().length() > 0) {
+            editTextRemarks.setText("סורב מפני: " + cardCarEdit.getRejection());
+            editTextRemarks.setTextColor(-65536);
+        }
     }
 
     private void setEditTxtId() {
@@ -410,65 +498,34 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         editTextYearCar = findViewById(R.id.yearCar3);
         editTextPriceForDay = findViewById(R.id.manyDay3);
         editTextPhone = findViewById(R.id.phone3);
-        editTextDateStart = findViewById(R.id.startDate23);
-        editTextDateEnd = findViewById(R.id.endDate23);
         editTextRemarks = findViewById(R.id.remarksRegisterCar3);
     }
 
     private void setWarnGone() {
-        textViewWarnName.setVisibility(View.GONE);
         textViewWarnAll.setVisibility(View.GONE);
         textViewWarnArea.setVisibility(View.GONE);
-        textViewWarnCity.setVisibility(View.GONE);
-        textViewWarnDateEnd.setVisibility(View.GONE);
-        textViewWarnDateStart.setVisibility(View.GONE);
         textViewWarnImage.setVisibility(View.GONE);
-        textViewWarnInsurance.setVisibility(View.GONE);
-        textViewWarnPhone.setVisibility(View.GONE);
-        textViewWarnPrice.setVisibility(View.GONE);
-        textViewWarnRemarker.setVisibility(View.GONE);
-        textViewWarnTypeCar.setVisibility(View.GONE);
-        textViewWarnYearCar.setVisibility(View.GONE);
+
+
+
     }
 
     private void setTextViewWarn() {
 
-        textViewWarnName = findViewById(R.id.warnName);
         textViewWarnAll = findViewById(R.id.warnAll);
         textViewWarnArea = findViewById(R.id.warnArea);
-        textViewWarnCity = findViewById(R.id.warnCity);
-        textViewWarnDateEnd = findViewById(R.id.warnDataEnd);
-        textViewWarnDateStart = findViewById(R.id.warnDateStart);
         textViewWarnImage = findViewById(R.id.warnImage);
-        textViewWarnInsurance = findViewById(R.id.warnInsurance);
-        textViewWarnPhone = findViewById(R.id.warnPhone);
-        textViewWarnPrice = findViewById(R.id.warnPrice);
-        textViewWarnRemarker = findViewById(R.id.warnRemarker);
-        textViewWarnTypeCar = findViewById(R.id.warnTypeCar);
-        textViewWarnYearCar = findViewById(R.id.warnYearCar);
-
 
     }
 
-    public void downloadFile(Context context, String fileName, String fileExtension, String destinationDirectory, String url) {
-        DownloadManager downloadmanager = (DownloadManager) context.
-                getSystemService(Context.DOWNLOAD_SERVICE);
-        Uri uri = Uri.parse(url);
-        DownloadManager.Request request = new DownloadManager.Request(uri);
 
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
-
-        downloadmanager.enqueue(request);
-    }
-
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setCardDetails() {
         flag = false;
         boolean flag2 = false;
 
         if (!flagEdit) {
-            flag2 = ErrWarn.errImage(area, arrayListImageViewUri.size(), textViewWarnImage);
+            flag2 = ErrWarn.errImage(arrayListImageViewUri.size(), textViewWarnImage);//TODO:b
             if (!flag && flag2) flag = true;
         }
 
@@ -477,63 +534,66 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCar.setArea(area);
 
         String edit = editTextName.getText().toString();
-        flag2 = ErrWarn.errName(edit, textViewWarnName);
+        flag2 = ErrWarn.errName(edit, editTextName);
         if (!flag && flag2) flag = true;
         cardCar.setName(edit);
 
         edit = editTextCity.getText().toString();
-        flag2 = ErrWarn.errCity(edit, textViewWarnCity);
+        flag2 = ErrWarn.errCity(edit, editTextCity);
         if (!flag && flag2) flag = true;
         cardCar.setCity(edit);
 
-        edit = editTextDateStart.getText().toString();
-        flag2 = ErrWarn.errStartDate(edit, textViewWarnDateStart);
+        edit = cardCar.getDateStart();
+        if (edit.length() == 0||MainActivityManagementCardsApprov.passDate(edit)) {//TODO: HERE
+            flag2 = true;
+            Button button = findViewById(R.id.buttonDate);
+            button.setTextColor(-65536);
+            button.setText("אנא הכנס תאריכים תקינים");
+        }
         if (!flag && flag2) flag = true;
-        cardCar.setDateStart(edit);
 
-        edit = editTextDateEnd.getText().toString();
-        flag2 = ErrWarn.errEndData(edit, textViewWarnDateEnd);
-        if (!flag && flag2) flag = true;
-        cardCar.setDateEnd(edit);
 
         edit = editTextInsurance.getText().toString();
-        flag2 = ErrWarn.errInsurance(edit, textViewWarnInsurance);
+        flag2 = ErrWarn.errInsurance(edit, editTextInsurance);
         if (!flag && flag2) flag = true;
         cardCar.setInsurance(edit);
 
+        edit = editTextRemarks.getText().toString();
+        flag2 = ErrWarn.errRemarker(edit, editTextRemarks);
+        if (!flag && flag2) flag = true;
+        cardCar.setRemarks(edit);
+
         edit = editTextPhone.getText().toString();
-        flag2 = ErrWarn.errPhone(edit, textViewWarnPhone);
+        flag2 = ErrWarn.errPhone(edit, editTextPhone);
         if (!flag && flag2) flag = true;
         cardCar.setPhone(edit);
 
         edit = editTextPriceForDay.getText().toString();
-        flag2 = ErrWarn.errPrice(edit, textViewWarnPrice);
+        flag2 = ErrWarn.errPrice(edit, editTextPriceForDay);
         if (!flag && flag2) flag = true;
         cardCar.setPriceDay(edit);
 
-        edit = editTextRemarks.getText().toString();
-        flag2 = ErrWarn.errRemarker(edit, textViewWarnRemarker);
-        if (!flag && flag2) flag = true;
-        cardCar.setRemarks(edit);
 
         edit = editTextTypeCar.getText().toString();
-        flag2 = ErrWarn.errTypeCar(edit, textViewWarnTypeCar);
+        flag2 = ErrWarn.errTypeCar(edit, editTextTypeCar);
         if (!flag && flag2) flag = true;
         cardCar.setTypeCar(edit);
 
         edit = editTextYearCar.getText().toString();
-        flag2 = ErrWarn.errYearCar(edit, textViewWarnYearCar);
+        flag2 = ErrWarn.errYearCar(edit, editTextYearCar);
         if (!flag && flag2) flag = true;
         cardCar.setYearCar(edit);
 
-        if(flag){
+        if (flag) {
             textViewWarnAll.setText("אחד הנתונים לא תקין");
             textViewWarnAll.setVisibility(View.VISIBLE);
         }
     }
 
-    public void openImage(ImageView imageView) {
+    public void openImage(ImageView imageView, Uri uri) {
         imageViewTemp = imageView;
+        uriSave = uri;
+
 
         try {
             if (ActivityCompat.checkSelfPermission(MainActivityRegisterCar.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -556,29 +616,35 @@ public class MainActivityRegisterCar extends AppCompatActivity {
             case 0:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    arrayListImageViewUri.add(selectedImage);
                     imageViewTemp.setImageURI(selectedImage);
-                    arrayListImageView.add(imageViewTemp);
-                    if (flagEdit && removeImage.length() > 0) {
-                        cardCar.removeImageViewArrayListName(removeImage);
-                        removeImage = "";
-                    }
+                    setUriImage(selectedImage);
+                    arrayListImageViewUri.add(selectedImage);
+
                 }
 
                 break;
             case 1:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    arrayListImageViewUri.add(selectedImage);
                     imageViewTemp.setImageURI(selectedImage);
-                    arrayListImageView.add(imageViewTemp);
-                    if (flagEdit && removeImage.length() > 0) {
-                        cardCar.removeImageViewArrayListName(removeImage);
-                        removeImage = "";
-                    }
+                    setUriImage(selectedImage);
+                    arrayListImageViewUri.add(selectedImage);
+
+
                 }
                 break;
         }
+    }
+
+    private void setUriImage(Uri selectedImage) {
+        if (numImage == 1)
+            uri1 = selectedImage;
+        if (numImage == 2)
+            uri2 = selectedImage;
+        if (numImage == 3)
+            uri3 = selectedImage;
+        if (numImage == 4)
+            uri4 = selectedImage;
     }
 
 
@@ -611,7 +677,9 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
 
     public void retrieveData() {
+        //  progressDialog = new ProgressDialog(this);
 
+        progressDialog.show();
 
         cardRef = FirebaseDatabase.getInstance().getReference();
         cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
@@ -619,13 +687,23 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     registerInformation = child.getValue(RegisterInformation.class);
                     key2 = child.getKey();
 
                 }
+
+                arrayListImageViewUri = new ArrayList<>();
+                if (uri4 != null) arrayListImageViewUri.add(uri4);
+                if (uri1 != null) arrayListImageViewUri.add(uri1);
+                if (uri2 != null) arrayListImageViewUri.add(uri2);
+                if (uri3 != null) arrayListImageViewUri.add(uri3);
+
+
                 cardCar.setId(registerInformation.getId());
                 upladUriFirebase();
+
             }
 
             @Override
@@ -641,86 +719,88 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCar.setEmail(email);
         cardCar.setNumImage(arrayListImageViewUri.size());
 
-        arrayListImageName = new ArrayList<String>();
         registerInformation.setId(registerInformation.getId() + 1);
-        if (flagEdit) cardCar.setImageViewArrayListName(cardCarEdit.getImageViewArrayListName());
 
         flagI = 0;
-        final int length = arrayListImageViewUri.size();
-        if (flagEdit && length == 0) {
+        //  final int length = arrayListImageViewUri.size();
+        if (flagEdit && flagImageDeleteConfirmation != 1) {
             DatabaseReference cardRef5 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
-            cardCar.setKey(cardRef.toString());
-            cardRef5.child(keyCard).setValue(cardCar);
+            cardCar.setKey(cardRef5.getKey());
+            cardRef5.setValue(cardCar);
             registerInformation.addCardcar(cardCar);
-
-            cardRef.child("RegisterInformation").child(key2).setValue(registerInformation);
+            DatabaseReference cardRef7 = FirebaseDatabase.getInstance().getReference();
+            cardRef7.child("RegisterInformation").child(key2).setValue(registerInformation);
 
             Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
 
             deleteCard();
         } else {
-            for (i = 0; i < length && i < 4; i++) {
+            //  for (i = 0; i < length && i < 4; i++) {
 
 
-                num = i + 1;
-                String s = registerInformation.getEmail() + "/" + registerInformation.getId() + "" + num + ".jpg";
-                final StorageReference riversRef = mStorageRef.child(s);
-                riversRef.putFile(arrayListImageViewUri.get(i))
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            imageAndSave(1);
+
+        }
+    }
+
+    private void imageAndSave(final int num) {
+
+        String s = registerInformation.getEmail() + "/" + registerInformation.getId() + "" + num + ".jpg";
+        StorageReference riversRef = mStorageRef.child(s);
+        riversRef.putFile(arrayListImageViewUri.get(num - 1))
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            public void onSuccess(Uri uri) {
+                                url = uri.toString();
+                                cardCar.addImageViewArrayListName(url);
+                                if (arrayListImageViewUri.size() == num) {
+                                    fireBase();
+                                    return;
+                                }
+                                imageAndSave(num + 1);
 
-                                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        url = uri.toString();
-                                        flagI++;
-                                        if (!keyCard.equals("0"))
-                                            registerInformation.getCardsUser().get(registerInformation.getCardsUser().size() - 1).addImageViewArrayListName(url);
-                                        cardCar.addImageViewArrayListName(url);
-
-
-                                        if (keyCard.equals("0")) {
-                                            DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
-                                            keyCard = cardRef4.getKey();
-                                            cardCar.setKey(keyCard);
-                                            registerInformation.addCardcar(cardCar);
-                                            cardRef4.setValue(cardCar);
-                                        } else {
-                                            DatabaseReference cardRef5 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
-                                            cardRef5.child(keyCard).setValue(cardCar);
-                                        }
-
-                                        cardRef.child("RegisterInformation").child(key2).setValue(registerInformation);
-                                        Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
-
-                                        if (flagEdit) deleteCard();
-                                        else if(flagI==length) {
-                                            Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                                            startActivity(intent);
-                                        }
-
-
-                                    }
-                                });
-
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Toast.makeText(MainActivityRegisterCar.this, "תמונה לא נשמרה", Toast.LENGTH_SHORT).show();
                             }
                         });
-                //   Toast.makeText(MainActivityRegisterCar.this, "צלחה"+riversRef.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(MainActivityRegisterCar.this, "תמונה לא נשמרה", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-            }
+    }
+
+    private void fireBase() {
+        DatabaseReference cardRef4 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov").push();
+        keyCard = cardRef4.getKey();
+        cardCar.setKey(keyCard);
+        registerInformation.addCardcar(cardCar);
+        cardRef4.setValue(cardCar);
+
+        DatabaseReference cardRef6 = FirebaseDatabase.getInstance().getReference();
+        cardRef6.child("RegisterInformation").child(key2).setValue(registerInformation);
+        Toast.makeText(MainActivityRegisterCar.this, "כרטיס נשמר בהצלחה", Toast.LENGTH_SHORT).show();
+
+        if (flagEdit) {
+            deleteCard();
+            return;
         }
 
+        progressDialog.dismiss();
+        Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+        startActivity(intent);
 
-        // finish();
+
     }
+
+    // finish();
+    //}
 
 
     private void setCard() {
@@ -741,6 +821,7 @@ public class MainActivityRegisterCar extends AppCompatActivity {
         cardCarEdit.setInsurance(bundle.getString("insurance"));
         cardCarEdit.setId(bundle.getInt("id"));
         cardCarEdit.setPermissionToPublish(bundle.getInt("permissionToPublish"));
+        cardCarEdit.setRejection(bundle.getString("rejection"));
 
         for (int i = 1; i <= cardCarEdit.getNumImage(); i++)
             cardCarEdit.addImageViewArrayListName(bundle.getString("image" + i));
@@ -749,48 +830,113 @@ public class MainActivityRegisterCar extends AppCompatActivity {
 
     public void deleteCard() {
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+//        mDatabase = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+//
+//        cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+//
+//        cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                    registerInformation = child.getValue(RegisterInformation.class);
+//                    key = child.getKey();
+//
+//                }
+//
+//                for (int i = 0; i < registerInformation.getCardsUser().size(); i++) {
+//                    if (cardCarEdit.getId() == registerInformation.getCardsUser().get(i).getId()) {
+//                        registerInformation.removeCardCar(i);
+//                        // Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
+//                        break;
+//                    }
+//                }
+//
+//                mDatabase.child(key).setValue(registerInformation);
+        if (cardCarEdit.getPermissionToPublish() == 0) {
+            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
+            ref2.child(cardCarEdit.getKey()).removeValue();
+        } else if (cardCarEdit.getPermissionToPublish() == 1) {
+            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsApprov");
+            ref2.child(cardCarEdit.getKey()).removeValue();
+        } else if (cardCarEdit.getPermissionToPublish() == 2) {
+            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsRejection");
+            ref2.child(cardCarEdit.getKey()).removeValue();
+        }
+        progressDialog.dismiss();
+        Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+        startActivity(intent);
 
-        cardRef2 = FirebaseDatabase.getInstance().getReference("RegisterInformation");
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
-        cardRef2.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_app, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent2;
+        switch (item.getItemId()) {
+            case R.id.mainMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.mainIconMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.myPageMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
+                startActivity(intent2);
+                return true;
+            case R.id.cardCarMenu:
+                intent2 = new Intent(MainActivityRegisterCar.this, MainActivityRegisterCar.class);
+                startActivity(intent2);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void dialogeImageDeleteConfirmation() {
+        final Dialog d = new Dialog(this);
+        d.setContentView(R.layout.dialog_image_delete);
+        d.setTitle("Image delete confirmation");
+
+        d.setCancelable(true);
+        Button buttonYes = (Button) d.findViewById(R.id.buttonYes);
+        Button buttonNo = (Button) d.findViewById(R.id.buttonNo);
+        buttonYes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    registerInformation = child.getValue(RegisterInformation.class);
-                    key = child.getKey();
-
-                }
-
-                for (int i = 0; i < registerInformation.getCardsUser().size(); i++) {
-                    if (cardCarEdit.getId() == registerInformation.getCardsUser().get(i).getId()) {
-                        registerInformation.removeCardCar(i);
-                        Toast.makeText(MainActivityRegisterCar.this, key, Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                }
-
-                mDatabase.child(key).setValue(registerInformation);
-                if (cardCarEdit.getPermissionToPublish() == 0) {
-                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsWaitApprov");
-                    ref2.child(cardCarEdit.getKey()).removeValue();
-                } else if (cardCarEdit.getPermissionToPublish() == 1) {
-                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsApprov");
-                    ref2.child(cardCarEdit.getKey()).removeValue();
-                } else if (cardCarEdit.getPermissionToPublish() == 2) {
-                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("CardsRejection");
-                    ref2.child(cardCarEdit.getKey()).removeValue();
-                }
-                Intent intent = new Intent(MainActivityRegisterCar.this, MainActivityPageUser.class);
-                startActivity(intent);
-
+            public void onClick(View view) {
+                flagImageDeleteConfirmation = 1;
+                imageView1.setImageResource(R.drawable.ic_car);
+                imageView2.setImageResource(R.drawable.ic_car);
+                imageView3.setImageResource(R.drawable.ic_car);
+                imageView4.setImageResource(R.drawable.ic_car);
+                cardCar.setImageViewArrayListName(new ArrayList<String>());
+                d.dismiss();
             }
-
+        });
+        buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onClick(View view) {
+                flagImageDeleteConfirmation = 2;
+                d.dismiss();
 
             }
         });
+        d.show();
 
     }
 }

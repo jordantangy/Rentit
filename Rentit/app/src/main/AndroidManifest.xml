@@ -10,13 +10,16 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_car_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_car_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MainActivityManagementCardsApprov"></activity>
+        <activity android:name=".MainActivityListFeedbackPage"></activity>
+        <activity android:name=".MainActivity_Feedback" />
+        <activity android:name=".MainActivityCardView" />
+        <activity android:name=".MainActivityManagementCardsApprov" />
         <activity android:name=".MainActivityFeedback" />
         <activity android:name=".MainActivityPageUser" />
         <activity android:name=".MainActivityRegisterCar" />

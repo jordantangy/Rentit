@@ -8,7 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardCar {
+//    -key: String
+//    -seeCard: int
+//    -email: String
+//    -numImage: int
+//    -id: int
+//    -permissionToPublish: int
+//    -name: String
+//    -typeCar: String
+//    -yearCar: String
+//    -phone: String
+//    -priceDay: String
+//    -insurance: String
+//    -area: String
+//    -city: String
+//    -dateStart: String
+//    -dateEnd: String
+//    -remarks: String
+//    -rejection: String
+//    -imageViewArrayListName: List<String>
+
+
     private String key="";
+    private int seeCard=0;
     private String email="";
     private int numImage=0;
     private int id=0;
@@ -24,48 +46,14 @@ public class CardCar {
     private String dateStart="";
     private String dateEnd="";
     private String remarks="";
+    private String rejection="";
     private List<String> imageViewArrayListName=new ArrayList<>();
 
 
 
     public CardCar() {
     }
-    public CardCar(String name) {
-        this.name=name;
-    }
-    public CardCar(CardCar c) {
-        this.id = c.id;
-        this.permissionToPublish = c.permissionToPublish;
-        this.name = c.name;
-        this.typeCar = c.typeCar;
-        this.yearCar = c.yearCar;
-        this.phone = c.phone;
-        this.priceDay = c.priceDay;
-        this.insurance = c.insurance;
-        this.area = c.area;
-        this.city = c.city;
-        this.dateStart = c.dateStart;
-        this.dateEnd = c.dateEnd;
-        this.remarks = c.remarks;
-        this.imageViewArrayListName = c.imageViewArrayListName;
-    }
 
-    public CardCar(int id, int permissionToPublish, String name, String typeCar, String yearCar, String phone, String priceDay, String insurance, String area, String city, String dateStart, String dateEnd, String remarks, List<String> imageViewArrayListName) {
-        this.id = id;
-        this.permissionToPublish = permissionToPublish;
-        this.name = name;
-        this.typeCar = typeCar;
-        this.yearCar = yearCar;
-        this.phone = phone;
-        this.priceDay = priceDay;
-        this.insurance = insurance;
-        this.area = area;
-        this.city = city;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
-        this.remarks = remarks;
-        this.imageViewArrayListName = imageViewArrayListName;
-    }
 
     public String getEmail() {
         return email;
@@ -74,7 +62,9 @@ public class CardCar {
     public void setEmail(String email) {
         this.email = email;
     }
-
+//+removeImageViewArrayListName (String)
+//    +addImageViewArrayListName (String)
+//        +addOneSeeCard ()
     public void removeImageViewArrayListName(String url){
         imageViewArrayListName.remove(url);
 }
@@ -212,5 +202,23 @@ public class CardCar {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getRejection() {
+        return rejection;
+    }
+
+    public void setRejection(String rejection) {
+        this.rejection = rejection;
+    }
+
+    public int getSeeCard() {
+        return seeCard;
+    }
+    public void addOneSeeCard() {
+        this.seeCard++;
+    }
+    public void setSeeCard(int seeCard) {
+        this.seeCard = seeCard;
     }
 }

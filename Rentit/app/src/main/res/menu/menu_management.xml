@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mainIconMenuManga"
+        android:icon="@mipmap/ic_car_icon"
+        android:title="לדף הראשי"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mainMenuManaga"
+        android:title="לדף הראשי"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/cards"
+        android:title="כרטיסים"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/cardsRejecsenMenu"
+                android:title="כרטיסים שסורבו"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/cardsAproveMenu"
+                android:title="כרטיסים שאושרו"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/cardsWaitAproveMenu"
+                android:title="כרטיסים שמחכים לאישור"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/cardsDeleteHistotyMenu"
+                android:title="כרטיסים שנמחקו"
+                app:showAsAction="never"/>
+
+        </menu>
+    </item>
+    <item
+        android:id="@+id/feeds"
+        android:title="משובים"
+        app:showAsAction="never" >
+        <menu>
+            <item
+                android:id="@+id/feedsRejecsenMenu"
+                android:title="משובים שסורבו"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/feedsAproveMenu"
+                android:title="משובים שאושרו"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/feedsWaitAproveMenu"
+                android:title="משובים שמחכים לאישור"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/deletePassDateMenu"
+        android:title="כרטיסים שעבר תאריך"
+        app:showAsAction="never" />
+
+</menu>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="130dp"
-
+    android:background="@color/colorAccent"
     tools:context=".CardList">
 
 
@@ -35,7 +35,7 @@
             android:id="@+id/typeCarListCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="10dp"
             android:text="טויוטה קורולה"
             android:textColor="#100F0F"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -59,6 +59,8 @@
             android:id="@+id/phoneListCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
+
             android:layout_marginTop="18dp"
             android:layout_marginEnd="4dp"
             android:text="0544540185"
@@ -76,17 +78,6 @@
             android:textColor="#100F0F"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/priceDayListCard" />
-
-        <TextView
-            android:id="@+id/remarksListCard"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="לא משכיר פחות משלושה ימים"
-            android:textColor="#100F0F"
-            app:layout_constraintEnd_toStartOf="@+id/insuranceListCard"
-            app:layout_constraintTop_toBottomOf="@+id/dateListCard" />
 
         <TextView
             android:id="@+id/areaListCard"
@@ -109,8 +100,31 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageViewListCard"
+            app:layout_constraintStart_toStartOf="@+id/imageViewListCard"
             app:layout_constraintTop_toTopOf="@+id/areaListCard" />
+
+        <TextView
+            android:id="@+id/textViewSeeMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1999"
+            android:textColor="#FF3D00"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/typeCarListCard"
+            app:layout_constraintEnd_toEndOf="@+id/typeCarListCard"
+            app:layout_constraintStart_toStartOf="@+id/typeCarListCard" />
+
+        <ImageView
+            android:id="@+id/imageViewSee"
+            android:layout_width="12sp"
+            android:layout_height="12sp"
+            android:layout_marginEnd="1dp"
+            android:src="@mipmap/ic_eye_icon"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewSeeMe"
+            app:layout_constraintEnd_toStartOf="@+id/textViewSeeMe"
+            app:layout_constraintTop_toTopOf="@+id/textViewSeeMe" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

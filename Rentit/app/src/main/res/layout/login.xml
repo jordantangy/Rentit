@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="450dp"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
     android:orientation="vertical">
 
     <TextView
@@ -14,13 +16,15 @@
 
     <EditText
         android:id="@+id/loginEmail"
-        android:layout_width="350dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
         android:hint="אימייל"
         android:inputType="textEmailAddress"
-        android:textSize="30sp" />
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtWarnPssword"
@@ -34,10 +38,14 @@
         android:id="@+id/loginPassword"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginTop="15dp"
         android:hint="סיסמא"
         android:inputType="textPassword"
-        android:textSize="30sp" />
+        android:textSize="25sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginEmail" />
 
     <TextView
         android:id="@+id/txtWarnAll"
@@ -52,9 +60,24 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:layout_marginTop="15dp"
         android:background="#c1112e"
         android:gravity="center"
         android:text="כניסה"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/loginPassword"
+        app:layout_constraintStart_toStartOf="@+id/loginPassword"
+        app:layout_constraintTop_toBottomOf="@+id/loginPassword" />
 
-</LinearLayout>
+    <CheckBox
+        android:id="@+id/checkBoxPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="10dp"
+        android:text="פלאפון"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/loginEmail"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

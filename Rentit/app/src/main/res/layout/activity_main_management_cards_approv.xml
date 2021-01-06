@@ -6,64 +6,208 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".MainActivityManagementCardsApprov">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-
-    <ListView
-        android:id="@+id/lvMange"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
-
-    <Button
-        android:id="@+id/buttonApprov"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:text="אושרו"
-        app:layout_constraintEnd_toStartOf="@+id/buttonWhite"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonRejection"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:text="סורבו"
-        app:layout_constraintEnd_toStartOf="@+id/buttonApprov"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonWhite"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:text="מחכים לאישור"
-        app:layout_constraintEnd_toStartOf="@+id/buttonMainReturn"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonMainReturn"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:text="לעמוד הראשי"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textViewNumUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="500"
+            android:textColor="#D500F9"
+            app:layout_constraintEnd_toEndOf="@+id/textView10"
+            app:layout_constraintStart_toStartOf="@+id/textView10"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="משובים"
+            android:textColor="#9C27B0"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/buttonWiatAprrovFeedbeck"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumWaitAprove" />
+
+        <ListView
+            android:id="@+id/lvMange"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="220dp"
+            android:cacheColorHint="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
+
+        <Button
+            android:id="@+id/buttonApprov"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:text="אושרו"
+            app:layout_constraintEnd_toStartOf="@+id/buttonWhite"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonRejection"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:text="סורבו"
+            app:layout_constraintEnd_toStartOf="@+id/buttonApprov"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonWhite"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="100dp"
+            android:text="מחכים לאישור"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonMainReturn"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="לעמוד הראשי"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumFeedWait" />
+
+        <TextView
+            android:id="@+id/textViewNumWaitAprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="20"
+            android:textColor="#FF9800"
+            app:layout_constraintEnd_toEndOf="@+id/buttonWhite"
+            app:layout_constraintStart_toStartOf="@+id/buttonWhite"
+            app:layout_constraintTop_toBottomOf="@+id/buttonWhite" />
+
+        <TextView
+            android:id="@+id/textViewNumAprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="700 "
+            android:textColor="#53CA53"
+            app:layout_constraintEnd_toEndOf="@+id/buttonApprov"
+            app:layout_constraintStart_toStartOf="@+id/buttonApprov"
+            app:layout_constraintTop_toBottomOf="@+id/buttonApprov" />
+
+        <TextView
+            android:id="@+id/textViewNumReject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="50"
+            android:textColor="#EA2C2C"
+            app:layout_constraintEnd_toEndOf="@+id/buttonRejection"
+            app:layout_constraintStart_toStartOf="@+id/buttonRejection"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRejection" />
+
+        <Button
+            android:id="@+id/buttonWiatAprrovFeedbeck"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="מחכים לאישור"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="@+id/buttonWhite"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumWaitAprove" />
+
+        <Button
+            android:id="@+id/buttonAprrovFeedbeck"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="אושרו"
+            app:layout_constraintEnd_toEndOf="@+id/buttonApprov"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumAprove" />
+
+        <Button
+            android:id="@+id/buttonRejecsanFeedback"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="סורבו"
+            app:layout_constraintEnd_toEndOf="@+id/buttonRejection"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumReject" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="כרטיסים"
+            android:textColor="#9C27B0"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/buttonWhite"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewNumFeedWait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20"
+            android:textColor="#FF9800"
+            app:layout_constraintEnd_toEndOf="@+id/buttonWiatAprrovFeedbeck"
+            app:layout_constraintStart_toStartOf="@+id/buttonWiatAprrovFeedbeck"
+            app:layout_constraintTop_toBottomOf="@+id/buttonWiatAprrovFeedbeck" />
+
+        <TextView
+            android:id="@+id/textViewNumFeedApprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="700"
+            android:textColor="#53CA53"
+            app:layout_constraintEnd_toEndOf="@+id/buttonAprrovFeedbeck"
+            app:layout_constraintStart_toStartOf="@+id/buttonAprrovFeedbeck"
+            app:layout_constraintTop_toBottomOf="@+id/buttonAprrovFeedbeck" />
+
+        <TextView
+            android:id="@+id/textViewNumFeedRejecsen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="1dp"
+            android:text="50"
+            android:textColor="#EA2C2C"
+            app:layout_constraintEnd_toEndOf="@+id/buttonRejecsanFeedback"
+            app:layout_constraintStart_toStartOf="@+id/buttonRejecsanFeedback"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRejecsanFeedback" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:text="נרשמו לאפליקציה"
+            android:textColor="#7039EA"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonMainReturn"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMainReturn"
+            app:layout_constraintTop_toTopOf="@+id/buttonMainReturn" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
