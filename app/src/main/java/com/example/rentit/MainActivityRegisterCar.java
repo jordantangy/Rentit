@@ -58,7 +58,7 @@ import java.util.TimeZone;
 
 public class MainActivityRegisterCar extends AppCompatActivity {
     private RegisterInformation registerInformation;
-
+int a;
 
     private DatabaseReference cardRef2;
     private DatabaseReference cardRef;
