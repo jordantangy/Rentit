@@ -100,7 +100,7 @@ import java.util.Locale;
 
 public class MainActivityManagementCardsApprov extends AppCompatActivity {
     private Dialog d;
-private int a;
+
     private DatabaseReference cardRef2;
     private ArrayList<CardCar> arrayListCards;
     private ArrayList<CardCar> arrayListCards2;
